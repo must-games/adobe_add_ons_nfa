@@ -1,0 +1,514 @@
+{
+  "category_list": [
+    "hanbok-female",
+    "hanbok-male",
+    "K-Pop-female",
+    "K-Pop-male",
+    "Casual-female",
+    "Casual-male"
+  ],
+  "hanbok-female": [
+    {
+      "key": "12630217054f30f467db2977f6ecbd70",
+      "path": "hanbok-female/1_ComfyUI_01202_f.jpg"
+    },
+    {
+      "key": "e03264aa60ffa420be2030acfca0219c",
+      "path": "hanbok-female/ComfyUI_02268_f.jpg"
+    },
+    {
+      "key": "a6e4861cf7756ae3b8683c4029fb3bc4",
+      "path": "hanbok-female/ComfyUI_02253_f.jpg"
+    },
+    {
+      "key": "d67e293e3361ec88b309f64c823db260",
+      "path": "hanbok-female/ComfyUI_02248_f.jpg"
+    },
+    {
+      "key": "3e2802186c114a8bebd43d5d9cebdc64",
+      "path": "hanbok-female/ComfyUI_02247_f.jpg"
+    },
+    {
+      "key": "9a0fba93bc4f20d717879896e819848b",
+      "path": "hanbok-female/ComfyUI_02321_f.jpg"
+    },
+    {
+      "key": "dad453886e3fb9540a66868954d4abf7",
+      "path": "hanbok-female/ComfyUI_02276_f.jpg"
+    },
+    {
+      "key": "47f1b32b01f408d8d095ce2aee2abe23",
+      "path": "hanbok-female/ComfyUI_02313_f.jpg"
+    },
+    {
+      "key": "01f6345b0642172a2319f74591d66fcb",
+      "path": "hanbok-female/ComfyUI_02245_f.jpg"
+    },
+    {
+      "key": "652ceaff604533d9168fc3f9332227b0",
+      "path": "hanbok-female/ComfyUI_01217_f.jpg"
+    },
+    {
+      "key": "ced8d2d4f380eed70a3ee63fc63f80c0",
+      "path": "hanbok-female/ComfyUI_01218_f.jpg"
+    },
+    {
+      "key": "b63c5e3a3df4bd30450170ae901a845b",
+      "path": "hanbok-female/ComfyUI_02269_f.jpg"
+    },
+    {
+      "key": "b313589dc42bdd79a71f71341e7e73b1",
+      "path": "hanbok-female/ComfyUI_02325_f.jpg"
+    },
+    {
+      "key": "54d94a3fd15bdc3daf49c754600d878b",
+      "path": "hanbok-female/ComfyUI_02272_f.jpg"
+    }
+  ],
+  "Casual-male": [
+    {
+      "key": "0a1b1eb008bb6318b951f8a8efcbfb11",
+      "path": "Casual-male/ComfyUI_02517_m.jpg"
+    },
+    {
+      "key": "44ea6f3120852366524e0f8ca6e20040",
+      "path": "Casual-male/ComfyUI_02506_m.jpg"
+    },
+    {
+      "key": "de4edba2741f25ead0a2db012e2bd19e",
+      "path": "Casual-male/ComfyUI_02532_m.jpg"
+    },
+    {
+      "key": "f693a98705eb54049150d2bb3eb9670c",
+      "path": "Casual-male/ComfyUI_02513_m.jpg"
+    },
+    {
+      "key": "74b69b73a7bfe4ca29403e37994234ef",
+      "path": "Casual-male/ComfyUI_02490_m.jpg"
+    },
+    {
+      "key": "152ef2f1ef3c26f7496f2bf0a345a373",
+      "path": "Casual-male/ComfyUI_02514_m.jpg"
+    },
+    {
+      "key": "83d2181e9fcdd0f81b080443a29d856a",
+      "path": "Casual-male/ComfyUI_02503_m.jpg"
+    },
+    {
+      "key": "19be8842a790dcc55fdd31d935756764",
+      "path": "Casual-male/ComfyUI_02519_m.jpg"
+    },
+    {
+      "key": "2dc237bb44bd872c062cf1b0329b887e",
+      "path": "Casual-male/ComfyUI_02485_m.jpg"
+    },
+    {
+      "key": "f10e0d61d8979b5f3e560f3a29eee5e8",
+      "path": "Casual-male/ComfyUI_02508_m.jpg"
+    },
+    {
+      "key": "8aa9f5c7ebd2eae49a8bbe765d7b25ee",
+      "path": "Casual-male/ComfyUI_02486_m.jpg"
+    },
+    {
+      "key": "e7096a9721e3598d5038fa9303f0c469",
+      "path": "Casual-male/ComfyUI_02480_m.jpg"
+    },
+    {
+      "key": "cbe1a452ddcbe5059dc2088af3986eac",
+      "path": "Casual-male/ComfyUI_02529_m.jpg"
+    },
+    {
+      "key": "0c21f4e71d1aec1bbbb7fde44cacf2b6",
+      "path": "Casual-male/ComfyUI_02474_m.jpg"
+    },
+    {
+      "key": "3c33ecc1d01667bb08a77e6a184e7c09",
+      "path": "Casual-male/ComfyUI_02516_m.jpg"
+    },
+    {
+      "key": "5c8ee0ae6b6a226b35e8dfd0b3a8a4e7",
+      "path": "Casual-male/ComfyUI_02507_m.jpg"
+    },
+    {
+      "key": "ff6df609f3a2f64895ecf2d3b7387b19",
+      "path": "Casual-male/ComfyUI_02491_m.jpg"
+    },
+    {
+      "key": "a62b3ef1e7e2a96529b76b5aef8f127c",
+      "path": "Casual-male/ComfyUI_02538_m.jpg"
+    },
+    {
+      "key": "fb05a2660b162f1d475f38cc991ed38f",
+      "path": "Casual-male/ComfyUI_02475_m.jpg"
+    },
+    {
+      "key": "427fa51a372eefcf18417ea7c3ced788",
+      "path": "Casual-male/ComfyUI_02501_m.jpg"
+    },
+    {
+      "key": "a156a5cbb07082a335406a00d95daddb",
+      "path": "Casual-male/ComfyUI_02482_m.jpg"
+    },
+    {
+      "key": "fb4e777f16fb1070fd177aa0bb43b66b",
+      "path": "Casual-male/ComfyUI_02542_m.jpg"
+    },
+    {
+      "key": "bac741fd0ada0afc5396c3990ac80fb6",
+      "path": "Casual-male/ComfyUI_02471_m.jpg"
+    },
+    {
+      "key": "723ac0eaeebfb2eac335bde8d0e672e9",
+      "path": "Casual-male/ComfyUI_02523_m.jpg"
+    },
+    {
+      "key": "7a425475079a666fe25cd79f19e571a8",
+      "path": "Casual-male/ComfyUI_02511_m.jpg"
+    },
+    {
+      "key": "e969459d7f0028eb975a8968053b4535",
+      "path": "Casual-male/ComfyUI_02527_m.jpg"
+    },
+    {
+      "key": "13a119137d5feee3fadccedd5a765e05",
+      "path": "Casual-male/ComfyUI_02477_m.jpg"
+    },
+    {
+      "key": "2e1a84d305934f10b584f3e5b972b89b",
+      "path": "Casual-male/ComfyUI_02489_m.jpg"
+    },
+    {
+      "key": "49d2dfc2710a646b99e52cb14f86d6d9",
+      "path": "Casual-male/ComfyUI_02504_m.jpg"
+    }
+  ],
+  "K-Pop-female": [
+    {
+      "key": "f81aba9483612b984d59b20c0445f58e",
+      "path": "K-Pop-female/ComfyUI_00088_f.jpg"
+    },
+    {
+      "key": "2693b7683f87649fcf72ede4ed6dd477",
+      "path": "K-Pop-female/ComfyUI_02143_f.jpg"
+    },
+    {
+      "key": "2afc9fdc2e4d8e4928db7603810d9439",
+      "path": "K-Pop-female/ComfyUI_02192_f.jpg"
+    },
+    {
+      "key": "f2b02b5545f07fbac2969aef639e8f22",
+      "path": "K-Pop-female/ComfyUI_02175_f.jpg"
+    },
+    {
+      "key": "06e69933d9907c9ceefcb4799abe9f6c",
+      "path": "K-Pop-female/ComfyUI_02190_f.jpg"
+    },
+    {
+      "key": "5a017afd91c87432c2f8438a3f58801d",
+      "path": "K-Pop-female/ComfyUI_02180_f.jpg"
+    },
+    {
+      "key": "f2d03637ddc6c9d77bb40c53e674b95e",
+      "path": "K-Pop-female/ComfyUI_02193_f.jpg"
+    },
+    {
+      "key": "bd8b90c581a23ae814af9a3654124a02",
+      "path": "K-Pop-female/ComfyUI_00079_f.jpg"
+    },
+    {
+      "key": "7b6e78ae2d7123b51d37d8d8ff526ed2",
+      "path": "K-Pop-female/ComfyUI_02073_f.jpg"
+    },
+    {
+      "key": "7131bb708017f502cdd535e3118fec91",
+      "path": "K-Pop-female/ComfyUI_00070_f.jpg"
+    },
+    {
+      "key": "1fc72de1010d7afc81ee741ac4f22dc8",
+      "path": "K-Pop-female/ComfyUI_02144_f.jpg"
+    },
+    {
+      "key": "0e2564983d156aa20fbd26c46a1f9413",
+      "path": "K-Pop-female/ComfyUI_02149_f.jpg"
+    },
+    {
+      "key": "59eb9b19e6acd8fd2b1700ccacdbd2dc",
+      "path": "K-Pop-female/ComfyUI_00061_f.jpg"
+    },
+    {
+      "key": "4f6be2e1be3299346d4fbd310853d959",
+      "path": "K-Pop-female/ComfyUI_02074_f.jpg"
+    },
+    {
+      "key": "bd29e68fb55b37b2b831dbb907e47e8f",
+      "path": "K-Pop-female/ComfyUI_00092_f.jpg"
+    },
+    {
+      "key": "21d894c197c36803836c148f6e2fbb84",
+      "path": "K-Pop-female/ComfyUI_02146_f.jpg"
+    },
+    {
+      "key": "bc67458a03ee16433b6fb1fbcfca4a74",
+      "path": "K-Pop-female/ComfyUI_02181_f.jpg"
+    },
+    {
+      "key": "28b2e04725056af83edc72ce73471a58",
+      "path": "K-Pop-female/ComfyUI_00089_f.jpg"
+    },
+    {
+      "key": "3449be83b7438c0d4e8d40dbb9bbe186",
+      "path": "K-Pop-female/ComfyUI_02077_f.jpg"
+    },
+    {
+      "key": "a537fad26e03fea6f4f1e271505afc22",
+      "path": "K-Pop-female/ComfyUI_02186_f.jpg"
+    },
+    {
+      "key": "3cfa3dddd66678b25275202125106d12",
+      "path": "K-Pop-female/ComfyUI_00085_f.jpg"
+    },
+    {
+      "key": "38d524ca76de7c6b63b0139e50cca727",
+      "path": "K-Pop-female/ComfyUI_02155_f.jpg"
+    },
+    {
+      "key": "fecbb1e3fc20b9dfa3e71c0a4c769df8",
+      "path": "K-Pop-female/ComfyUI_02173_f.jpg"
+    },
+    {
+      "key": "de40527782197800ae2d4a3a2e1410b2",
+      "path": "K-Pop-female/ComfyUI_02164_f.jpg"
+    },
+    {
+      "key": "4c060d42c19bdd50bdb823a0890b21e5",
+      "path": "K-Pop-female/ComfyUI_02140_f.jpg"
+    }
+  ],
+  "hanbok-male": [
+    {
+      "key": "c8bbc23d0ff85b5d33d067dfab8deac0",
+      "path": "hanbok-male/ComfyUI_02344_m.jpg"
+    },
+    {
+      "key": "b4b0a3130d8e2acf09ee4c1ad8a9ea32",
+      "path": "hanbok-male/ComfyUI_02343_m.jpg"
+    },
+    {
+      "key": "b0b82dab52ffa36487c87cb62fa7a78b",
+      "path": "hanbok-male/ComfyUI_02346_m.jpg"
+    },
+    {
+      "key": "68a58e51236477ea2f126ea495d103fd",
+      "path": "hanbok-male/ComfyUI_02378_m.jpg"
+    },
+    {
+      "key": "d5e46a68e2cdeaf490c1cf9a6e981421",
+      "path": "hanbok-male/ComfyUI_02366_m.jpg"
+    },
+    {
+      "key": "eb478ccdb2bc325535ccda2e1f07406e",
+      "path": "hanbok-male/ComfyUI_02379_m.jpg"
+    },
+    {
+      "key": "5199b747ecb9becf66c464e42a679179",
+      "path": "hanbok-male/ComfyUI_02358_m.jpg"
+    },
+    {
+      "key": "fb17e0fd5052af2ab98696a2158d38ff",
+      "path": "hanbok-male/ComfyUI_02365_m.jpg"
+    },
+    {
+      "key": "4268d514de0f295a584d76c39f50351e",
+      "path": "hanbok-male/ComfyUI_02363_m.jpg"
+    },
+    {
+      "key": "7d547c819394f7f18f64bfbfd8ed7055",
+      "path": "hanbok-male/ComfyUI_02375_m.jpg"
+    },
+    {
+      "key": "5c6e9426877b9721f60e93484a410620",
+      "path": "hanbok-male/ComfyUI_02370_m.jpg"
+    },
+    {
+      "key": "37284f7d890f7c05202f5d311d2eeab2",
+      "path": "hanbok-male/ComfyUI_02371_m.jpg"
+    },
+    {
+      "key": "b99bff3cf064dccc813b64bfa5d83382",
+      "path": "hanbok-male/ComfyUI_02349_m.jpg"
+    }
+  ],
+  "K-Pop-male": [
+    {
+      "key": "10fbfd1c62e8be2d013c5bf5eee59d57",
+      "path": "K-Pop-male/ComfyUI_02233_m.jpg"
+    },
+    {
+      "key": "bd44aa7e91247f0da68f32f7c8afd0d8",
+      "path": "K-Pop-male/ComfyUI_02214_m.jpg"
+    },
+    {
+      "key": "3b2aeaa12efa9918f12b3ffbe914fbc6",
+      "path": "K-Pop-male/ComfyUI_02211_m.jpg"
+    },
+    {
+      "key": "d3cd10e0dee1d795e5acf161e543bd15",
+      "path": "K-Pop-male/ComfyUI_02232_m.jpg"
+    },
+    {
+      "key": "b355199635959a187fb0350b8d021d4e",
+      "path": "K-Pop-male/ComfyUI_02204_m.jpg"
+    },
+    {
+      "key": "949ce8e1fd00bdcb44f6b7968ea4592d",
+      "path": "K-Pop-male/ComfyUI_02234_m.jpg"
+    },
+    {
+      "key": "8ddfb985bbafe270a5aab80b430e2d91",
+      "path": "K-Pop-male/ComfyUI_02219_m.jpg"
+    },
+    {
+      "key": "bc9e08f96aff1d83a9ee0748a742fd19",
+      "path": "K-Pop-male/ComfyUI_02217_m.jpg"
+    },
+    {
+      "key": "f9e558ce746791363a1bc9fb5dacfa63",
+      "path": "K-Pop-male/ComfyUI_02207_m.jpg"
+    },
+    {
+      "key": "ab4e643f86caf8be4f6b6f60af2f4b25",
+      "path": "K-Pop-male/ComfyUI_02216_m.jpg"
+    },
+    {
+      "key": "ac07fce65e664386b0e82e268c831d9a",
+      "path": "K-Pop-male/ComfyUI_02218_m.jpg"
+    },
+    {
+      "key": "6e960e63146a24f7368e4a5d8f408fcc",
+      "path": "K-Pop-male/ComfyUI_02213_m.jpg"
+    },
+    {
+      "key": "0ba64811a80941c810b3e86d8268f8e7",
+      "path": "K-Pop-male/ComfyUI_02209_m.jpg"
+    },
+    {
+      "key": "02c6875f0a0a4d958843f40a0cdf07f8",
+      "path": "K-Pop-male/ComfyUI_02239_m.jpg"
+    }
+  ],
+  "Casual-female": [
+    {
+      "key": "2db018e706ed183b89b75abcc9f38a9a",
+      "path": "Casual-female/ComfyUI_02439_f.jpg"
+    },
+    {
+      "key": "684390588ced767f64aae7fb0374aeed",
+      "path": "Casual-female/ComfyUI_02434_f.jpg"
+    },
+    {
+      "key": "39245ecb98b5ce493c69d08124a915ca",
+      "path": "Casual-female/ComfyUI_02401_f.jpg"
+    },
+    {
+      "key": "bbaf8d2c89e351642a4f8c4f27b82f0b",
+      "path": "Casual-female/ComfyUI_02405_f.jpg"
+    },
+    {
+      "key": "a75fff7914caacf9bed5d4a2b11e6ed6",
+      "path": "Casual-female/ComfyUI_02452_f.jpg"
+    },
+    {
+      "key": "f034d52636d322acecf03efcb7219bc5",
+      "path": "Casual-female/ComfyUI_02453_f.jpg"
+    },
+    {
+      "key": "c9ce55d2ee3f23261d36035560fc63fa",
+      "path": "Casual-female/ComfyUI_02428_f.jpg"
+    },
+    {
+      "key": "66ce965c02648357e4333ff53c96afd0",
+      "path": "Casual-female/ComfyUI_02415_f.jpg"
+    },
+    {
+      "key": "6429ee198828209088f1a705f138e107",
+      "path": "Casual-female/ComfyUI_02407_f.jpg"
+    },
+    {
+      "key": "695eb37e7f32851340499b795faff9a7",
+      "path": "Casual-female/ComfyUI_02450_f.jpg"
+    },
+    {
+      "key": "943a012c4d8b7f1f716851643b7425b2",
+      "path": "Casual-female/ComfyUI_02456_f.jpg"
+    },
+    {
+      "key": "7493880ca519dc1c6db09d1ae934df0a",
+      "path": "Casual-female/ComfyUI_02430_f.jpg"
+    },
+    {
+      "key": "344538bd17092a49e0f6adf7c5f2141c",
+      "path": "Casual-female/ComfyUI_02451_f.jpg"
+    },
+    {
+      "key": "dfc22c8f8b4a47ba955ee945b7f8b22c",
+      "path": "Casual-female/ComfyUI_02414_f.jpg"
+    },
+    {
+      "key": "ce7347ebafcf184d8a51622223dac129",
+      "path": "Casual-female/ComfyUI_02433_f.jpg"
+    },
+    {
+      "key": "823b2819f79a8b840fe77c79cc892194",
+      "path": "Casual-female/ComfyUI_02406_f.jpg"
+    },
+    {
+      "key": "557a23b8f010616db63aecfe4e61dc8b",
+      "path": "Casual-female/ComfyUI_02431_f.jpg"
+    },
+    {
+      "key": "7782c6c3840438fe98ae45b527c28582",
+      "path": "Casual-female/ComfyUI_02400_f.jpg"
+    },
+    {
+      "key": "e4e62d4dbf364bc608502181fddc376a",
+      "path": "Casual-female/ComfyUI_02437_f.jpg"
+    },
+    {
+      "key": "c823f21bb79b83e128ebfb1b0152ac6d",
+      "path": "Casual-female/ComfyUI_02455_f.jpg"
+    },
+    {
+      "key": "d1e1fad83d7896bdd17b79ad14619d83",
+      "path": "Casual-female/ComfyUI_02454_f.jpg"
+    },
+    {
+      "key": "cf73c182818ad2921722fca1602dc6e9",
+      "path": "Casual-female/ComfyUI_02461_f.jpg"
+    },
+    {
+      "key": "31d9cd5e5e3a4041bb1a2952facaffc0",
+      "path": "Casual-female/ComfyUI_02432_f.jpg"
+    },
+    {
+      "key": "af47188d1118df04096af6b0b13cd645",
+      "path": "Casual-female/ComfyUI_02463_f.jpg"
+    },
+    {
+      "key": "a0f553bb691a25a730b18791e8c4d441",
+      "path": "Casual-female/ComfyUI_02412_f.jpg"
+    },
+    {
+      "key": "1afd35c8669811657db38cf14d9239b9",
+      "path": "Casual-female/ComfyUI_02403_f.jpg"
+    },
+    {
+      "key": "2991c7714c9e99b671a0b3aeca625fcc",
+      "path": "Casual-female/ComfyUI_02420_f.jpg"
+    },
+    {
+      "key": "b87f908246a04ac9f2319d718ed9322c",
+      "path": "Casual-female/ComfyUI_02444_f.jpg"
+    }
+  ]
+}

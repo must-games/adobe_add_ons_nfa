@@ -1,0 +1,23 @@
+{
+    "name": "adobe_add_ons_fullstack",
+    "version": "1.0.0",
+    "scripts": {
+        "clean": "npm --prefix Client run clean",
+        "build:web": "npm --prefix Client run build",
+        "build:server": "npm --prefix Server run build",
+        "build": "npm run build:web && npm run build:server",
+        "start:web": "npm --prefix Client run start",
+        "start:server": "npm --prefix Server run start",
+        "start": "concurrently \"npm run start:web\" \"npm run start:server\"",
+        "dev": "concurrently \"npm --prefix Client run start\" \"npm --prefix server run dev\"",
+        "pm2-start": "pm2 start npm --name 'adobe_add_ons' -- run start",
+        "postinstall": "npm --prefix Client install && npm --prefix Server install"
+    },
+    "devDependencies": {
+        "@types/file-saver": "^2.0.7",
+        "concurrently": "^7.0.0"
+    },
+    "dependencies": {
+        "file-saver": "^2.0.5"
+    }
+}

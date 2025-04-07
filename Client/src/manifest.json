@@ -1,0 +1,29 @@
+{
+    "testId": "713d96ea-9d1f-4cdf-a541-3a8d197ee84e",
+    "name": "KKUSA AI Profile Generator",
+    "version": "1.0.0",
+    "manifestVersion": 2,
+    "requirements": {
+        "apps": [
+            {
+                "name": "Express",
+                "apiVersion": 1
+            }
+        ]
+    },
+    "entryPoints": [
+        {
+            "type": "panel",
+            "id": "panel1",
+            "main": "index.html",
+            "documentSandbox": "code.js",
+            "permissions": {
+                "sandbox": [
+                    "allow-popups-to-escape-sandbox",
+                    "allow-popups",
+                    "allow-downloads"
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,23 @@
+{
+  "cors": [
+    {
+      "allowed_origins": [
+        "https://localhost:5241",
+        "https://new.express.adobe.com",
+        "https://*.wxp.adobe-addons.com"
+      ],
+      "allowed_headers": [
+        "X-Auth-Token"
+      ],
+      "allowed_methods": [
+        "GET",
+        "HEAD",
+        "POST"
+      ],
+      "expose_headers": [
+        "Access-Control-Allow-Origin"
+      ],
+      "max_age_seconds": 3600
+    }
+  ]
+}

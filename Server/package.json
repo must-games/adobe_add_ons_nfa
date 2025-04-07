@@ -1,0 +1,53 @@
+{
+    "name": "adobe_add_ons_worker",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "NODE_ENV=development nodemon --exec ts-node src/server.ts",
+        "build": "tsc",
+        "start": "NODE_ENV=production node dist/server.js",
+        "postinstall": "prisma generate"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "dependencies": {
+        "@aws-sdk/client-s3": "^3.721.0",
+        "@prisma/client": "^6.0.1",
+        "axios": "^1.7.9",
+        "cors": "^2.8.5",
+        "diskusage": "^1.2.0",
+        "dotenv": "^16.4.7",
+        "dotenv-flow": "^4.1.0",
+        "express": "^4.21.2",
+        "multer": "^1.4.5-lts.1",
+        "node-schedule": "^2.1.1",
+        "nodemon": "^3.1.7",
+        "querystring": "^0.2.1",
+        "sharp": "^0.33.5",
+        "uuid": "^11.1.0",
+        "winston": "^3.17.0",
+        "winston-daily-rotate-file": "^5.0.0"
+    },
+    "devDependencies": {
+        "@types/express": "^5.0.0",
+        "@types/multer": "^1.4.12",
+        "@types/node": "^22.10.2",
+        "@types/node-schedule": "^2.1.7",
+        "@types/sharp": "^0.32.0",
+        "@types/winston": "^2.4.4",
+        "@typescript-eslint/eslint-plugin": "^8.18.0",
+        "@typescript-eslint/parser": "^8.18.0",
+        "eslint": "^9.16.0",
+        "eslint-config-prettier": "^9.1.0",
+        "eslint-plugin-import": "^2.31.0",
+        "eslint-plugin-node": "^11.1.0",
+        "eslint-plugin-prettier": "^5.2.1",
+        "eslint-plugin-promise": "^7.2.1",
+        "prettier": "^3.4.2",
+        "prisma": "^6.0.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.2"
+    }
+}

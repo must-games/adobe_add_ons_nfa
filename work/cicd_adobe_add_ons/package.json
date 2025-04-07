@@ -1,0 +1,14 @@
+{
+  "name": "cicd",
+  "type": "module",
+  "scripts": {
+        "start": "node cicd.js",
+        "pm2-start": "pm2 start npm --name 'cicd-adobe-add-ons' -- run start"
+  },
+  "dependencies": {
+    "axios": "^1.7.7",
+    "child_process": "^1.0.2",
+    "crypto": "^1.0.1",
+    "express": "^4.21.0"
+  }
+}
