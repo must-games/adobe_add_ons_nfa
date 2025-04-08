@@ -126,6 +126,23 @@ export class App extends LitElement {
     @state()
     private _loadingProgress = 10 // Default progress value
 
+    @state()
+    private _selectedHairColor: string | null = null
+
+    private _handleHairColorSelect(colorKey: string) {
+        // 이미 선택된 색상과 같으면 해제, 아니면 새 colorKey로 설정
+        if (this._selectedHairColor === colorKey) {
+            this._selectedHairColor = null
+        } else {
+            this._selectedHairColor = colorKey
+        }
+
+        // 필요한 추가 작업
+        // console.log(`Selected hair color: ${this._selectedHairColor}`)
+
+        this.requestUpdate()
+    }
+
     static get styles() {
         return style
     }
@@ -820,6 +837,7 @@ export class App extends LitElement {
     render() {
         const isButtonDisabled =
             !this._selectedImage ||
+            !this._selectedHairColor ||
             (this.userAccessData?.limitInfo
                 .REMAINING_DAILY_IMAGE_GENERATION_LIMIT ?? 0) < 1
 
@@ -1058,73 +1076,72 @@ export class App extends LitElement {
                                                             Upload a face photo
                                                         </h2>
                                                     </div>
-                                                    ${
-                                                        this._uploadedFile
-                                                            ? html`
-                                                                  <sp-dropzone
-                                                                      class="dropzone"
-                                                                      style="height: 100px;background-color: #f5f5f5; "
+                                                    ${this._uploadedFile
+                                                        ? html`
+                                                              <sp-dropzone
+                                                                  class="dropzone"
+                                                                  style="height: 100px;background-color: #f5f5f5; "
+                                                              >
+                                                                  <div
+                                                                      class="preview-container flex flex-row items-center justify-center h-full"
+                                                                      style="gap: 16px;"
+                                                                  >
+                                                                      <img
+                                                                          src="${URL.createObjectURL(
+                                                                              this
+                                                                                  ._uploadedFile
+                                                                          )}"
+                                                                          class="image-preview rounded-lg object-fit"
+                                                                          style="width: 80px; height: 80px;"
+                                                                      />
+                                                                      <div
+                                                                          class="button-group flex flex-col"
+                                                                          style="gap: 8px;"
+                                                                      >
+                                                                          <sp-button
+                                                                              size="s"
+                                                                              variant="secondary"
+                                                                              style="font-size: 12px;"
+                                                                              @click="${this
+                                                                                  ._openFileDialog}"
+                                                                              >Change
+                                                                              Photo</sp-button
+                                                                          >
+                                                                          <sp-button
+                                                                              size="s"
+                                                                              variant="secondary"
+                                                                              style="font-size: 12px; color:red;"
+                                                                              @click="${this
+                                                                                  ._deletePhoto}"
+                                                                              >Clear</sp-button
+                                                                          >
+                                                                      </div>
+                                                                  </div>
+                                                              </sp-dropzone>
+                                                          `
+                                                        : html`
+                                                              <sp-dropzone
+                                                                  class="dropzone"
+                                                                  @sp-dropzone-drop="${this
+                                                                      ._handleFileUpload}"
+                                                                  @click="${this
+                                                                      ._openFileDialog}"
+                                                                  style="height: 100px;"
+                                                              >
+                                                                  <div
+                                                                      class="dropzone-content"
+                                                                      style="background-color: #f5f5f5;padding:8px;"
                                                                   >
                                                                       <div
-                                                                          class="preview-container flex flex-row items-center justify-center h-full"
-                                                                          style="gap: 16px;"
+                                                                          class="upload-icon"
                                                                       >
                                                                           <img
-                                                                              src="${URL.createObjectURL(
-                                                                                  this
-                                                                                      ._uploadedFile
-                                                                              )}"
-                                                                              class="image-preview rounded-lg object-fit"
-                                                                              style="width: 80px; height: 80px;"
+                                                                              src="./images/upload_icon.svg"
+                                                                              alt="Upload Icon"
+                                                                              width="30"
+                                                                              height="30"
                                                                           />
-                                                                          <div
-                                                                              class="button-group flex flex-col"
-                                                                              style="gap: 8px;"
-                                                                          >
-                                                                              <sp-button
-                                                                                  size="s"
-                                                                                  variant="secondary"
-                                                                                  style="font-size: 12px;"
-                                                                                  @click="${this
-                                                                                      ._openFileDialog}"
-                                                                                  >Change
-                                                                                  Photo</sp-button
-                                                                              >
-                                                                              <sp-button
-                                                                                  size="s"
-                                                                                  variant="secondary"
-                                                                                  style="font-size: 12px; color:red;"
-                                                                                  @click="${this
-                                                                                      ._deletePhoto}"
-                                                                                  >Clear</sp-button
-                                                                              >
-                                                                          </div>
-                                                                      </div>
-                                                                  </sp-dropzone>
-                                                              `
-                                                            : html`
-                                                                  <sp-dropzone
-                                                                      class="dropzone"
-                                                                      @sp-dropzone-drop="${this
-                                                                          ._handleFileUpload}"
-                                                                      @click="${this
-                                                                          ._openFileDialog}"
-                                                                      style="height: 100px;"
-                                                                  >
-                                                                      <div
-                                                                          class="dropzone-content"
-                                                                          style="background-color: #f5f5f5;padding:8px;"
-                                                                      >
-                                                                          <div
-                                                                              class="upload-icon"
-                                                                          >
-                                                                              <img
-                                                                                  src="./images/upload_icon.svg"
-                                                                                  alt="Upload Icon"
-                                                                                  width="30"
-                                                                                  height="30"
-                                                                              />
-                                                                              <!--
+                                                                          <!--
                                                             <svg
                                                                 width="40"
                                                                 height="40"
@@ -1145,219 +1162,327 @@ export class App extends LitElement {
                                                                 ></path>
                                                             </svg>
                                                             -->
-                                                                          </div>
-                                                                          <div
-                                                                              class="upload-text"
-                                                                          >
-                                                                              For
-                                                                              best
-                                                                              results,
-                                                                              we
-                                                                              recommend
-                                                                              a
-                                                                              clear,
-                                                                              full-face,
-                                                                              front-view
-                                                                              color
-                                                                              photo.
-                                                                          </div>
                                                                       </div>
-                                                                  </sp-dropzone>
-                                                              `
-                                                    }
+                                                                      <div
+                                                                          class="upload-text"
+                                                                      >
+                                                                          For
+                                                                          best
+                                                                          results,
+                                                                          we
+                                                                          recommend
+                                                                          a
+                                                                          clear,
+                                                                          full-face,
+                                                                          front-view
+                                                                          color
+                                                                          photo.
+                                                                      </div>
+                                                                  </div>
+                                                              </sp-dropzone>
+                                                          `}
                                                 </div>
 
-                                                <!-- Select Image Section -->
+                                                <!-- Select Hairstyle Section -->
                                                 <div
                                                     class="section"
                                                     style="padding-bottom:0px;"
                                                 >
                                                     <div
                                                         class="section-header"
-                                                        style="margin-bottom: 0px; "
+                                                        style="margin-bottom: 0px;"
                                                     >
                                                         <h2
                                                             class="section-title"
                                                         >
-                                                            Select Image
+                                                            Select Hairstyle
                                                         </h2>
                                                     </div>
-                                                    <div class="theme-filter">
-                                                        <sp-picker
-                                                            id="theme-picker"
-                                                            size="m"
-                                                            label="Select Theme"
-                                                            value=${
-                                                                this
-                                                                    ._selectedTheme
-                                                            }
-                                                            @change=${
-                                                                this
-                                                                    ._handleThemeSelect
-                                                            }
+
+                                                    <!-- 새로 추가된 Female / Male 토글 버튼 -->
+                                                    <div
+                                                        style="
+                                                        display: flex;
+                                                        gap: 8px;
+                                                        margin: 10px 0;
+                                                    "
+                                                    >
+                                                        <!-- Female 버튼 -->
+                                                        <button
                                                             style="
-                                                            --spectrum-picker-border-width: 2px !important;
-                                                            --spectrum-picker-border-color: #e1e1e1 !important;
-                                                            "
+                                                            border: none;
+                                                            outline: none;
+                                                            padding: 8px 16px;
+                                                            border-radius: 20px;
+                                                            cursor: pointer;
+                                                            font-size: 13px;
+                                                            font-weight: 600;
+                                                            /* 선택 여부에 따라 색상 변경 */
+                                                            background-color: ${this
+                                                                ._selectedTheme ===
+                                                            'female'
+                                                                ? '#2680eb'
+                                                                : '#f0f0f0'};
+                                                            color: ${this
+                                                                ._selectedTheme ===
+                                                            'female'
+                                                                ? '#ffffff'
+                                                                : '#333333'};
+                                                            transition: background-color 0.2s ease;
+                                                        "
+                                                            @click="${() => {
+                                                                this._selectedTheme =
+                                                                    'female'
+                                                            }}"
                                                         >
-                                                            <sp-menu-item
-                                                                value="all"
-                                                                >All</sp-menu-item
-                                                            >
-                                                            ${categoryData.category_list.map(
-                                                                (
-                                                                    category
-                                                                ) => html`
-                                                                    <sp-menu-item
-                                                                        value="${category}"
-                                                                        style=""
-                                                                        >${category}</sp-menu-item
-                                                                    >
-                                                                `
-                                                            )}
-                                                        </sp-picker>
+                                                            Female Hairstyle
+                                                        </button>
+
+                                                        <!-- Male 버튼 -->
+                                                        <button
+                                                            style="
+                                                            border: none;
+                                                            outline: none;
+                                                            padding: 8px 16px;
+                                                            border-radius: 20px;
+                                                            cursor: pointer;
+                                                            font-size: 13px;
+                                                            font-weight: 600;
+                                                            background-color: ${this
+                                                                ._selectedTheme ===
+                                                            'male'
+                                                                ? '#2680eb'
+                                                                : '#f0f0f0'};
+                                                            color: ${this
+                                                                ._selectedTheme ===
+                                                            'male'
+                                                                ? '#ffffff'
+                                                                : '#333333'};
+                                                            transition: background-color 0.2s ease;
+                                                        "
+                                                            @click="${() => {
+                                                                this._selectedTheme =
+                                                                    'male'
+                                                            }}"
+                                                        >
+                                                            Male Hairstyle
+                                                        </button>
                                                     </div>
+
+                                                    <!-- 스크롤 가능한 이미지 목록 -->
                                                     <div
                                                         class="scrollable-content"
                                                     >
                                                         <div
                                                             class="image-categories"
                                                         >
-                                                            ${Object.entries(
-                                                                this
-                                                                    ._imageCategories
-                                                            )
-                                                                .filter(
-                                                                    ([
-                                                                        category,
-                                                                    ]) =>
-                                                                        this
-                                                                            ._selectedTheme ===
-                                                                            'all' ||
-                                                                        this
-                                                                            ._selectedTheme ===
-                                                                            category
+                                                            ${
+                                                                // _imageCategories 객체를 순회하여,
+                                                                // 현재 _selectedTheme('female','male')와 일치하는 카테고리만 필터링
+                                                                Object.entries(
+                                                                    this
+                                                                        ._imageCategories
                                                                 )
-                                                                .map(
-                                                                    ([
-                                                                        category,
-                                                                        images,
-                                                                    ]) => html`
-                                                                        <div
-                                                                            class="category"
-                                                                        >
-                                                                            ${this
+                                                                    .filter(
+                                                                        ([
+                                                                            category,
+                                                                        ]) =>
+                                                                            // 'all' 일 경우 전체 표시, 그렇지 않으면 _selectedTheme와 동일한 것만 표시
+                                                                            this
                                                                                 ._selectedTheme ===
-                                                                            'all'
-                                                                                ? html`<h3
-                                                                                      class="category-title"
-                                                                                  >
-                                                                                      ${category}
-                                                                                  </h3>`
-                                                                                : ''}
+                                                                                'all' ||
+                                                                            this
+                                                                                ._selectedTheme ===
+                                                                                category
+                                                                    )
+                                                                    .map(
+                                                                        ([
+                                                                            category,
+                                                                            images,
+                                                                        ]) => html`
                                                                             <div
-                                                                                class="image-grid"
+                                                                                class="category"
                                                                             >
-                                                                                ${Array.isArray(
-                                                                                    images
-                                                                                )
-                                                                                    ? images.map(
-                                                                                          (
-                                                                                              imageObj
-                                                                                          ) => html`
-                                                                                              <div
-                                                                                                  class="image-item ${this
-                                                                                                      ._selectedImage ===
-                                                                                                  imageObj.path
-                                                                                                      ? 'selected'
-                                                                                                      : ''}"
-                                                                                                  @click=${() =>
-                                                                                                      this._handleImageSelect(
-                                                                                                          imageObj.path,
-                                                                                                          imageObj.key
-                                                                                                      )}
-                                                                                              >
-                                                                                                  <img
-                                                                                                      src="${`./images/${imageObj.path}`}"
-                                                                                                      alt="Image"
-                                                                                                  />
-                                                                                                  ${this
-                                                                                                      ._selectedImage ===
-                                                                                                  imageObj.path
-                                                                                                      ? html`
-                                                                                                            <div
-                                                                                                                class="selected-overlay"
-                                                                                                            >
-                                                                                                                <svg
-                                                                                                                    width="24"
-                                                                                                                    height="24"
-                                                                                                                    viewBox="0 0 24 24"
-                                                                                                                    fill="none"
-                                                                                                                    xmlns="http://www.w3.org/2000/svg"
+                                                                                <div
+                                                                                    class="image-grid"
+                                                                                >
+                                                                                    ${Array.isArray(
+                                                                                        images
+                                                                                    )
+                                                                                        ? images.map(
+                                                                                              (
+                                                                                                  imageObj
+                                                                                              ) => html`
+                                                                                                  <div
+                                                                                                      class="image-item ${this
+                                                                                                          ._selectedImage ===
+                                                                                                      imageObj.path
+                                                                                                          ? 'selected'
+                                                                                                          : ''}"
+                                                                                                      @click=${() =>
+                                                                                                          this._handleImageSelect(
+                                                                                                              imageObj.path,
+                                                                                                              imageObj.key
+                                                                                                          )}
+                                                                                                      style="cursor: pointer;"
+                                                                                                  >
+                                                                                                      <img
+                                                                                                          src="${`./images/${imageObj.path}`}"
+                                                                                                          alt="Image"
+                                                                                                          style="width: 100%; height: auto; object-fit: cover;"
+                                                                                                      />
+                                                                                                      ${this
+                                                                                                          ._selectedImage ===
+                                                                                                      imageObj.path
+                                                                                                          ? html`
+                                                                                                                <div
+                                                                                                                    class="selected-overlay"
+                                                                                                                    style="
+                                                                                                                    position: absolute;
+                                                                                                                    top: 8px;
+                                                                                                                    right: 8px;
+                                                                                                                    width: 24px;
+                                                                                                                    height: 24px;
+                                                                                                                    background-color: #2680eb;
+                                                                                                                    border-radius: 50%;
+                                                                                                                    display: flex;
+                                                                                                                    align-items: center;
+                                                                                                                    justify-content: center;
+                                                                                                                    "
                                                                                                                 >
-                                                                                                                    <path
-                                                                                                                        d="M20 6L9 17L4 12"
-                                                                                                                        stroke="white"
-                                                                                                                        stroke-width="2"
-                                                                                                                        stroke-linecap="round"
-                                                                                                                        stroke-linejoin="round"
-                                                                                                                    ></path>
-                                                                                                                </svg>
-                                                                                                            </div>
-                                                                                                        `
-                                                                                                      : ''}
-                                                                                              </div>
-                                                                                          `
-                                                                                      )
-                                                                                    : ''}
+                                                                                                                    <svg
+                                                                                                                        width="16"
+                                                                                                                        height="16"
+                                                                                                                        viewBox="0 0 24 24"
+                                                                                                                        fill="none"
+                                                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                                                    >
+                                                                                                                        <path
+                                                                                                                            d="M20 6L9 17L4 12"
+                                                                                                                            stroke="white"
+                                                                                                                            stroke-width="2"
+                                                                                                                            stroke-linecap="round"
+                                                                                                                            stroke-linejoin="round"
+                                                                                                                        />
+                                                                                                                    </svg>
+                                                                                                                </div>
+                                                                                                            `
+                                                                                                          : ''}
+                                                                                                  </div>
+                                                                                              `
+                                                                                          )
+                                                                                        : ''}
+                                                                                </div>
                                                                             </div>
-                                                                        </div>
-                                                                    `
-                                                                )}
+                                                                        `
+                                                                    )
+                                                            }
                                                         </div>
                                                     </div>
                                                 </div>
                                             </div>
 
-                                            <div class="fixed-button-container">
+                                            <div
+                                                class="section"
+                                                style="padding-bottom:0px;"
+                                            >
                                                 <div
-                                                    class="flex flex-col"
-                                                    style="width: 100%;"
+                                                    class="section-header"
+                                                    style="margin-bottom: 0px;"
                                                 >
-                                                    <!-- Generated Images Section -->
+                                                    <h2 class="section-title">
+                                                        Select Hair Color
+                                                    </h2>
+                                                </div>
+
+                                                <!-- select hair color -->
+                                                <!-- 6개까지만 표시되도록 width 고정 & 7개부터 스크롤 -->
+                                                <div
+                                                    style="
+    margin-top: 12px;
+    display: flex;
+    gap: 12px;
+    align-items: center;
+    overflow-x: auto;
+    width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
+    max-width: 100%;
+  "
+                                                >
+                                                    <!-- 예시: 7개 컬러 -->
+                                                    ${[
+                                                        'color1',
+                                                        'color2',
+                                                        'color3',
+                                                        'color4',
+                                                        'color5',
+                                                        'color6',
+                                                        'color7',
+                                                        'color8',
+                                                    ].map(
+                                                        (colorKey) => html`
+                                                            <img
+                                                                src="./images/pic1.png"
+                                                                style="
+                                                                min-width: 40px;    
+          width: 40px;
+          height: 40px;
+          border-radius: 50%;
+          object-fit: cover;
+          cursor: pointer;
+          box-shadow: ${this._selectedHairColor === colorKey
+                                                                    ? '0 0 0 2px #2680eb'
+                                                                    : 'none'};
+        "
+                                                                @click="${() =>
+                                                                    this._handleHairColorSelect(
+                                                                        colorKey
+                                                                    )}"
+                                                            />
+                                                        `
+                                                    )}
+                                                </div>
+
+                                                <div
+                                                    class="fixed-button-container"
+                                                >
                                                     <div
-                                                        class="section"
-                                                        style="border-top: none; position:relative;  margin-bottom:10px;  padding:0px; "
+                                                        class="flex flex-col"
+                                                        style="width: 100%;"
                                                     >
+                                                        <!-- Generated Images Section -->
                                                         <div
-                                                            class="section-header"
-                                                            style="margin-top: 5px; margin-bottom: 6px;"
+                                                            class="section"
+                                                            style="border-top: none; position:relative;  margin-bottom:10px;  padding:0px; "
                                                         >
-                                                            <h2
-                                                                class="section-title"
-                                                                style="margin-bottom:0px;"
+                                                            <div
+                                                                class="section-header"
+                                                                style="margin-top: 5px; margin-bottom: 6px;"
                                                             >
-                                                                Generated images
-                                                            </h2>
-                                                            <sp-link
-                                                                href="#"
-                                                                class="see-all"
-                                                                quiet
-                                                                @click=${(
-                                                                    e: Event
-                                                                ) => {
-                                                                    e.preventDefault()
-                                                                    this._toggleShowAllImages()
-                                                                }}
-                                                                >See
-                                                                all</sp-link
+                                                                <h2
+                                                                    class="section-title"
+                                                                    style="margin-bottom:0px;"
+                                                                >
+                                                                    Generated
+                                                                    images
+                                                                </h2>
+                                                                <sp-link
+                                                                    href="#"
+                                                                    class="see-all"
+                                                                    quiet
+                                                                    @click=${(
+                                                                        e: Event
+                                                                    ) => {
+                                                                        e.preventDefault()
+                                                                        this._toggleShowAllImages()
+                                                                    }}
+                                                                    >See
+                                                                    all</sp-link
+                                                                >
+                                                            </div>
+                                                            <div
+                                                                class="image-gallery"
                                                             >
-                                                        </div>
-                                                        <div
-                                                            class="image-gallery"
-                                                        >
-                                                            ${
-                                                                this
+                                                                ${this
                                                                     ._generatedImages
                                                                     .length > 0
                                                                     ? this._generatedImages
@@ -1514,11 +1639,9 @@ export class App extends LitElement {
                                                                               up
                                                                               here
                                                                           </div>
-                                                                      `
-                                                            }
-                                                        </div>
-                                                        ${
-                                                            this
+                                                                      `}
+                                                            </div>
+                                                            ${this
                                                                 ._generatedImages
                                                                 .length > 0
                                                                 ? html` <div
@@ -1537,81 +1660,75 @@ export class App extends LitElement {
                                                                           .STORED_IMAGE_EXPIRATION_DAYS}
                                                                       days.
                                                                   </div>`
-                                                                : ''
-                                                        }
-                                                    </div>
-                                                    <!-- Create Rectangle button -->
-                                                  <div
-                                                        class="tooltip-wrapper"
-                                                        style="width: 100%; position: relative;"
-                                                    >
+                                                                : ''}
+                                                        </div>
+                                                        <!-- Create Rectangle button -->
+                                                        <div
+                                                            class="tooltip-wrapper"
+                                                            style="width: 100%; position: relative;"
+                                                        >
                                                             <sp-button
                                                                 size="l"
-                                                                @click=${
-                                                                    this
-                                                                        ._handleClick
-                                                                }
+                                                                @click=${this
+                                                                    ._handleClick}
                                                                 ?disabled=${isButtonDisabled}
                                                                 style="width:100%; text-align:center;"
                                                             >
                                                                 Generate image
-                                                                (${
-                                                                    this
-                                                                        .userAccessData
-                                                                        ?.limitInfo
-                                                                        .REMAINING_DAILY_IMAGE_GENERATION_LIMIT
-                                                                }
+                                                                (${this
+                                                                    .userAccessData
+                                                                    ?.limitInfo
+                                                                    .REMAINING_DAILY_IMAGE_GENERATION_LIMIT}
                                                                 left)
-                                                                 <sp-tooltip
+                                                                <sp-tooltip
                                                                     self-managed
                                                                     placement="top"
                                                                 >
-                                                                    ${
-                                                                        this
-                                                                            .userAccessData
-                                                                            ?.limitInfo
-                                                                            .DAILY_IMAGE_GENERATION_LIMIT
-                                                                    }
-                                                                    images daily.<br />
-                                                                    Resets at UTC 0
+                                                                    ${this
+                                                                        .userAccessData
+                                                                        ?.limitInfo
+                                                                        .DAILY_IMAGE_GENERATION_LIMIT}
+                                                                    images
+                                                                    daily.<br />
+                                                                    Resets at
+                                                                    UTC 0
                                                                 </sp-tooltip>
                                                             </sp-button>
 
-                                                     ${
-                                                         isButtonDisabled
-                                                             ? html`
-                                                                   <div
-                                                                       class="tooltip-container"
-                                                                       style="position: absolute; top: 11px; right: 45px; z-index: 1000;"
-                                                                   >
-                                                                       <sp-help-text
-                                                                           style="cursor: help;"
-                                                                           onmouseover="this.nextElementSibling.style.display='block'"
-                                                                           onmouseout="this.nextElementSibling.style.display='none'"
-                                                                       >
-                                                                           <sp-icon-info
-                                                                               slot="icon"
-                                                                               size="s"
-                                                                           ></sp-icon-info>
-                                                                       </sp-help-text>
-                                                                       <div
-                                                                           style="display: none; position: absolute; top: -50px; right: 0; background: white; padding: 8px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 200px; text-align: center;"
-                                                                       >
-                                                                           ${this
-                                                                               .userAccessData
-                                                                               ?.limitInfo
-                                                                               .DAILY_IMAGE_GENERATION_LIMIT}
-                                                                           images
-                                                                           daily.<br />
-                                                                           Resets
-                                                                           at
-                                                                           UTC 0
-                                                                       </div>
-                                                                   </div>
-                                                               `
-                                                             : ''
-                                                     }
-                                                       </div>
+                                                            ${isButtonDisabled
+                                                                ? html`
+                                                                      <div
+                                                                          class="tooltip-container"
+                                                                          style="position: absolute; top: 11px; right: 45px; z-index: 1000;"
+                                                                      >
+                                                                          <sp-help-text
+                                                                              style="cursor: help;"
+                                                                              onmouseover="this.nextElementSibling.style.display='block'"
+                                                                              onmouseout="this.nextElementSibling.style.display='none'"
+                                                                          >
+                                                                              <sp-icon-info
+                                                                                  slot="icon"
+                                                                                  size="s"
+                                                                              ></sp-icon-info>
+                                                                          </sp-help-text>
+                                                                          <div
+                                                                              style="display: none; position: absolute; top: -50px; right: 0; background: white; padding: 8px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 200px; text-align: center;"
+                                                                          >
+                                                                              ${this
+                                                                                  .userAccessData
+                                                                                  ?.limitInfo
+                                                                                  .DAILY_IMAGE_GENERATION_LIMIT}
+                                                                              images
+                                                                              daily.<br />
+                                                                              Resets
+                                                                              at
+                                                                              UTC
+                                                                              0
+                                                                          </div>
+                                                                      </div>
+                                                                  `
+                                                                : ''}
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
