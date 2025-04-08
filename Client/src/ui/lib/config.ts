@@ -17,9 +17,9 @@ if (isDebugLog) {
 }
 
 if (process.env.PACKAGE_TYPE === 'distribution') {
-    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2112'
+    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2122'
 } else {
-    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2111'
+    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2121'
 }
 
 console.log(`BACK_END_URL=${BACK_END_URL}`)

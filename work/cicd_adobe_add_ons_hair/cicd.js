@@ -77,10 +77,10 @@ function getLogFolder() {
 }
 
 async function backupLogDev(basePath) {
-    const logDirectory = `${basePath}/adobe_add_ons_logs_dev/Server/${getLogFolder()}`
+    const logDirectory = `${basePath}/adobe_add_ons_hair_logs_dev/Server/${getLogFolder()}`
 
     try {
-        const sourcePath = `${basePath}/adobe_add_ons_logs_dev/Server/logs`
+        const sourcePath = `${basePath}/adobe_add_ons_hair_logs_dev/Server/logs`
         await fs.access(sourcePath)
 
         // mv 명령 실행
@@ -102,8 +102,8 @@ async function handleGitPullAndBuildWorker(finalMessage) {
     const basePath = '/home/ubuntu/adobeaddon'
 
     try {
-        await execCommand('pm2 stop adobe_add_ons_dev')
-        await execCommand('pm2 delete adobe_add_ons_dev')
+        await execCommand('pm2 stop adobe_add_ons_hair_dev')
+        await execCommand('pm2 delete adobe_add_ons_hair_dev')
         //await backupLog(basePath);
     } catch (err) {
         console.warn(`Error ignorable during build: ${err.message}`)
@@ -118,9 +118,9 @@ async function handleGitPullAndBuildWorker(finalMessage) {
     try {
         await execCommand(`
       cd ${basePath} &&
-      rm -rf adobe_add_ons_dev &&
-      git clone -b dev git@github.com:must-games/adobe_add_ons.git adobe_add_ons_dev &&
-      cd adobe_add_ons_dev/Server &&
+      rm -rf adobe_add_ons_hair_dev &&
+      git clone -b dev git@github.com:must-games/adobe_add_ons.git adobe_add_ons_hair_dev &&
+      cd adobe_add_ons_hair_dev/Server &&
       npm i &&
       npm run build &&
       pm2 start ecosystem_dev.config.cjs`)
@@ -129,7 +129,7 @@ async function handleGitPullAndBuildWorker(finalMessage) {
 
         // Slack에 성공 메시지 전송
         await sendSlackNotification(
-            `:adobe_flash: :white_check_mark: (dev) Build and deployment succeeded for adobe_add_ons Backend
+            `:adobe_flash: :white_check_mark: (dev) Build and deployment succeeded for adobe_add_ons_hair Backend
        ${finalMessage}
       `
         )
@@ -138,7 +138,7 @@ async function handleGitPullAndBuildWorker(finalMessage) {
 
         // Slack에 실패 메시지 전송
         await sendSlackNotification(
-            `:adobe_flash: :x:  (dev)Build failed for adobe_add_ons: ${err.message}`
+            `:adobe_flash: :x:  (dev)Build failed for adobe_add_ons_hair: ${err.message}`
         )
     }
 }
@@ -147,8 +147,8 @@ async function handleGitPullAndBuildWorkerLive(finalMessage) {
     const basePath = '/home/ubuntu/adobeaddon'
 
     try {
-        await execCommand('pm2 stop adobe_add_ons')
-        await execCommand('pm2 delete adobe_add_ons')
+        await execCommand('pm2 stop adobe_add_ons_hair')
+        await execCommand('pm2 delete adobe_add_ons_hair')
         //await backupLog(basePath);
     } catch (err) {
         console.warn(`Error ignorable during build: ${err.message}`)
@@ -163,9 +163,9 @@ async function handleGitPullAndBuildWorkerLive(finalMessage) {
     try {
         await execCommand(`
       cd ${basePath} &&
-      rm -rf adobe_add_ons &&
-      git clone -b main git@github.com:must-games/adobe_add_ons.git adobe_add_ons &&
-      cd adobe_add_ons/Server &&
+      rm -rf adobe_add_ons_hair &&
+      git clone -b main git@github.com:must-games/adobe_add_ons_hair.git adobe_add_ons_hair &&
+      cd adobe_add_ons_hair/Server &&
       npm i &&
       npm run build &&
       pm2 start ecosystem.config.cjs`)
@@ -174,7 +174,7 @@ async function handleGitPullAndBuildWorkerLive(finalMessage) {
 
         // Slack에 성공 메시지 전송
         await sendSlackNotification(
-            `:adobe_flash: :white_check_mark: (live) Build and deployment succeeded for adobe_add_ons Backend
+            `:adobe_flash: :white_check_mark: (live) Build and deployment succeeded for adobe_add_ons_hair Backend
        ${finalMessage}
       `
         )
@@ -183,7 +183,7 @@ async function handleGitPullAndBuildWorkerLive(finalMessage) {
 
         // Slack에 실패 메시지 전송
         await sendSlackNotification(
-            `:adobe_flash: :x:  (live)Build failed for adobe_add_ons: ${err.message}`
+            `:adobe_flash: :x:  (live)Build failed for adobe_add_ons_hair: ${err.message}`
         )
     }
 }
