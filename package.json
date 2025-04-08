@@ -1,5 +1,5 @@
 {
-    "name": "adobe_add_ons_fullstack",
+    "name": "adobe_add_ons_hair_fullstack",
     "version": "1.0.0",
     "scripts": {
         "clean": "npm --prefix Client run clean",
