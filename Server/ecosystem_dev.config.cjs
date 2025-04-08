@@ -11,7 +11,7 @@ module.exports = {
                 LOG_LEVEL: 'Debug',
                 DATABASE_URL:
                     'mysql://root:evgXHfGBMUxRdKvp@210.109.14.76:3306/abodeaddon-ai-test',
-                STORAGE_BUCKET: 'abodeaddon-ai-dev',
+                STORAGE_BUCKET: 'abodeaddon-hair-dev',
                 SERVER_PORT: 2121,
             },
         },
