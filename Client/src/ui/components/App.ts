@@ -365,7 +365,12 @@ export class App extends LitElement {
     private async _handleClick() {
         if (!this._uploadedFile) {
             this._showAlertBanner(
-                'Please upload a face photo and select an image to proceed with image generation.'
+                'Please upload a profile photo to proceed with image generation'
+            )
+            return
+        } else if (!this._selectedImage) {
+            this._showAlertBanner(
+                'Please select an image to proceed with image generation'
             )
             return
         }
@@ -836,8 +841,8 @@ export class App extends LitElement {
 
     render() {
         const isButtonDisabled =
-            !this._selectedImage ||
-            !this._selectedHairColor ||
+            // !this._selectedImage ||
+            // !this._selectedHairColor ||
             (this.userAccessData?.limitInfo
                 .REMAINING_DAILY_IMAGE_GENERATION_LIMIT ?? 0) < 1
 
@@ -1331,6 +1336,93 @@ export class App extends LitElement {
                                                                                                           alt="Image"
                                                                                                           style="width: 100%; height: auto; object-fit: cover;"
                                                                                                       />
+
+                                                                                                      <!-- color가 true이면 팔레트 아이콘 + 툴팁 표시 -->
+                                                                                                      ${imageObj.color
+                                                                                                          ? html`
+                                                                                                                <div
+                                                                                                                    style="
+                                                                                                                        position: absolute;
+                                                                                                                        bottom: 8px;
+                                                                                                                        left: 8px;
+                                                                                                                    "
+                                                                                                                >
+                                                                                                                    <!-- 마우스 오버 시 툴팁 노출 -->
+                                                                                                                    <div
+                                                                                                                        style="
+                                                                                                                            position: relative;
+                                                                                                                            display: inline-block;
+                                                                                                                            cursor: pointer;
+                                                                                                                        "
+                                                                                                                        @mouseover="${(
+                                                                                                                            e: MouseEvent
+                                                                                                                        ) => {
+                                                                                                                            const tooltip =
+                                                                                                                                (
+                                                                                                                                    e.currentTarget as HTMLElement
+                                                                                                                                ).querySelector(
+                                                                                                                                    '.palette-tooltip'
+                                                                                                                                ) as HTMLElement
+                                                                                                                            if (
+                                                                                                                                tooltip
+                                                                                                                            )
+                                                                                                                                tooltip.style.display =
+                                                                                                                                    'block'
+                                                                                                                        }}"
+                                                                                                                        @mouseout="${(
+                                                                                                                            e: MouseEvent
+                                                                                                                        ) => {
+                                                                                                                            const tooltip =
+                                                                                                                                (
+                                                                                                                                    e.currentTarget as HTMLElement
+                                                                                                                                ).querySelector(
+                                                                                                                                    '.palette-tooltip'
+                                                                                                                                ) as HTMLElement
+                                                                                                                            if (
+                                                                                                                                tooltip
+                                                                                                                            )
+                                                                                                                                tooltip.style.display =
+                                                                                                                                    'none'
+                                                                                                                        }}"
+                                                                                                                    >
+                                                                                                                        <!-- 팔레트 아이콘 (SVG 예시) -->
+                                                                                                                        <svg
+                                                                                                                            width="24"
+                                                                                                                            height="24"
+                                                                                                                            viewBox="0 0 24 24"
+                                                                                                                            fill="currentColor"
+                                                                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                                                                        >
+                                                                                                                            <path
+                                                                                                                                d="M19.9923 12C19.9923 6.47525 15.517 2 9.99225 2C4.46754 2 -0.00772095 6.47525 -0.00772095 12C-0.00772095 17.5247 4.46754 22 9.99225 22C10.3422 22 10.6741 21.8584 10.9205 21.6103C11.1669 21.3622 11.3092 21.0283 11.3092 20.6759C11.3092 20.322 11.1669 19.9899 10.9205 19.7407C10.6741 19.4914 10.3416 19.3491 9.98869 19.3491C6.67804 19.3491 4.00029 16.6714 4.00029 13.3607C4.00029 10.05 6.67804 7.37223 9.98869 7.37223C13.2994 7.37223 15.9771 10.05 15.9771 13.3607C15.9771 14.1354 15.8732 14.8876 15.6907 15.6121C15.5804 16.0621 15.6987 16.5395 16.0152 16.8566C16.3317 17.1731 16.8087 17.2914 17.2588 17.1812C18.0364 16.9799 18.772 16.6242 19.4149 16.1399C20.2756 15.5105 20.9923 14.682 20.9923 13.3607C20.9923 12.3916 20.6583 11.3939 19.9923 10.7274V12ZM11.9923 9C11.6404 9 11.3078 9.14166 11.0614 9.39006C10.815 9.63846 10.6661 9.96947 10.6661 10.3247V14.6753C10.6661 15.0305 10.815 15.3615 11.0614 15.6099C11.3078 15.8583 11.6404 16 11.9923 16C12.3442 16 12.6768 15.8583 12.9232 15.6099C13.1696 15.3615 13.3186 15.0305 13.3186 14.6753V10.3247C13.3186 9.96947 13.1696 9.63846 12.9232 9.39006C12.6768 9.14166 12.3442 9 11.9923 9Z"
+                                                                                                                            />
+                                                                                                                        </svg>
+
+                                                                                                                        <!-- 말풍선(툴팁) -->
+                                                                                                                        <div
+                                                                                                                            class="palette-tooltip"
+                                                                                                                            style="
+                                                                                                                                display: none;
+                                                                                                                                position: absolute;
+                                                                                                                                bottom: 28px;
+                                                                                                                                left: 0;
+                                                                                                                                background: rgba(0, 0, 0, 0.8);
+                                                                                                                                color: #fff;
+                                                                                                                                padding: 4px 8px;
+                                                                                                                                border-radius: 4px;
+                                                                                                                                font-size: 12px;
+                                                                                                                                white-space: nowrap;
+                                                                                                                                box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                                                                                                                            "
+                                                                                                                        >
+                                                                                                                            Hair
+                                                                                                                            coloring
+                                                                                                                            available
+                                                                                                                        </div>
+                                                                                                                    </div>
+                                                                                                                </div>
+                                                                                                            `
+                                                                                                          : ''}
                                                                                                       ${this
                                                                                                           ._selectedImage ===
                                                                                                       imageObj.path
@@ -1399,14 +1491,14 @@ export class App extends LitElement {
                                                 <!-- 6개까지만 표시되도록 width 고정 & 7개부터 스크롤 -->
                                                 <div
                                                     style="
-    margin-top: 12px;
-    display: flex;
-    gap: 12px;
-    align-items: center;
-    overflow-x: auto;
-    width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
-    max-width: 100%;
-  "
+                                                    margin-top: 12px;
+                                                    display: flex;
+                                                    gap: 12px;
+                                                    align-items: center;
+                                                    overflow-x: auto;
+                                                    width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
+                                                    max-width: 100%;
+                                                "
                                                 >
                                                     <!-- 예시: 7개 컬러 -->
                                                     ${[
@@ -1424,15 +1516,17 @@ export class App extends LitElement {
                                                                 src="./images/pic1.png"
                                                                 style="
                                                                 min-width: 40px;    
-          width: 40px;
-          height: 40px;
-          border-radius: 50%;
-          object-fit: cover;
-          cursor: pointer;
-          box-shadow: ${this._selectedHairColor === colorKey
+                                                                width: 40px;
+                                                                height: 40px;
+                                                                border-radius: 50%;
+                                                                object-fit: cover;
+                                                                cursor: pointer;
+                                                                box-shadow: ${this
+                                                                    ._selectedHairColor ===
+                                                                colorKey
                                                                     ? '0 0 0 2px #2680eb'
                                                                     : 'none'};
-        "
+                                                                    "
                                                                 @click="${() =>
                                                                     this._handleHairColorSelect(
                                                                         colorKey
@@ -1792,14 +1886,14 @@ export class App extends LitElement {
                                                 <!-- 설명 텍스트 -->
                                                 <!--  <div
                                           style="
-                        margin-top: 16px;
-                        padding: 12px;
-                        background-color: #222;
-                        color: white;
-                        text-align: center;
-                        border-radius: 8px;
-                        font-size: 14px;
-                        line-height: 1.4;
+                                            margin-top: 16px;
+                                            padding: 12px;
+                                            background-color: #222;
+                                            color: white;
+                                            text-align: center;
+                                            border-radius: 8px;
+                                            font-size: 14px;
+                                            line-height: 1.4;
                       "
                                       >
                                           ${this._previewText}
