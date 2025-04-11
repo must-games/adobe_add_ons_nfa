@@ -5,7 +5,43 @@
         "K-Pop-female",
         "K-Pop-male",
         "Casual-female",
-        "Casual-male"
+        "Casual-male",
+        "female",
+        "male"
+    ],
+    "female": [
+        {
+            "key": "12630217054f30f467db2977f6ecbd70",
+            "path": "hanbok-female/1_ComfyUI_01202_f.jpg",
+            "color": true
+        },
+        {
+            "key": "d67e293e3361ec88b309f64c823db260",
+            "path": "hanbok-female/ComfyUI_02248_f.jpg",
+            "color": false
+        },
+        {
+            "key": "12630217054f30f467db2977f6ecbd70",
+            "path": "hanbok-female/1_ComfyUI_01202_f.jpg",
+            "color": true
+        },
+        {
+            "key": "12630217054f30f467db2977f6ecbd70",
+            "path": "hanbok-female/1_ComfyUI_01202_f.jpg",
+            "color": false
+        }
+    ],
+    "male": [
+        {
+            "key": "0a1b1eb008bb6318b951f8a8efcbfb11",
+            "path": "Casual-male/ComfyUI_02517_m.jpg",
+            "color": true
+        },
+        {
+            "key": "0a1b1eb008bb6318b951f8a8efcbfb11",
+            "path": "Casual-male/ComfyUI_02517_m.jpg",
+            "color": false
+        }
     ],
     "hanbok-female": [
         {

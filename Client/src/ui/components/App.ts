@@ -81,7 +81,7 @@ export class App extends LitElement {
     private _selectedImageKey: string | null = null
 
     @state()
-    private _selectedTheme = 'all'
+    private _selectedTheme = 'female'
 
     @state()
     private _imageCategories = this.initializeImageCategories(categoryData) // 수정된 부분
@@ -103,6 +103,23 @@ export class App extends LitElement {
         })
         return categories
     }
+
+    @state()
+    private _hairColors = [
+        { key: 'color1', fileName: 'color1.png', name: 'Color 1' },
+        { key: 'color2', fileName: 'color2.png', name: 'Color 2' },
+        { key: 'color3', fileName: 'color3.png', name: 'Color 3' },
+        { key: 'color4', fileName: 'color4.png', name: 'Color 4' },
+        { key: 'color5', fileName: 'color5.png', name: 'Color 5' },
+        { key: 'color6', fileName: 'color6.png', name: 'Color 6' },
+        { key: 'color7', fileName: 'color7.png', name: 'Color 7' },
+        { key: 'color8', fileName: 'color8.png', name: 'Color 8' },
+        { key: 'color9', fileName: 'color9.png', name: 'Color 9' },
+        { key: 'color10', fileName: 'color10.png', name: 'Color 10' },
+        { key: 'color11', fileName: 'color11.png', name: 'Color 11' },
+
+        // Add more colors here as needed
+    ]
 
     @state()
     private _openMenuForImage: string | null = null
@@ -128,6 +145,9 @@ export class App extends LitElement {
 
     @state()
     private _selectedHairColor: string | null = null
+
+    private _selectedCategory = 'female' // Default category
+    private _selectedImageSupportsColor = true
 
     private _handleHairColorSelect(colorKey: string) {
         // 이미 선택된 색상과 같으면 해제, 아니면 새 colorKey로 설정
@@ -658,13 +678,30 @@ export class App extends LitElement {
         this.requestUpdate()
     }
 
-    private _handleImageSelect(image: string, imageKey: string) {
+    private _handleImageSelect(
+        image: string,
+        imageKey: string,
+        color: boolean
+    ) {
         if (this._selectedImage === image) {
             this._selectedImage = null
             this._selectedImageKey = null
+            this._selectedImageSupportsColor = true
         } else {
             this._selectedImage = image
             this._selectedImageKey = imageKey
+            this._selectedImageSupportsColor = color
+        }
+
+        // const selectedCategory = this._selectedCategory
+        // if (selectedCategory && this._categoryData[selectedCategory]) {
+        //     const selectedImageData = this._categoryData[selectedCategory].find(
+        //         (img) => img.path === image
+        //     )
+        if (color === true) {
+            this._selectedImageSupportsColor = true
+        } else {
+            this._selectedImageSupportsColor = false
         }
 
         if (isDebugLog) {
@@ -858,115 +895,116 @@ export class App extends LitElement {
                       ></loading-screen>`
                     : html`
                           <div class="container">
-                              ${this._showAllImages
-                                  ? html`
-                                        <!-- "See all" 모드 -->
-                                        <div class="full-gallery-header">
-                                            <div
-                                                class="back-button"
-                                                @click=${this
-                                                    ._toggleShowAllImages}
-                                            >
-                                                <svg
-                                                    width="24"
-                                                    height="24"
-                                                    viewBox="0 0 24 24"
-                                                    fill="none"
-                                                    xmlns="http://www.w3.org/2000/svg"
+                              ${
+                                  this._showAllImages
+                                      ? html`
+                                            <!-- "See all" 모드 -->
+                                            <div class="full-gallery-header">
+                                                <div
+                                                    class="back-button"
+                                                    @click=${this
+                                                        ._toggleShowAllImages}
                                                 >
-                                                    <path
-                                                        d="M15 18L9 12L15 6"
-                                                        stroke="currentColor"
-                                                        stroke-width="2"
-                                                        stroke-linecap="round"
-                                                        stroke-linejoin="round"
-                                                    />
-                                                </svg>
+                                                    <svg
+                                                        width="24"
+                                                        height="24"
+                                                        viewBox="0 0 24 24"
+                                                        fill="none"
+                                                        xmlns="http://www.w3.org/2000/svg"
+                                                    >
+                                                        <path
+                                                            d="M15 18L9 12L15 6"
+                                                            stroke="currentColor"
+                                                            stroke-width="2"
+                                                            stroke-linecap="round"
+                                                            stroke-linejoin="round"
+                                                        />
+                                                    </svg>
+                                                </div>
+                                                <h2 class="section-title">
+                                                    Generated images
+                                                </h2>
                                             </div>
-                                            <h2 class="section-title">
-                                                Generated images
-                                            </h2>
-                                        </div>
 
-                                        <div class="full-gallery-content">
-                                            ${this._generatedImages.map(
-                                                (img, id) => {
-                                                    if (isDebugLog) {
-                                                        console.log(
-                                                            `rendering image-${id}`
-                                                        )
-                                                    }
-                                                    return html`
-                                                        <div
-                                                            class="full-gallery-item"
-                                                            style="padding-top:0;"
-                                                        >
-                                                            <img
-                                                                id="image-all-${id}"
-                                                                src="${img.url}"
-                                                                alt="Generated image"
-                                                                @load=${this
-                                                                    ._handleImageDrag}
-                                                                @dblclick=${(
-                                                                    e: MouseEvent
-                                                                ) =>
-                                                                    this._handleDoubleClick(
-                                                                        e
-                                                                    )}
-                                                            />
+                                            <div class="full-gallery-content">
+                                                ${this._generatedImages.map(
+                                                    (img, id) => {
+                                                        if (isDebugLog) {
+                                                            console.log(
+                                                                `rendering image-${id}`
+                                                            )
+                                                        }
+                                                        return html`
                                                             <div
-                                                                class="image-actions"
-                                                                style="width: 24px; height: 24px; border-radius: 10%; background-color: lightgray;"
+                                                                class="full-gallery-item"
+                                                                style="padding-top:0;"
                                                             >
-                                                                <sp-button-group>
-                                                                    <sp-action-button
-                                                                        quiet
-                                                                        @click=${(
-                                                                            e: MouseEvent
-                                                                        ) =>
-                                                                            this._toggleImageMenu(
-                                                                                img.url,
-                                                                                e
-                                                                            )}
-                                                                        style="padding-left:1px; padding-top:3px; display:block;"
-                                                                    >
-                                                                        <svg
-                                                                            slot="icon"
-                                                                            width="18"
-                                                                            height="18"
-                                                                            viewBox="0 0 24 24"
-                                                                            fill="none"
-                                                                            xmlns="http://www.w3.org/2000/svg"
+                                                                <img
+                                                                    id="image-all-${id}"
+                                                                    src="${img.url}"
+                                                                    alt="Generated image"
+                                                                    @load=${this
+                                                                        ._handleImageDrag}
+                                                                    @dblclick=${(
+                                                                        e: MouseEvent
+                                                                    ) =>
+                                                                        this._handleDoubleClick(
+                                                                            e
+                                                                        )}
+                                                                />
+                                                                <div
+                                                                    class="image-actions"
+                                                                    style="width: 24px; height: 24px; border-radius: 10%; background-color: lightgray;"
+                                                                >
+                                                                    <sp-button-group>
+                                                                        <sp-action-button
+                                                                            quiet
+                                                                            @click=${(
+                                                                                e: MouseEvent
+                                                                            ) =>
+                                                                                this._toggleImageMenu(
+                                                                                    img.url,
+                                                                                    e
+                                                                                )}
+                                                                            style="padding-left:1px; padding-top:3px; display:block;"
                                                                         >
-                                                                            <circle
-                                                                                cx="12"
-                                                                                cy="12"
-                                                                                r="2"
-                                                                                fill="currentColor"
-                                                                            ></circle>
-                                                                            <circle
-                                                                                cx="19"
-                                                                                cy="12"
-                                                                                r="2"
-                                                                                fill="currentColor"
-                                                                            ></circle>
-                                                                            <circle
-                                                                                cx="5"
-                                                                                cy="12"
-                                                                                r="2"
-                                                                                fill="currentColor"
-                                                                            ></circle>
-                                                                        </svg>
-                                                                    </sp-action-button>
-                                                                </sp-button-group>
+                                                                            <svg
+                                                                                slot="icon"
+                                                                                width="18"
+                                                                                height="18"
+                                                                                viewBox="0 0 24 24"
+                                                                                fill="none"
+                                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                            >
+                                                                                <circle
+                                                                                    cx="12"
+                                                                                    cy="12"
+                                                                                    r="2"
+                                                                                    fill="currentColor"
+                                                                                ></circle>
+                                                                                <circle
+                                                                                    cx="19"
+                                                                                    cy="12"
+                                                                                    r="2"
+                                                                                    fill="currentColor"
+                                                                                ></circle>
+                                                                                <circle
+                                                                                    cx="5"
+                                                                                    cy="12"
+                                                                                    r="2"
+                                                                                    fill="currentColor"
+                                                                                ></circle>
+                                                                            </svg>
+                                                                        </sp-action-button>
+                                                                    </sp-button-group>
 
-                                                                ${this
-                                                                    ._openMenuForImage ===
-                                                                img.url
-                                                                    ? html`
-                                                                          <div
-                                                                              class="image-menu"
-                                                                              style="
+                                                                    ${this
+                                                                        ._openMenuForImage ===
+                                                                    img.url
+                                                                        ? html`
+                                                                              <div
+                                                                                  class="image-menu"
+                                                                                  style="
                                                                                 position: absolute;
                                                                                 top: 100%;
                                                                                 right: 0;
@@ -979,76 +1017,81 @@ export class App extends LitElement {
                                                                                 width: 90px;
                                                                                 margin-top:5px;
                                                                                 "
-                                                                          >
-                                                                              <div
-                                                                                  class="menu-item"
-                                                                                  @click=${() =>
-                                                                                      this._handleMenuAction(
-                                                                                          'download',
-                                                                                          img.url,
-                                                                                          null
-                                                                                      )}
                                                                               >
-                                                                                  Download
+                                                                                  <div
+                                                                                      class="menu-item"
+                                                                                      @click=${() =>
+                                                                                          this._handleMenuAction(
+                                                                                              'download',
+                                                                                              img.url,
+                                                                                              null
+                                                                                          )}
+                                                                                  >
+                                                                                      Download
+                                                                                  </div>
+                                                                                  <div
+                                                                                      class="menu-item"
+                                                                                      @click=${() =>
+                                                                                          this._handleMenuAction(
+                                                                                              'preview',
+                                                                                              img.url,
+                                                                                              null
+                                                                                          )}
+                                                                                  >
+                                                                                      Open
+                                                                                      preview
+                                                                                  </div>
+                                                                                  <div
+                                                                                      class="menu-item delete"
+                                                                                      @click=${() =>
+                                                                                          this._handleMenuAction(
+                                                                                              'delete',
+                                                                                              img.url,
+                                                                                              id
+                                                                                          )}
+                                                                                  >
+                                                                                      Delete
+                                                                                  </div>
                                                                               </div>
-                                                                              <div
-                                                                                  class="menu-item"
-                                                                                  @click=${() =>
-                                                                                      this._handleMenuAction(
-                                                                                          'preview',
-                                                                                          img.url,
-                                                                                          null
-                                                                                      )}
-                                                                              >
-                                                                                  Open
-                                                                                  preview
-                                                                              </div>
-                                                                              <div
-                                                                                  class="menu-item delete"
-                                                                                  @click=${() =>
-                                                                                      this._handleMenuAction(
-                                                                                          'delete',
-                                                                                          img.url,
-                                                                                          id
-                                                                                      )}
-                                                                              >
-                                                                                  Delete
-                                                                              </div>
-                                                                          </div>
-                                                                      `
-                                                                    : ''}
+                                                                          `
+                                                                        : ''}
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    `
-                                                }
-                                            )}
-                                        </div>
+                                                        `
+                                                    }
+                                                )}
+                                            </div>
 
-                                        ${this._generatedImages.length > 0
-                                            ? html` <div class="drag-drop-hint">
-                                                      Drag & drop or
-                                                      double-click to add.
-                                                      Images auto-delete after 7
-                                                      days.
-                                                  </div>
-                                                  <div
-                                                      class="clear-history-container"
-                                                  >
-                                                      <sp-button
-                                                          variant="negative"
-                                                          style="width: 100%;"
-                                                          @click=${this
-                                                              ._clearHistory}
+                                            ${this._generatedImages.length > 0
+                                                ? html` <div
+                                                          class="drag-drop-hint"
                                                       >
-                                                          Clear history
-                                                      </sp-button>
-                                                  </div>`
-                                            : html` <div class="empty-state">
-                                                  History is empty, generate an
-                                                  image and it will show up here
-                                              </div>`}
-                                    `
-                                  : html`
+                                                          Drag & drop or
+                                                          double-click to add.
+                                                          Images auto-delete
+                                                          after 7 days.
+                                                      </div>
+                                                      <div
+                                                          class="clear-history-container"
+                                                      >
+                                                          <sp-button
+                                                              variant="negative"
+                                                              style="width: 100%;"
+                                                              @click=${this
+                                                                  ._clearHistory}
+                                                          >
+                                                              Clear history
+                                                          </sp-button>
+                                                      </div>`
+                                                : html` <div
+                                                      class="empty-state"
+                                                  >
+                                                      History is empty, generate
+                                                      an image and it will show
+                                                      up here
+                                                  </div>`}
+                                        `
+                                      : html`
                                         <!-- 기존 화면 -->
                                         <div
                                             class="fixed-container"
@@ -1081,72 +1124,73 @@ export class App extends LitElement {
                                                             Upload a face photo
                                                         </h2>
                                                     </div>
-                                                    ${this._uploadedFile
-                                                        ? html`
-                                                              <sp-dropzone
-                                                                  class="dropzone"
-                                                                  style="height: 100px;background-color: #f5f5f5; "
-                                                              >
-                                                                  <div
-                                                                      class="preview-container flex flex-row items-center justify-center h-full"
-                                                                      style="gap: 16px;"
-                                                                  >
-                                                                      <img
-                                                                          src="${URL.createObjectURL(
-                                                                              this
-                                                                                  ._uploadedFile
-                                                                          )}"
-                                                                          class="image-preview rounded-lg object-fit"
-                                                                          style="width: 80px; height: 80px;"
-                                                                      />
-                                                                      <div
-                                                                          class="button-group flex flex-col"
-                                                                          style="gap: 8px;"
-                                                                      >
-                                                                          <sp-button
-                                                                              size="s"
-                                                                              variant="secondary"
-                                                                              style="font-size: 12px;"
-                                                                              @click="${this
-                                                                                  ._openFileDialog}"
-                                                                              >Change
-                                                                              Photo</sp-button
-                                                                          >
-                                                                          <sp-button
-                                                                              size="s"
-                                                                              variant="secondary"
-                                                                              style="font-size: 12px; color:red;"
-                                                                              @click="${this
-                                                                                  ._deletePhoto}"
-                                                                              >Clear</sp-button
-                                                                          >
-                                                                      </div>
-                                                                  </div>
-                                                              </sp-dropzone>
-                                                          `
-                                                        : html`
-                                                              <sp-dropzone
-                                                                  class="dropzone"
-                                                                  @sp-dropzone-drop="${this
-                                                                      ._handleFileUpload}"
-                                                                  @click="${this
-                                                                      ._openFileDialog}"
-                                                                  style="height: 100px;"
-                                                              >
-                                                                  <div
-                                                                      class="dropzone-content"
-                                                                      style="background-color: #f5f5f5;padding:8px;"
+                                                    ${
+                                                        this._uploadedFile
+                                                            ? html`
+                                                                  <sp-dropzone
+                                                                      class="dropzone"
+                                                                      style="height: 100px;background-color: #f5f5f5; "
                                                                   >
                                                                       <div
-                                                                          class="upload-icon"
+                                                                          class="preview-container flex flex-row items-center justify-center h-full"
+                                                                          style="gap: 16px;"
                                                                       >
                                                                           <img
-                                                                              src="./images/upload_icon.svg"
-                                                                              alt="Upload Icon"
-                                                                              width="30"
-                                                                              height="30"
+                                                                              src="${URL.createObjectURL(
+                                                                                  this
+                                                                                      ._uploadedFile
+                                                                              )}"
+                                                                              class="image-preview rounded-lg object-fit"
+                                                                              style="width: 80px; height: 80px;"
                                                                           />
-                                                                          <!--
+                                                                          <div
+                                                                              class="button-group flex flex-col"
+                                                                              style="gap: 8px;"
+                                                                          >
+                                                                              <sp-button
+                                                                                  size="s"
+                                                                                  variant="secondary"
+                                                                                  style="font-size: 12px;"
+                                                                                  @click="${this
+                                                                                      ._openFileDialog}"
+                                                                                  >Change
+                                                                                  Photo</sp-button
+                                                                              >
+                                                                              <sp-button
+                                                                                  size="s"
+                                                                                  variant="secondary"
+                                                                                  style="font-size: 12px; color:red;"
+                                                                                  @click="${this
+                                                                                      ._deletePhoto}"
+                                                                                  >Clear</sp-button
+                                                                              >
+                                                                          </div>
+                                                                      </div>
+                                                                  </sp-dropzone>
+                                                              `
+                                                            : html`
+                                                                  <sp-dropzone
+                                                                      class="dropzone"
+                                                                      @sp-dropzone-drop="${this
+                                                                          ._handleFileUpload}"
+                                                                      @click="${this
+                                                                          ._openFileDialog}"
+                                                                      style="height: 100px;"
+                                                                  >
+                                                                      <div
+                                                                          class="dropzone-content"
+                                                                          style="background-color: #f5f5f5;padding:8px;"
+                                                                      >
+                                                                          <div
+                                                                              class="upload-icon"
+                                                                          >
+                                                                              <img
+                                                                                  src="./images/upload_icon.svg"
+                                                                                  alt="Upload Icon"
+                                                                                  width="30"
+                                                                                  height="30"
+                                                                              />
+                                                                              <!--
                                                             <svg
                                                                 width="40"
                                                                 height="40"
@@ -1167,25 +1211,26 @@ export class App extends LitElement {
                                                                 ></path>
                                                             </svg>
                                                             -->
+                                                                          </div>
+                                                                          <div
+                                                                              class="upload-text"
+                                                                          >
+                                                                              For
+                                                                              best
+                                                                              results,
+                                                                              we
+                                                                              recommend
+                                                                              a
+                                                                              clear,
+                                                                              full-face,
+                                                                              front-view
+                                                                              color
+                                                                              photo.
+                                                                          </div>
                                                                       </div>
-                                                                      <div
-                                                                          class="upload-text"
-                                                                      >
-                                                                          For
-                                                                          best
-                                                                          results,
-                                                                          we
-                                                                          recommend
-                                                                          a
-                                                                          clear,
-                                                                          full-face,
-                                                                          front-view
-                                                                          color
-                                                                          photo.
-                                                                      </div>
-                                                                  </div>
-                                                              </sp-dropzone>
-                                                          `}
+                                                                  </sp-dropzone>
+                                                              `
+                                                    }
                                                 </div>
 
                                                 <!-- Select Hairstyle Section -->
@@ -1204,35 +1249,42 @@ export class App extends LitElement {
                                                         </h2>
                                                     </div>
 
-                                                    <!-- 새로 추가된 Female / Male 토글 버튼 -->
+                                                    <!-- Female / Male  -->
                                                     <div
                                                         style="
                                                         display: flex;
                                                         gap: 8px;
                                                         margin: 10px 0;
+                                                        justify-content: center;
+                                                        height: 33px;
                                                     "
                                                     >
                                                         <!-- Female 버튼 -->
                                                         <button
                                                             style="
+                                                            width: 100%;
                                                             border: none;
                                                             outline: none;
                                                             padding: 8px 16px;
-                                                            border-radius: 20px;
+                                                            border-radius: 8px;
                                                             cursor: pointer;
                                                             font-size: 13px;
                                                             font-weight: 600;
                                                             /* 선택 여부에 따라 색상 변경 */
-                                                            background-color: ${this
-                                                                ._selectedTheme ===
-                                                            'female'
-                                                                ? '#2680eb'
-                                                                : '#f0f0f0'};
-                                                            color: ${this
-                                                                ._selectedTheme ===
-                                                            'female'
-                                                                ? '#ffffff'
-                                                                : '#333333'};
+                                                            background-color: ${
+                                                                this
+                                                                    ._selectedTheme ===
+                                                                'female'
+                                                                    ? '#2680eb'
+                                                                    : '#f0f0f0'
+                                                            };
+                                                            color: ${
+                                                                this
+                                                                    ._selectedTheme ===
+                                                                'female'
+                                                                    ? '#ffffff'
+                                                                    : '#333333'
+                                                            };
                                                             transition: background-color 0.2s ease;
                                                         "
                                                             @click="${() => {
@@ -1246,23 +1298,28 @@ export class App extends LitElement {
                                                         <!-- Male 버튼 -->
                                                         <button
                                                             style="
+                                                            width: 100%;
                                                             border: none;
                                                             outline: none;
                                                             padding: 8px 16px;
-                                                            border-radius: 20px;
+                                                            border-radius: 8px;
                                                             cursor: pointer;
                                                             font-size: 13px;
                                                             font-weight: 600;
-                                                            background-color: ${this
-                                                                ._selectedTheme ===
-                                                            'male'
-                                                                ? '#2680eb'
-                                                                : '#f0f0f0'};
-                                                            color: ${this
-                                                                ._selectedTheme ===
-                                                            'male'
-                                                                ? '#ffffff'
-                                                                : '#333333'};
+                                                            background-color: ${
+                                                                this
+                                                                    ._selectedTheme ===
+                                                                'male'
+                                                                    ? '#2680eb'
+                                                                    : '#f0f0f0'
+                                                            };
+                                                            color: ${
+                                                                this
+                                                                    ._selectedTheme ===
+                                                                'male'
+                                                                    ? '#ffffff'
+                                                                    : '#333333'
+                                                            };
                                                             transition: background-color 0.2s ease;
                                                         "
                                                             @click="${() => {
@@ -1327,7 +1384,8 @@ export class App extends LitElement {
                                                                                                       @click=${() =>
                                                                                                           this._handleImageSelect(
                                                                                                               imageObj.path,
-                                                                                                              imageObj.key
+                                                                                                              imageObj.key,
+                                                                                                              imageObj.color
                                                                                                           )}
                                                                                                       style="cursor: pointer;"
                                                                                                   >
@@ -1385,18 +1443,12 @@ export class App extends LitElement {
                                                                                                                                     'none'
                                                                                                                         }}"
                                                                                                                     >
-                                                                                                                        <!-- 팔레트 아이콘 (SVG 예시) -->
-                                                                                                                        <svg
-                                                                                                                            width="24"
-                                                                                                                            height="24"
-                                                                                                                            viewBox="0 0 24 24"
-                                                                                                                            fill="currentColor"
-                                                                                                                            xmlns="http://www.w3.org/2000/svg"
-                                                                                                                        >
-                                                                                                                            <path
-                                                                                                                                d="M19.9923 12C19.9923 6.47525 15.517 2 9.99225 2C4.46754 2 -0.00772095 6.47525 -0.00772095 12C-0.00772095 17.5247 4.46754 22 9.99225 22C10.3422 22 10.6741 21.8584 10.9205 21.6103C11.1669 21.3622 11.3092 21.0283 11.3092 20.6759C11.3092 20.322 11.1669 19.9899 10.9205 19.7407C10.6741 19.4914 10.3416 19.3491 9.98869 19.3491C6.67804 19.3491 4.00029 16.6714 4.00029 13.3607C4.00029 10.05 6.67804 7.37223 9.98869 7.37223C13.2994 7.37223 15.9771 10.05 15.9771 13.3607C15.9771 14.1354 15.8732 14.8876 15.6907 15.6121C15.5804 16.0621 15.6987 16.5395 16.0152 16.8566C16.3317 17.1731 16.8087 17.2914 17.2588 17.1812C18.0364 16.9799 18.772 16.6242 19.4149 16.1399C20.2756 15.5105 20.9923 14.682 20.9923 13.3607C20.9923 12.3916 20.6583 11.3939 19.9923 10.7274V12ZM11.9923 9C11.6404 9 11.3078 9.14166 11.0614 9.39006C10.815 9.63846 10.6661 9.96947 10.6661 10.3247V14.6753C10.6661 15.0305 10.815 15.3615 11.0614 15.6099C11.3078 15.8583 11.6404 16 11.9923 16C12.3442 16 12.6768 15.8583 12.9232 15.6099C13.1696 15.3615 13.3186 15.0305 13.3186 14.6753V10.3247C13.3186 9.96947 13.1696 9.63846 12.9232 9.39006C12.6768 9.14166 12.3442 9 11.9923 9Z"
-                                                                                                                            />
-                                                                                                                        </svg>
+                                                                                                                        <!-- Using external SVG file instead of inline code -->
+                                                                                                                        <img 
+                                                                                                                        style="width: 24px; height: 24px; position:absolute; bottom: -8px; left: -5px;"
+                                                                                                                            src="./images/palette.png" 
+                                                                                                                            alt="Hair coloring available"
+                                                                                                                        />
 
                                                                                                                         <!-- 말풍선(툴팁) -->
                                                                                                                         <div
@@ -1404,8 +1456,8 @@ export class App extends LitElement {
                                                                                                                             style="
                                                                                                                                 display: none;
                                                                                                                                 position: absolute;
-                                                                                                                                bottom: 28px;
-                                                                                                                                left: 0;
+                                                                                                                                bottom: 18px;
+                                                                                                                                left: -5px;
                                                                                                                                 background: rgba(0, 0, 0, 0.8);
                                                                                                                                 color: #fff;
                                                                                                                                 padding: 4px 8px;
@@ -1416,7 +1468,7 @@ export class App extends LitElement {
                                                                                                                             "
                                                                                                                         >
                                                                                                                             Hair
-                                                                                                                            coloring
+                                                                                                                            coloring</br>
                                                                                                                             available
                                                                                                                         </div>
                                                                                                                     </div>
@@ -1487,56 +1539,90 @@ export class App extends LitElement {
                                                     </h2>
                                                 </div>
 
-                                                <!-- select hair color -->
-                                                <!-- 6개까지만 표시되도록 width 고정 & 7개부터 스크롤 -->
-                                                <div
-                                                    style="
-                                                    margin-top: 12px;
-                                                    display: flex;
-                                                    gap: 12px;
-                                                    align-items: center;
-                                                    overflow-x: auto;
-                                                    width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
-                                                    max-width: 100%;
-                                                "
-                                                >
-                                                    <!-- 예시: 7개 컬러 -->
-                                                    ${[
-                                                        'color1',
-                                                        'color2',
-                                                        'color3',
-                                                        'color4',
-                                                        'color5',
-                                                        'color6',
-                                                        'color7',
-                                                        'color8',
-                                                    ].map(
-                                                        (colorKey) => html`
-                                                            <img
-                                                                src="./images/pic1.png"
-                                                                style="
-                                                                min-width: 40px;    
-                                                                width: 40px;
-                                                                height: 40px;
-                                                                border-radius: 50%;
-                                                                object-fit: cover;
-                                                                cursor: pointer;
-                                                                box-shadow: ${this
-                                                                    ._selectedHairColor ===
-                                                                colorKey
-                                                                    ? '0 0 0 2px #2680eb'
-                                                                    : 'none'};
-                                                                    "
-                                                                @click="${() =>
-                                                                    this._handleHairColorSelect(
-                                                                        colorKey
-                                                                    )}"
-                                                            />
-                                                        `
-                                                    )}
-                                                </div>
+                                                <!-- Only show hair color selection UI if the selected image supports coloring -->
+                                                ${
+                                                    this
+                                                        ._selectedImageSupportsColor ||
+                                                    this._selectedImage === null
+                                                        ? html`
+                                                              <!-- select hair color -->
+                                                              <!-- 스크롤 가능한 헤어 컬러 선택 -->
+                                                              <div
+                                                                  style="
+                                                        margin-top: 4px;
+                                                        display: flex;
+                                                        gap: 12px;
+                                                        align-items: center;
+                                                        overflow-x: auto;
+                                                        width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
+                                                        max-width: 100%;
+                                                        padding-top:3px;
+                                                        padding-bottom:3px;
+                                                    "
+                                                              >
+                                                                  ${this._hairColors.map(
+                                                                      (
+                                                                          color
+                                                                      ) => {
+                                                                          return html`
+                                                                              <img
+                                                                                  src="./images/HairColor/${color.fileName}"
+                                                                                  style="
+                                                                    min-width: 40px;    
+                                                                    width: 40px;
+                                                                    height: 40px;
+                                                                    border-radius: 50%;
+                                                                    object-fit: cover;
+                                                                    cursor: pointer;
+                                                                    box-shadow: ${this
+                                                                                      ._selectedHairColor ===
+                                                                                  color.key
+                                                                                      ? '0 0 0 2px #2680eb'
+                                                                                      : 'none'};
+                                                                        "
+                                                                                  @click="${() =>
+                                                                                      this._handleHairColorSelect(
+                                                                                          color.key
+                                                                                      )}"
+                                                                                  alt="${color.name ||
+                                                                                  `Hair color ${color.key}`}"
+                                                                              />
+                                                                          `
+                                                                      }
+                                                                  )}
+                                                              </div>
+                                                          `
+                                                        : html`
+                                                              <!-- Message when selected image doesn't support coloring -->
+                                                              <div
+                                                                  style="
+                                                        margin-top: 7px;
+                                                        height:37px;
+                                                        border:1px solid #efefef;
+                                                        color: #666;
+                                                        padding: 8px 0;
+                                                        display: flex;
+                                                        align-items: center;
+                                                        justify-content: center;
+                                                        border-radius: 4px;
+                                                    "
+                                                              >
+                                                                  This hairstyle
+                                                                  doesn't
+                                                                  support color
+                                                                  changes.
+                                                              </div>
+                                                          `
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                `
+                              }
 
-                                                <div
+
+
+                                <div
                                                     class="fixed-button-container"
                                                 >
                                                     <div
@@ -1576,92 +1662,94 @@ export class App extends LitElement {
                                                             <div
                                                                 class="image-gallery"
                                                             >
-                                                                ${this
-                                                                    ._generatedImages
-                                                                    .length > 0
-                                                                    ? this._generatedImages
-                                                                          .slice(
-                                                                              0,
-                                                                              3
-                                                                          )
-                                                                          .map(
-                                                                              (
-                                                                                  img,
-                                                                                  id
-                                                                              ) => html`
-                                                                                  <div
-                                                                                      style="position: relative;"
-                                                                                      id="image-${id}"
-                                                                                  >
-                                                                                      <img
-                                                                                          class="generated-image-item"
-                                                                                          id="image-${id}"
-                                                                                          src="${img.url}"
-                                                                                          alt="Image"
-                                                                                          @load=${this
-                                                                                              ._handleImageDrag}
-                                                                                          @dblclick=${(
-                                                                                              e: MouseEvent
-                                                                                          ) =>
-                                                                                              this._handleDoubleClick(
-                                                                                                  e
-                                                                                              )}
-                                                                                      />
-
-                                                                                      <!-- 이미지 오른쪽 상단에 메뉴 버튼 추가 -->
+                                                                ${
+                                                                    this
+                                                                        ._generatedImages
+                                                                        .length >
+                                                                    0
+                                                                        ? this._generatedImages
+                                                                              .slice(
+                                                                                  0,
+                                                                                  3
+                                                                              )
+                                                                              .map(
+                                                                                  (
+                                                                                      img,
+                                                                                      id
+                                                                                  ) => html`
                                                                                       <div
-                                                                                          class="image-actions"
-                                                                                          style="width: 24px; height: 24px; border-radius: 10%; background-color: lightgray; position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center;"
+                                                                                          style="position: relative;"
+                                                                                          id="image-${id}"
                                                                                       >
-                                                                                          <sp-button-group>
-                                                                                              <sp-action-button
-                                                                                                  quiet
-                                                                                                  @click=${(
-                                                                                                      e: MouseEvent
-                                                                                                  ) =>
-                                                                                                      this._toggleImageMenu(
-                                                                                                          img.url,
-                                                                                                          e
-                                                                                                      )}
-                                                                                                  style="padding-left:3px; padding-top:3px; display:block;"
-                                                                                              >
-                                                                                                  <svg
-                                                                                                      slot="icon"
-                                                                                                      width="18"
-                                                                                                      height="18"
-                                                                                                      viewBox="0 0 24 24"
-                                                                                                      fill="none"
-                                                                                                      xmlns="http://www.w3.org/2000/svg"
-                                                                                                  >
-                                                                                                      <circle
-                                                                                                          cx="12"
-                                                                                                          cy="12"
-                                                                                                          r="2"
-                                                                                                          fill="currentColor"
-                                                                                                      ></circle>
-                                                                                                      <circle
-                                                                                                          cx="19"
-                                                                                                          cy="12"
-                                                                                                          r="2"
-                                                                                                          fill="currentColor"
-                                                                                                      ></circle>
-                                                                                                      <circle
-                                                                                                          cx="5"
-                                                                                                          cy="12"
-                                                                                                          r="2"
-                                                                                                          fill="currentColor"
-                                                                                                      ></circle>
-                                                                                                  </svg>
-                                                                                              </sp-action-button>
-                                                                                          </sp-button-group>
+                                                                                          <img
+                                                                                              class="generated-image-item"
+                                                                                              id="image-${id}"
+                                                                                              src="${img.url}"
+                                                                                              alt="Image"
+                                                                                              @load=${this
+                                                                                                  ._handleImageDrag}
+                                                                                              @dblclick=${(
+                                                                                                  e: MouseEvent
+                                                                                              ) =>
+                                                                                                  this._handleDoubleClick(
+                                                                                                      e
+                                                                                                  )}
+                                                                                          />
 
-                                                                                          ${this
-                                                                                              ._openMenuForImage ===
-                                                                                          img.url
-                                                                                              ? html`
-                                                                                                    <div
-                                                                                                        class="image-menu"
-                                                                                                        style="
+                                                                                          <!-- 이미지 오른쪽 상단에 메뉴 버튼 추가 -->
+                                                                                          <div
+                                                                                              class="image-actions"
+                                                                                              style="width: 24px; height: 24px; border-radius: 10%; background-color: lightgray; position: absolute; top: 8px; right: 8px; display: flex; align-items: center; justify-content: center;"
+                                                                                          >
+                                                                                              <sp-button-group>
+                                                                                                  <sp-action-button
+                                                                                                      quiet
+                                                                                                      @click=${(
+                                                                                                          e: MouseEvent
+                                                                                                      ) =>
+                                                                                                          this._toggleImageMenu(
+                                                                                                              img.url,
+                                                                                                              e
+                                                                                                          )}
+                                                                                                      style="padding-left:3px; padding-top:3px; display:block;"
+                                                                                                  >
+                                                                                                      <svg
+                                                                                                          slot="icon"
+                                                                                                          width="18"
+                                                                                                          height="18"
+                                                                                                          viewBox="0 0 24 24"
+                                                                                                          fill="none"
+                                                                                                          xmlns="http://www.w3.org/2000/svg"
+                                                                                                      >
+                                                                                                          <circle
+                                                                                                              cx="12"
+                                                                                                              cy="12"
+                                                                                                              r="2"
+                                                                                                              fill="currentColor"
+                                                                                                          ></circle>
+                                                                                                          <circle
+                                                                                                              cx="19"
+                                                                                                              cy="12"
+                                                                                                              r="2"
+                                                                                                              fill="currentColor"
+                                                                                                          ></circle>
+                                                                                                          <circle
+                                                                                                              cx="5"
+                                                                                                              cy="12"
+                                                                                                              r="2"
+                                                                                                              fill="currentColor"
+                                                                                                          ></circle>
+                                                                                                      </svg>
+                                                                                                  </sp-action-button>
+                                                                                              </sp-button-group>
+
+                                                                                              ${this
+                                                                                                  ._openMenuForImage ===
+                                                                                              img.url
+                                                                                                  ? html`
+                                                                                                        <div
+                                                                                                            class="image-menu"
+                                                                                                            style="
                                                                                             position: absolute;
                                                                                             top: 100%;
                                                                                             right: 0;
@@ -1674,167 +1762,175 @@ export class App extends LitElement {
                                                                                             width: 90px;
                                                                                             margin-top:5px;
                                                                                         "
-                                                                                                    >
-                                                                                                        <div
-                                                                                                            class="menu-item"
-                                                                                                            @click=${() =>
-                                                                                                                this._handleMenuAction(
-                                                                                                                    'download',
-                                                                                                                    img.url,
-                                                                                                                    null
-                                                                                                                )}
                                                                                                         >
-                                                                                                            Download
+                                                                                                            <div
+                                                                                                                class="menu-item"
+                                                                                                                @click=${() =>
+                                                                                                                    this._handleMenuAction(
+                                                                                                                        'download',
+                                                                                                                        img.url,
+                                                                                                                        null
+                                                                                                                    )}
+                                                                                                            >
+                                                                                                                Download
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="menu-item"
+                                                                                                                @click=${() =>
+                                                                                                                    this._handleMenuAction(
+                                                                                                                        'preview',
+                                                                                                                        img.url,
+                                                                                                                        null
+                                                                                                                    )}
+                                                                                                            >
+                                                                                                                Open
+                                                                                                                preview
+                                                                                                            </div>
+                                                                                                            <div
+                                                                                                                class="menu-item delete"
+                                                                                                                @click=${() =>
+                                                                                                                    this._handleMenuAction(
+                                                                                                                        'delete',
+                                                                                                                        img.url,
+                                                                                                                        id
+                                                                                                                    )}
+                                                                                                            >
+                                                                                                                Delete
+                                                                                                            </div>
                                                                                                         </div>
-                                                                                                        <div
-                                                                                                            class="menu-item"
-                                                                                                            @click=${() =>
-                                                                                                                this._handleMenuAction(
-                                                                                                                    'preview',
-                                                                                                                    img.url,
-                                                                                                                    null
-                                                                                                                )}
-                                                                                                        >
-                                                                                                            Open
-                                                                                                            preview
-                                                                                                        </div>
-                                                                                                        <div
-                                                                                                            class="menu-item delete"
-                                                                                                            @click=${() =>
-                                                                                                                this._handleMenuAction(
-                                                                                                                    'delete',
-                                                                                                                    img.url,
-                                                                                                                    id
-                                                                                                                )}
-                                                                                                        >
-                                                                                                            Delete
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                `
-                                                                                              : ''}
+                                                                                                    `
+                                                                                                  : ''}
+                                                                                          </div>
                                                                                       </div>
-                                                                                  </div>
-                                                                              `
-                                                                          )
-                                                                    : html`
-                                                                          <div
-                                                                              class="empty-state"
-                                                                          >
-                                                                              History
-                                                                              is
-                                                                              empty,
-                                                                              generate
-                                                                              an
-                                                                              image
-                                                                              and
-                                                                              it
-                                                                              will
-                                                                              show
-                                                                              up
-                                                                              here
-                                                                          </div>
-                                                                      `}
+                                                                                  `
+                                                                              )
+                                                                        : html`
+                                                                              <div
+                                                                                  class="empty-state"
+                                                                              >
+                                                                                  History
+                                                                                  is
+                                                                                  empty,
+                                                                                  generate
+                                                                                  an
+                                                                                  image
+                                                                                  and
+                                                                                  it
+                                                                                  will
+                                                                                  show
+                                                                                  up
+                                                                                  here
+                                                                              </div>
+                                                                          `
+                                                                }
                                                             </div>
-                                                            ${this
-                                                                ._generatedImages
-                                                                .length > 0
-                                                                ? html` <div
-                                                                      class="image-gallery-footer"
-                                                                  >
-                                                                      Drag &
-                                                                      drop or
-                                                                      double-click
-                                                                      to add.
-                                                                      Images
-                                                                      auto-delete
-                                                                      after
-                                                                      ${this
-                                                                          .userAccessData
-                                                                          ?.limitInfo
-                                                                          .STORED_IMAGE_EXPIRATION_DAYS}
-                                                                      days.
-                                                                  </div>`
-                                                                : ''}
+                                                            ${
+                                                                this
+                                                                    ._generatedImages
+                                                                    .length > 0
+                                                                    ? html` <div
+                                                                          class="image-gallery-footer"
+                                                                      >
+                                                                          Drag &
+                                                                          drop
+                                                                          or
+                                                                          double-click
+                                                                          to
+                                                                          add.
+                                                                          Images
+                                                                          auto-delete
+                                                                          after
+                                                                          ${this
+                                                                              .userAccessData
+                                                                              ?.limitInfo
+                                                                              .STORED_IMAGE_EXPIRATION_DAYS}
+                                                                          days.
+                                                                      </div>`
+                                                                    : ''
+                                                            }
                                                         </div>
-                                                        <!-- Create Rectangle button -->
+                                 <!-- Create Rectangle button -->
                                                         <div
                                                             class="tooltip-wrapper"
                                                             style="width: 100%; position: relative;"
                                                         >
                                                             <sp-button
                                                                 size="l"
-                                                                @click=${this
-                                                                    ._handleClick}
+                                                                @click=${
+                                                                    this
+                                                                        ._handleClick
+                                                                }
                                                                 ?disabled=${isButtonDisabled}
                                                                 style="width:100%; text-align:center;"
                                                             >
                                                                 Generate image
-                                                                (${this
-                                                                    .userAccessData
-                                                                    ?.limitInfo
-                                                                    .REMAINING_DAILY_IMAGE_GENERATION_LIMIT}
+                                                                (${
+                                                                    this
+                                                                        .userAccessData
+                                                                        ?.limitInfo
+                                                                        .REMAINING_DAILY_IMAGE_GENERATION_LIMIT
+                                                                }
                                                                 left)
                                                                 <sp-tooltip
                                                                     self-managed
                                                                     placement="top"
                                                                 >
-                                                                    ${this
-                                                                        .userAccessData
-                                                                        ?.limitInfo
-                                                                        .DAILY_IMAGE_GENERATION_LIMIT}
-                                                                    images
-                                                                    daily.<br />
-                                                                    Resets at
-                                                                    UTC 0
+                                                                    You
+                                                                           get
+                                                                           ${
+                                                                               this
+                                                                                   .userAccessData
+                                                                                   ?.limitInfo
+                                                                                   .DAILY_IMAGE_GENERATION_LIMIT
+                                                                           }
+                                                                           free
+                                                                           credit </br>
+                                                                           every
+                                                                           day
                                                                 </sp-tooltip>
                                                             </sp-button>
 
-                                                            ${isButtonDisabled
-                                                                ? html`
-                                                                      <div
-                                                                          class="tooltip-container"
-                                                                          style="position: absolute; top: 11px; right: 45px; z-index: 1000;"
-                                                                      >
-                                                                          <sp-help-text
-                                                                              style="cursor: help;"
-                                                                              onmouseover="this.nextElementSibling.style.display='block'"
-                                                                              onmouseout="this.nextElementSibling.style.display='none'"
-                                                                          >
-                                                                              <sp-icon-info
-                                                                                  slot="icon"
-                                                                                  size="s"
-                                                                              ></sp-icon-info>
-                                                                          </sp-help-text>
+                                                            ${
+                                                                isButtonDisabled
+                                                                    ? html`
                                                                           <div
-                                                                              style="display: none; position: absolute; top: -50px; right: 0; background: white; padding: 8px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 200px; text-align: center;"
+                                                                              class="tooltip-container"
+                                                                              style="position: absolute; top: 11px; right: 45px; z-index: 1000;"
                                                                           >
-                                                                              ${this
-                                                                                  .userAccessData
-                                                                                  ?.limitInfo
-                                                                                  .DAILY_IMAGE_GENERATION_LIMIT}
-                                                                              images
-                                                                              daily.<br />
-                                                                              Resets
-                                                                              at
-                                                                              UTC
-                                                                              0
+                                                                              <sp-help-text
+                                                                                  style="cursor: help;"
+                                                                                  onmouseover="this.nextElementSibling.style.display='block'"
+                                                                                  onmouseout="this.nextElementSibling.style.display='none'"
+                                                                              >
+                                                                                  <sp-icon-info
+                                                                                      slot="icon"
+                                                                                      size="s"
+                                                                                  ></sp-icon-info>
+                                                                              </sp-help-text>
+                                                                              <div
+                                                                                  style="display: none; position: absolute; top: -50px; right: 0; background: white; padding: 8px; border-radius: 4px; box-shadow: 0 2px 5px rgba(0,0,0,0.2); width: 200px; text-align: center;"
+                                                                              >
+                                                                                  You
+                                                                           get
+                                                                           ${this.userAccessData?.limitInfo.DAILY_IMAGE_GENERATION_LIMIT}
+                                                                           free
+                                                                           credit </br>
+                                                                           every
+                                                                           day
+                                                                              </div>
                                                                           </div>
-                                                                      </div>
-                                                                  `
-                                                                : ''}
+                                                                      `
+                                                                    : ''
+                                                            }
                                                         </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    `}
-
                               <!-- 공통 preveiw 모달 렌더링 -->
-                              ${this._previewModalOpen && this._previewImageSrc
-                                  ? html`
-                                        <div
-                                            class="modal-overlay"
-                                            style="
+                              ${
+                                  this._previewModalOpen &&
+                                  this._previewImageSrc
+                                      ? html`
+                                            <div
+                                                class="modal-overlay"
+                                                style="
                                                 position: fixed;
                                                 inset: 0;
                                                 background-color: rgba(0,0,0,0.5);
@@ -1843,11 +1939,12 @@ export class App extends LitElement {
                                                 justify-content: center;
                                                 z-index: 1000;
                                             "
-                                            @click=${this._closePreviewModal}
-                                        >
-                                            <div
-                                                class="modal-content"
-                                                style="
+                                                @click=${this
+                                                    ._closePreviewModal}
+                                            >
+                                                <div
+                                                    class="modal-content"
+                                                    style="
                                                     background-color: white;
                                                     padding: 34px;
                                                     border-radius: 16px;
@@ -1857,34 +1954,34 @@ export class App extends LitElement {
                                                     box-shadow: 0 4px 12px rgba(0,0,0,0.2);
                                                     margin:20px;
                                                     "
-                                                @click=${(e: Event) =>
-                                                    e.stopPropagation()}
-                                            >
-                                                <!-- 닫기 버튼 -->
-                                                <sp-action-button
-                                                    quiet
-                                                    style="
+                                                    @click=${(e: Event) =>
+                                                        e.stopPropagation()}
+                                                >
+                                                    <!-- 닫기 버튼 -->
+                                                    <sp-action-button
+                                                        quiet
+                                                        style="
                                                     position: absolute;
                                                     top: 12px;
                                                     right: 12px;
                                                     cursor: pointer;
                                                 "
-                                                    @click=${this
-                                                        ._closePreviewModal}
-                                                >
-                                                    ✕
-                                                </sp-action-button>
+                                                        @click=${this
+                                                            ._closePreviewModal}
+                                                    >
+                                                        ✕
+                                                    </sp-action-button>
 
-                                                <!-- 이미지 -->
-                                                <img
-                                                    src="${this
-                                                        ._previewImageSrc}"
-                                                    alt="Preview"
-                                                    style="width: 100%; border-radius: 8px;"
-                                                />
+                                                    <!-- 이미지 -->
+                                                    <img
+                                                        src="${this
+                                                            ._previewImageSrc}"
+                                                        alt="Preview"
+                                                        style="width: 100%; border-radius: 8px;"
+                                                    />
 
-                                                <!-- 설명 텍스트 -->
-                                                <!--  <div
+                                                    <!-- 설명 텍스트 -->
+                                                    <!--  <div
                                           style="
                                             margin-top: 16px;
                                             padding: 12px;
@@ -1898,10 +1995,11 @@ export class App extends LitElement {
                                       >
                                           ${this._previewText}
                                       </div> -->
+                                                </div>
                                             </div>
-                                        </div>
-                                    `
-                                  : ''}
+                                        `
+                                      : ''
+                              }
                           </div>
                       `}
             </sp-theme>

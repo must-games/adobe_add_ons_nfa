@@ -386,7 +386,7 @@ export const style = css`
         right: 0;
         bottom: 80px; /* 버튼과 겹치지 않도록 여유 공간 확보 */
         overflow-y: auto; /* 이 부분만 스크롤 가능 */
-        height: calc(100vh - 640px); /* 전체 높이에서 고정된 섹션 높이 빼기 */
+        height: calc(100vh - 620px); /* 전체 높이에서 고정된 섹션 높이 빼기 */
         padding: 10px 16px;
         padding-top: 0px;
         margin-top: 45px;
@@ -394,9 +394,9 @@ export const style = css`
     }
     .full-content {
         position: relative;
-        height: calc(100vh - 385px); /* 헤더와 하단 버튼 영역을 제외한 높이 */
+        height: calc(100vh - 370px); /* 헤더와 하단 버튼 영역을 제외한 높이 */
         overflow-y: auto;
-        padding-bottom: 16px;
+        padding-bottom: 10px;
     }
     .image-gallery-footer {
         text-align: center;

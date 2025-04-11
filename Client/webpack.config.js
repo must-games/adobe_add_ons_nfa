@@ -9,7 +9,6 @@ const isEnvProduction = process.env.NODE_ENV === 'production'
 const uiPath = path.resolve(__dirname, './src/ui')
 const sandboxPath = path.resolve(__dirname, './src/sandbox')
 
-
 module.exports = {
     mode: isEnvProduction ? 'production' : 'development',
     devtool: 'source-map',
@@ -36,9 +35,7 @@ module.exports = {
             'process.env.PACKAGE_TYPE': JSON.stringify(
                 process.env.PACKAGE_TYPE || 'private'
             ),
-            'process.env.DEBUG': JSON.stringify(
-                process.env.DEBUG || 'false'
-            ),
+            'process.env.DEBUG': JSON.stringify(process.env.DEBUG || 'false'),
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html',
@@ -85,6 +82,11 @@ module.exports = {
                 {
                     from: 'src/assets/images/K-Pop-male/*.{png,jpg}',
                     to: 'images/K-Pop-male/[name][ext]',
+                    noErrorOnMissing: true,
+                },
+                {
+                    from: 'src/assets/images/HairColor/*.{png,jpg}',
+                    to: 'images/HairColor/[name][ext]',
                     noErrorOnMissing: true,
                 },
                 {
