@@ -55,6 +55,16 @@ module.exports = {
                     noErrorOnMissing: true,
                 },
                 {
+                    from: 'src/assets/images/female/Color X/*.{png,jpg}',
+                    to: 'images/female/Color X/[name][ext]',
+                    noErrorOnMissing: true,
+                },
+                {
+                    from: 'src/assets/images/male/Color X/*.{png,jpg}',
+                    to: 'images/male/Color X/[name][ext]',
+                    noErrorOnMissing: true,
+                },
+                {
                     from: 'src/assets/images/Casual-female/*.{png,jpg}',
                     to: 'images/Casual-female/[name][ext]',
                     noErrorOnMissing: true,
