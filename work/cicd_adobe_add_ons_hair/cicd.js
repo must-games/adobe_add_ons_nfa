@@ -124,6 +124,8 @@ async function handleGitPullAndBuildWorker(finalMessage) {
 
     const basePath = '/home/ubuntu/adobeaddon'
 
+    console.log(`handleGitPullAndBuildWorker phase 1`)
+
     try {
         await execCommand('pm2 stop adobe_add_ons_hair_dev')
         await execCommand('pm2 delete adobe_add_ons_hair_dev')
@@ -132,12 +134,15 @@ async function handleGitPullAndBuildWorker(finalMessage) {
         console.warn(`Error ignorable during build: ${err.message}`)
     }
 
+    console.log(`handleGitPullAndBuildWorker phase 2`)
     try {
         await backupLogDev(basePath)
     } catch (err) {
         console.warn(`Error ignorable during build: ${err.message}`)
     }
 
+    console.log(`handleGitPullAndBuildWorker phase 3`)
+    
     try {
         await execCommand(`
       cd ${basePath} &&
