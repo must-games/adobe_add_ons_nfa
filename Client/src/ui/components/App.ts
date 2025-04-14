@@ -106,17 +106,17 @@ export class App extends LitElement {
 
     @state()
     private _hairColors = [
-        { key: 'color1', fileName: 'color1.png', name: 'Color 1' },
-        { key: 'color2', fileName: 'color2.png', name: 'Color 2' },
-        { key: 'color3', fileName: 'color3.png', name: 'Color 3' },
-        { key: 'color4', fileName: 'color4.png', name: 'Color 4' },
-        { key: 'color5', fileName: 'color5.png', name: 'Color 5' },
-        { key: 'color6', fileName: 'color6.png', name: 'Color 6' },
-        { key: 'color7', fileName: 'color7.png', name: 'Color 7' },
-        { key: 'color8', fileName: 'color8.png', name: 'Color 8' },
-        { key: 'color9', fileName: 'color9.png', name: 'Color 9' },
-        { key: 'color10', fileName: 'color10.png', name: 'Color 10' },
-        { key: 'color11', fileName: 'color11.png', name: 'Color 11' },
+        { key: '1', fileName: 'color1.png', name: 'Color 1' },
+        { key: '2', fileName: 'color2.png', name: 'Color 2' },
+        { key: '3', fileName: 'color3.png', name: 'Color 3' },
+        { key: '4', fileName: 'color4.png', name: 'Color 4' },
+        { key: '5', fileName: 'color5.png', name: 'Color 5' },
+        { key: '6', fileName: 'color6.png', name: 'Color 6' },
+        { key: '7', fileName: 'color7.png', name: 'Color 7' },
+        { key: '8', fileName: 'color8.png', name: 'Color 8' },
+        { key: '9', fileName: 'color9.png', name: 'Color 9' },
+        { key: '10', fileName: 'color10.png', name: 'Color 10' },
+        { key: '11', fileName: 'color11.png', name: 'Color 11' },
 
         // Add more colors here as needed
     ]
