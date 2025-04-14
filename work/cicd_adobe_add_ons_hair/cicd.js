@@ -50,11 +50,11 @@ app.post('/gitcommit', (req, res) => {
 
         // 비동기 함수로 Git pull 및 빌드 처리
         if (branch == 'dev') {
-            handleGitPullAndBuildWorker(finalMessage)
+            handleGitPullAndBuildWorkerDev(finalMessage)
         } else if (branch == 'main') {
             handleGitPullAndBuildWorkerLive(finalMessage)
         } else {
-            console.error(`unknown branch ${branch}`)            
+            console.error(`unknown branch ${branch}`)
         }
     } catch (e) {
         console.log(e)
@@ -119,12 +119,12 @@ async function backupLogLive(basePath) {
 }
 
 // 비동기로 Git pull, 빌드 및 Slack 알림을 처리하는 함수
-async function handleGitPullAndBuildWorker(finalMessage) {
-    console.log(`handleGitPullAndBuildWorker`)
+async function handleGitPullAndBuildWorkerDev(finalMessage) {
+    console.log(`handleGitPullAndBuildWorkerDev`)
 
     const basePath = '/home/ubuntu/adobeaddon'
 
-    console.log(`handleGitPullAndBuildWorker phase 1`)
+    console.log(`handleGitPullAndBuildWorkerDev phase 1`)
 
     try {
         await execCommand('pm2 stop adobe_add_ons_hair_dev')
@@ -134,14 +134,14 @@ async function handleGitPullAndBuildWorker(finalMessage) {
         console.warn(`Error ignorable during build: ${err.message}`)
     }
 
-    console.log(`handleGitPullAndBuildWorker phase 2`)
+    console.log(`handleGitPullAndBuildWorkerDev phase 2`)
     try {
         await backupLogDev(basePath)
     } catch (err) {
         console.warn(`Error ignorable during build: ${err.message}`)
     }
 
-    console.log(`handleGitPullAndBuildWorker phase 3`)
+    console.log(`handleGitPullAndBuildWorkerDev phase 3`)
 
     try {
         await execCommand(`
@@ -241,21 +241,21 @@ function execCommand(command) {
 // 비동기로 Slack 알림을 보내는 함수
 function sendSlackNotification(message) {
     console.log(`slack message = ${message}`)
-    // return axios
-    //     .post(
-    //         'https://hooks.slack.com/services/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',
-    //         {
-    //             text: message,
-    //             username: 'Build Bot',
-    //             icon_emoji: ':robot_face:',
-    //         }
-    //     )
-    //     .then(() => {
-    //         console.log('Slack notification sent')
-    //     })
-    //     .catch((error) => {
-    //         console.error(`Slack notification failed: ${error.message}`)
-    //     })
+    return axios
+        .post(
+            'https://hooks.slack.com/services/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',
+            {
+                text: message,
+                username: 'Build Bot',
+                icon_emoji: ':robot_face:',
+            }
+        )
+        .then(() => {
+            console.log('Slack notification sent')
+        })
+        .catch((error) => {
+            console.error(`Slack notification failed: ${error.message}`)
+        })
 }
 
 app.listen(7781, () => {
