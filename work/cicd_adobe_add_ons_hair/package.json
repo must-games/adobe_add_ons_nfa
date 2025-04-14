@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
         "start": "node cicd.js",
-        "pm2-start": "pm2 start npm --name 'cicd-adobe-add-ons' -- run start"
+        "pm2-start": "pm2 start npm --name 'cicd-adobe-add-ons-hair' -- run start"
   },
   "dependencies": {
     "axios": "^1.7.7",

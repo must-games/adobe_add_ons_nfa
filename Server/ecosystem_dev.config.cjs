@@ -7,7 +7,7 @@ module.exports = {
             env: {
                 VENDOR: 'mustg',
                 SERVER_TYPE: 'dev',
-                SERVER_TAG: 'abodeaddon-ai-base',
+                SERVER_TAG: 'abodeaddon-hair-base',
                 LOG_LEVEL: 'Debug',
                 DATABASE_URL:
                     'mysql://root:evgXHfGBMUxRdKvp@210.109.14.76:3306/abodeaddon-ai-test',
