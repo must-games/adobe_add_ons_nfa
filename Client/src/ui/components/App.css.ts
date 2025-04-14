@@ -402,26 +402,4 @@ export const style = css`
         text-align: center;
         font-size: 12px;
     }
-
-    html::-webkit-scrollbar,
-    body::-webkit-scrollbar {
-        width: 2px;
-        height: 2px;
-    }
-
-    html::-webkit-scrollbar-track,
-    body::-webkit-scrollbar-track {
-        background: transparent;
-    }
-
-    html::-webkit-scrollbar-thumb,
-    body::-webkit-scrollbar-thumb {
-        background-color: rgba(0, 0, 0, 0.2);
-        border-radius: 10px;
-    }
-
-    html::-webkit-scrollbar-thumb:hover,
-    body::-webkit-scrollbar-thumb:hover {
-        background-color: rgba(0, 0, 0, 0.35);
-    }
 `
