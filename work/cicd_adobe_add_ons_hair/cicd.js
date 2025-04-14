@@ -118,7 +118,7 @@ async function backupLogLive(basePath) {
     }
 }
 
-// 비동기로 Git pull, 빌드 및 Slack 알림을 처리a하는 함수
+// 비동기로 Git pull, 빌드 및 Slack 알림을 처리하는 함수
 async function handleGitPullAndBuildWorker(finalMessage) {
     console.log(`handleGitPullAndBuildWorker`)
 
