@@ -97,8 +97,31 @@ async function backupLogDev(basePath) {
     }
 }
 
+async function backupLogLive(basePath) {
+    const logDirectory = `${basePath}/adobe_add_ons_hair_logs/Server/${getLogFolder()}`
+
+    try {
+        const sourcePath = `${basePath}/adobe_add_ons_hair_logs/Server/logs`
+        await fs.access(sourcePath)
+
+        // mv 명령 실행
+        await execAsync(
+            `mkdir -p ${logDirectory} && mv ${sourceFile} ${logDirectory}`
+        )
+        console.log(`File moved to ${targetDirectory}`)
+    } catch (error) {
+        if (error.code === 'ENOENT') {
+            return
+        } else {
+            console.error('An error occurred:', error)
+        }
+    }
+}
+
 // 비동기로 Git pull, 빌드 및 Slack 알림을 처리a하는 함수
 async function handleGitPullAndBuildWorker(finalMessage) {
+    console.log(`handleGitPullAndBuildWorker`)
+
     const basePath = '/home/ubuntu/adobeaddon'
 
     try {
@@ -144,6 +167,8 @@ async function handleGitPullAndBuildWorker(finalMessage) {
 }
 
 async function handleGitPullAndBuildWorkerLive(finalMessage) {
+    console.log(`handleGitPullAndBuildWorkerLive`)
+
     const basePath = '/home/ubuntu/adobeaddon'
 
     try {
@@ -155,7 +180,7 @@ async function handleGitPullAndBuildWorkerLive(finalMessage) {
     }
 
     try {
-        await backupLogDev(basePath)
+        await backupLogLive(basePath)
     } catch (err) {
         console.warn(`Error ignorable during build: ${err.message}`)
     }
