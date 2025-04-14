@@ -146,8 +146,7 @@ export class App extends LitElement {
     @state()
     private _selectedHairColor: string | null = null
 
-    private _selectedCategory = 'female' // Default category
-    private _selectedImageSupportsColor = true
+    private _selectedImageSupportsColor = false
 
     private _handleHairColorSelect(colorKey: string) {
         // 이미 선택된 색상과 같으면 해제, 아니면 새 colorKey로 설정
@@ -395,6 +394,13 @@ export class App extends LitElement {
             return
         }
 
+        if (this._selectedImageSupportsColor) {
+            if (this._selectedHairColor === null) {
+                this._showAlertBanner('Please select a hair color')
+                return
+            }
+        }
+
         try {
             // console.log(`_selectedImage=${this._selectedImage}`)
             // console.log(`_selectedImageKey=${this._selectedImageKey}`)
@@ -584,7 +590,7 @@ export class App extends LitElement {
                 alertBanner.classList.add('fade-out') // fade-out 클래스 추가
                 setTimeout(() => {
                     this.alertVisible = false // 경고창 숨김
-                }, 300) // fadeOut 애니메이션 시간과 일치
+                }, 500) // fadeOut 애니메이션 시간과 일치
             } else {
                 this.alertVisible = false // 경고창 숨김
             }
@@ -686,11 +692,9 @@ export class App extends LitElement {
         if (this._selectedImage === image) {
             this._selectedImage = null
             this._selectedImageKey = null
-            this._selectedImageSupportsColor = true
         } else {
             this._selectedImage = image
             this._selectedImageKey = imageKey
-            this._selectedImageSupportsColor = color
         }
 
         // const selectedCategory = this._selectedCategory
@@ -713,11 +717,11 @@ export class App extends LitElement {
         this.requestUpdate()
     }
 
-    private _handleThemeSelect(e: CustomEvent) {
-        const target = e.target as HTMLSelectElement
-        this._selectedTheme = target.value
-        this.requestUpdate()
-    }
+    // private _handleThemeSelect(e: CustomEvent) {
+    //     const target = e.target as HTMLSelectElement
+    //     this._selectedTheme = target.value
+    //     this.requestUpdate()
+    // }
 
     private _toggleShowAllImages() {
         this._openMenuForImage = null
@@ -877,11 +881,9 @@ export class App extends LitElement {
     }
 
     render() {
-        const isButtonDisabled =
-            // !this._selectedImage ||
-            // !this._selectedHairColor ||
-            (this.userAccessData?.limitInfo
-                .REMAINING_DAILY_IMAGE_GENERATION_LIMIT ?? 0) < 1
+        const isButtonDisabled = false
+        // (this.userAccessData?.limitInfo
+        //     .REMAINING_DAILY_IMAGE_GENERATION_LIMIT ?? 0) < 1
 
         return html`
             <sp-theme theme="express" color="light" scale="medium">
@@ -1113,7 +1115,7 @@ export class App extends LitElement {
                                             </sp-top-nav>
 
                                             <div class="full-content">
-                                                <!-- Upload Face Photo Section -->
+                                                <!-- Upload Profile Photo Section -->
                                                 <div class="section">
                                                     <div
                                                         class="section-header flex-col items-start"
@@ -1121,7 +1123,7 @@ export class App extends LitElement {
                                                         <h2
                                                             class="section-title"
                                                         >
-                                                            Upload a face photo
+                                                            Upload a profile photo
                                                         </h2>
                                                     </div>
                                                     ${
@@ -1541,24 +1543,44 @@ export class App extends LitElement {
 
                                                 <!-- Only show hair color selection UI if the selected image supports coloring -->
                                                 ${
-                                                    this
-                                                        ._selectedImageSupportsColor ||
                                                     this._selectedImage === null
+                                                        ? html`
+                                                              <!-- Message when no hairstyle is selected -->
+                                                              <div
+                                                                  style="
+                                                                    margin-top: 7px;
+                                                                    height:37px;
+                                                                    border:1px solid #efefef;
+                                                                    color: #666;
+                                                                    padding: 8px 0;
+                                                                    display: flex;
+                                                                    align-items: center;
+                                                                    justify-content: center;
+                                                                    border-radius: 4px;
+                                                                "
+                                                              >
+                                                                  Please select
+                                                                  a hairstyle
+                                                                  first
+                                                              </div>
+                                                          `
+                                                        : this
+                                                              ._selectedImageSupportsColor
                                                         ? html`
                                                               <!-- select hair color -->
                                                               <!-- 스크롤 가능한 헤어 컬러 선택 -->
                                                               <div
                                                                   style="
-                                                        margin-top: 4px;
-                                                        display: flex;
-                                                        gap: 12px;
-                                                        align-items: center;
-                                                        overflow-x: auto;
-                                                        width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
-                                                        max-width: 100%;
-                                                        padding-top:3px;
-                                                        padding-bottom:3px;
-                                                    "
+                                                                        margin-top: 4px;
+                                                                        display: flex;
+                                                                        gap: 12px;
+                                                                        align-items: center;
+                                                                        overflow-x: auto;
+                                                                        width: 300px; /* 6개 + gap = 300px, 7번째부터 스크롤 발생 */
+                                                                        max-width: 100%;
+                                                                        padding-top:3px;
+                                                                        padding-bottom:3px;
+                                                                    "
                                                               >
                                                                   ${this._hairColors.map(
                                                                       (
@@ -1568,18 +1590,18 @@ export class App extends LitElement {
                                                                               <img
                                                                                   src="./images/HairColor/${color.fileName}"
                                                                                   style="
-                                                                    min-width: 40px;    
-                                                                    width: 40px;
-                                                                    height: 40px;
-                                                                    border-radius: 50%;
-                                                                    object-fit: cover;
-                                                                    cursor: pointer;
-                                                                    box-shadow: ${this
+                                                                                        min-width: 40px;    
+                                                                                        width: 40px;
+                                                                                        height: 40px;
+                                                                                        border-radius: 50%;
+                                                                                        object-fit: cover;
+                                                                                        cursor: pointer;
+                                                                                        box-shadow: ${this
                                                                                       ._selectedHairColor ===
                                                                                   color.key
                                                                                       ? '0 0 0 2px #2680eb'
                                                                                       : 'none'};
-                                                                        "
+                                                                                         "
                                                                                   @click="${() =>
                                                                                       this._handleHairColorSelect(
                                                                                           color.key
@@ -1596,16 +1618,16 @@ export class App extends LitElement {
                                                               <!-- Message when selected image doesn't support coloring -->
                                                               <div
                                                                   style="
-                                                        margin-top: 7px;
-                                                        height:37px;
-                                                        border:1px solid #efefef;
-                                                        color: #666;
-                                                        padding: 8px 0;
-                                                        display: flex;
-                                                        align-items: center;
-                                                        justify-content: center;
-                                                        border-radius: 4px;
-                                                    "
+                                                                        margin-top: 7px;
+                                                                        height:37px;
+                                                                        border:1px solid #efefef;
+                                                                        color: #666;
+                                                                        padding: 8px 0;
+                                                                        display: flex;
+                                                                        align-items: center;
+                                                                        justify-content: center;
+                                                                        border-radius: 4px;
+                                                                    "
                                                               >
                                                                   This hairstyle
                                                                   doesn't
