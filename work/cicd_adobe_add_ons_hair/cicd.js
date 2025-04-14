@@ -233,21 +233,21 @@ function execCommand(command) {
 // 비동기로 Slack 알림을 보내는 함수
 function sendSlackNotification(message) {
     console.log(`slack message = ${message}`)
-    return axios
-        .post(
-            'https://hooks.slack.com/services/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',
-            {
-                text: message,
-                username: 'Build Bot',
-                icon_emoji: ':robot_face:',
-            }
-        )
-        .then(() => {
-            console.log('Slack notification sent')
-        })
-        .catch((error) => {
-            console.error(`Slack notification failed: ${error.message}`)
-        })
+    // return axios
+    //     .post(
+    //         'https://hooks.slack.com/services/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',
+    //         {
+    //             text: message,
+    //             username: 'Build Bot',
+    //             icon_emoji: ':robot_face:',
+    //         }
+    //     )
+    //     .then(() => {
+    //         console.log('Slack notification sent')
+    //     })
+    //     .catch((error) => {
+    //         console.error(`Slack notification failed: ${error.message}`)
+    //     })
 }
 
 app.listen(7781, () => {
