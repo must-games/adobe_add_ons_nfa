@@ -63,7 +63,8 @@ export async function getUser(userId: string) {
 export async function generateImage(
     userId: string,
     selectedImageKey: string,
-    file: File
+    file: File,
+    selectedHairColorKey: string
 ) {
     try {
         if (isDebugLog) {
@@ -79,6 +80,7 @@ export async function generateImage(
         formData.append('userId', userId)
         formData.append('sourceImageFile', blob, file.name)
         formData.append('selectedImageKey', selectedImageKey)
+        formData.append('selectedHairColorKey', selectedHairColorKey)
 
         const response = await fetch(BACK_END_URL + '/image-gen', {
             method: 'POST',

@@ -420,7 +420,8 @@ export class App extends LitElement {
             const workId = await generateImage(
                 this._userId,
                 this._selectedImageKey,
-                this._uploadedFile
+                this._uploadedFile,
+                this._selectedHairColor || ''
             )
             console.log(`Generated workId: ${workId}`)
 

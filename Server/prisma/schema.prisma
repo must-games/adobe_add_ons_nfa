@@ -22,21 +22,22 @@ model User {
 }
 
 model Work {
-  id               Int        @id @default(autoincrement())
-  userId           String
-  createdAt        DateTime   @default(now())
-  updatedAt        DateTime   @default(now())
-  status           WorkStatus @default(PENDING)
-  promptId         String     @db.Text
-  description      String     @db.Text
-  imagePrefix      String     @default("adobe")
-  workStart        DateTime   @default(now())
-  workEnd          DateTime   @default(now())
-  generationTime   Float      @default(0)
-  result           Json       @default("[]")
-  selectedImageKey String     @default("")
-  sourceImageInfo  String     @db.Text
-  batchSize        Int        @default(1)
+  id                   Int        @id @default(autoincrement())
+  userId               String
+  createdAt            DateTime   @default(now())
+  updatedAt            DateTime   @default(now())
+  status               WorkStatus @default(PENDING)
+  promptId             String     @db.Text
+  description          String     @db.Text
+  imagePrefix          String     @default("adobe")
+  workStart            DateTime   @default(now())
+  workEnd              DateTime   @default(now())
+  generationTime       Float      @default(0)
+  result               Json       @default("[]")
+  selectedImageKey     String     @default("")
+  selectedHairColorKey String     @default("")
+  sourceImageInfo      String     @db.Text
+  batchSize            Int        @default(1)
 
   @@index([status])
   @@index([userId, status])

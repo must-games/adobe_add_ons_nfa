@@ -126,6 +126,7 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
 
             const resultPath = GetObjectStorageUrl(STORAGE_BUCKET, fileKey)
             const selectedImageKey = req.body.selectedImageKey
+            const selectedHairColorKey = req.body.selectedHairColorKey
 
             const sourceImageInfo = {
                 fileKey: req.file.originalname,
@@ -140,6 +141,7 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                     imagePrefix: 'kstyle',
                     promptId: '',
                     selectedImageKey: selectedImageKey,
+                    selectedHairColorKey: selectedHairColorKey,
                     sourceImageInfo: JSON.stringify(sourceImageInfo),
                 },
             })
