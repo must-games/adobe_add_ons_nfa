@@ -142,7 +142,7 @@ async function handleGitPullAndBuildWorker(finalMessage) {
         await execCommand(`
       cd ${basePath} &&
       rm -rf adobe_add_ons_hair_dev &&
-      git clone -b dev git@github.com:must-games/adobe_add_ons.git adobe_add_ons_hair_dev &&
+      git clone -b dev git@github.com:must-games/adobe_add_ons_hair.git adobe_add_ons_hair_dev &&
       cd adobe_add_ons_hair_dev/Server &&
       npm i &&
       npm run build &&
