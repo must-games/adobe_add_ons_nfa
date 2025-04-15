@@ -1275,14 +1275,16 @@ export class App extends LitElement {
                                                                               For
                                                                               best
                                                                               results,
-                                                                              we
-                                                                              recommend
+                                                                              please
+                                                                              upload
                                                                               a
                                                                               clear,
                                                                               full-face,
                                                                               front-view
                                                                               color
-                                                                              photo.
+                                                                              photo
+                                                                              without
+                                                                              glasses.
                                                                           </div>
                                                                       </div>
                                                                   </sp-dropzone>
