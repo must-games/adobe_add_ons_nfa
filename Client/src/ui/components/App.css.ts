@@ -58,7 +58,7 @@ export const style = css`
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 10px;
+        margin-bottom: 5px;
     }
 
     .section-title {
@@ -123,6 +123,7 @@ export const style = css`
         font-size: 13px;
         margin-bottom: 6px;
         color: #bdbdbd;
+        line-height: 15px;
     }
 
     .flex-col {
@@ -381,20 +382,20 @@ export const style = css`
 
     .scrollable-content {
         position: absolute;
-        top: 205px; /* 고정된 섹션 아래부터 시작 */
+        top: 170px; /* 고정된 섹션 아래부터 시작 */
         left: 0;
         right: 0;
         bottom: 80px; /* 버튼과 겹치지 않도록 여유 공간 확보 */
         overflow-y: auto; /* 이 부분만 스크롤 가능 */
-        height: calc(100vh - 620px); /* 전체 높이에서 고정된 섹션 높이 빼기 */
+        height: calc(100vh - 480px); /* 전체 높이에서 고정된 섹션 높이 빼기 */
         padding: 10px 16px;
-        padding-top: 0px;
-        margin-top: 45px;
+        margin-top: 30px;
         min-height: 130px;
+        padding-top: 2px;
     }
     .full-content {
         position: relative;
-        height: calc(100vh - 370px); /* 헤더와 하단 버튼 영역을 제외한 높이 */
+        height: calc(100vh - 275px); /* 헤더와 하단 버튼 영역을 제외한 높이 */
         overflow-y: auto;
         padding-bottom: 10px;
     }
