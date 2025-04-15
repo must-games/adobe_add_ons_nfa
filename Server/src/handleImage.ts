@@ -138,7 +138,7 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                     userId,
                     result: '[]',
                     description: '',
-                    imagePrefix: 'kstyle',
+                    imagePrefix: 'kstylo_hair',
                     promptId: '',
                     selectedImageKey: selectedImageKey,
                     selectedHairColorKey: selectedHairColorKey,
