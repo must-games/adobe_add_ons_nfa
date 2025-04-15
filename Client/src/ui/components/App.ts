@@ -974,7 +974,7 @@ export class App extends LitElement {
                                                                                 img.url,
                                                                                 e
                                                                             )}
-                                                                        style="padding-left:1px; padding-top:3px; display:block;"
+                                                                        style="padding-left:2px; padding-top:3px; display:block;"
                                                                     >
                                                                         <svg
                                                                             slot="icon"
@@ -1069,7 +1069,82 @@ export class App extends LitElement {
                                                 }
                                             )}
                                         </div>
+                                        <!-- 공통 preveiw 모달 렌더링 -->
+                                        ${this._previewModalOpen &&
+                                        this._previewImageSrc
+                                            ? html`
+                                                  <div
+                                                      class="modal-overlay"
+                                                      style="
+                                                                            position: fixed;
+                                                                            inset: 0;
+                                                                            background-color: rgba(0,0,0,0.5);
+                                                                            display: flex;
+                                                                            align-items: center;
+                                                                            justify-content: center;
+                                                                            z-index: 1000;
+                                                                        "
+                                                      @click=${this
+                                                          ._closePreviewModal}
+                                                  >
+                                                      <div
+                                                          class="modal-content"
+                                                          style="
+                                                                                background-color: white;
+                                                                                padding: 34px;
+                                                                                border-radius: 16px;
+                                                                                max-width: 400px;
+                                                                                width: 90%;
+                                                                                position: relative;
+                                                                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                                                                                margin:20px;
+                                                                                "
+                                                          @click=${(e: Event) =>
+                                                              e.stopPropagation()}
+                                                      >
+                                                          <!-- 닫기 버튼 -->
+                                                          <sp-action-button
+                                                              quiet
+                                                              style="
+                                                                                position: absolute;
+                                                                                top: 12px;
+                                                                                right: 12px;
+                                                                                cursor: pointer;
+                                                                            "
+                                                              @click=${this
+                                                                  ._closePreviewModal}
+                                                          >
+                                                              ✕
+                                                          </sp-action-button>
 
+                                                          <!-- 이미지 -->
+                                                          <img
+                                                              src="${this
+                                                                  ._previewImageSrc}"
+                                                              alt="Preview"
+                                                              style="width: 100%; border-radius: 8px;"
+                                                          />
+
+                                                          <!-- 설명 텍스트 -->
+                                                          <!--  <div
+                                                                    style="
+                                                                        margin-top: 16px;
+                                                                        padding: 12px;
+                                                                        background-color: #222;
+                                                                        color: white;
+                                                                        text-align: center;
+                                                                        border-radius: 8px;
+                                                                        font-size: 14px;
+                                                                        line-height: 1.4;
+                                                                        "
+                                                                >
+                                                                    ${this
+                                                              ._previewText}
+                                                                </div> -->
+                                                      </div>
+                                                  </div>
+                                              `
+                                            : ''}
                                         ${this._generatedImages.length > 0
                                             ? html` <div class="drag-drop-hint">
                                                       Drag & drop or
@@ -1616,7 +1691,7 @@ export class App extends LitElement {
                                                 }
                                             </div>
                                         </div>
- <div
+                                                <div
                                                     class="fixed-button-container"
                                                 >
                                                     <div
@@ -1736,88 +1811,7 @@ export class App extends LitElement {
                                                         </div>
                                                        
 
-                                                        <!-- 공통 preveiw 모달 렌더링 -->
-                                                        ${
-                                                            this
-                                                                ._previewModalOpen &&
-                                                            this
-                                                                ._previewImageSrc
-                                                                ? html`
-                                                                      <div
-                                                                          class="modal-overlay"
-                                                                          style="
-                                                                            position: fixed;
-                                                                            inset: 0;
-                                                                            background-color: rgba(0,0,0,0.5);
-                                                                            display: flex;
-                                                                            align-items: center;
-                                                                            justify-content: center;
-                                                                            z-index: 1000;
-                                                                        "
-                                                                          @click=${this
-                                                                              ._closePreviewModal}
-                                                                      >
-                                                                          <div
-                                                                              class="modal-content"
-                                                                              style="
-                                                                                background-color: white;
-                                                                                padding: 34px;
-                                                                                border-radius: 16px;
-                                                                                max-width: 400px;
-                                                                                width: 90%;
-                                                                                position: relative;
-                                                                                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-                                                                                margin:20px;
-                                                                                "
-                                                                              @click=${(
-                                                                                  e: Event
-                                                                              ) =>
-                                                                                  e.stopPropagation()}
-                                                                          >
-                                                                              <!-- 닫기 버튼 -->
-                                                                              <sp-action-button
-                                                                                  quiet
-                                                                                  style="
-                                                                                position: absolute;
-                                                                                top: 12px;
-                                                                                right: 12px;
-                                                                                cursor: pointer;
-                                                                            "
-                                                                                  @click=${this
-                                                                                      ._closePreviewModal}
-                                                                              >
-                                                                                  ✕
-                                                                              </sp-action-button>
-
-                                                                              <!-- 이미지 -->
-                                                                              <img
-                                                                                  src="${this
-                                                                                      ._previewImageSrc}"
-                                                                                  alt="Preview"
-                                                                                  style="width: 100%; border-radius: 8px;"
-                                                                              />
-
-                                                                              <!-- 설명 텍스트 -->
-                                                                              <!--  <div
-                                                                    style="
-                                                                        margin-top: 16px;
-                                                                        padding: 12px;
-                                                                        background-color: #222;
-                                                                        color: white;
-                                                                        text-align: center;
-                                                                        border-radius: 8px;
-                                                                        font-size: 14px;
-                                                                        line-height: 1.4;
-                                                                        "
-                                                                >
-                                                                    ${this
-                                                                                  ._previewText}
-                                                                </div> -->
-                                                                          </div>
-                                                                      </div>
-                                                                  `
-                                                                : ''
-                                                        }
+                                                       
                                                             
                                                 </div>
 
