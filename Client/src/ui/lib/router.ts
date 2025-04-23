@@ -30,6 +30,37 @@ export async function userAccess(userId: string) {
     }
 }
 
+export async function cancelGenerateImage(userId: string, workId: number) {
+    try {
+        if (isDebugLog) {
+            console.log(`cancelGenerateImage userId=${userId} workId=${workId}`)
+        }
+
+        const response = await fetch(BACK_END_URL + '/image-gen-cancel', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+                workId,
+            }),
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            return { success: true, message: data.message }
+        } else {
+            console.error(`Failed cancelGenerateImage: ${response.status}`)
+            return { success: false, message: `${response.statusText}` }
+        }
+    } catch (e) {
+        console.error(`cancelGenerateImage e=${e}`)
+
+        return { success: false, message: `${e}` }
+    }
+}
+
 export async function getUser(userId: string) {
     try {
         if (isDebugLog) {
@@ -57,6 +88,36 @@ export async function getUser(userId: string) {
         console.error(`getUser e=${e}`)
 
         return null
+    }
+}
+
+export async function createGenerateImage(userId: string) {
+    try {
+        if (isDebugLog) {
+            console.log(`createGenerateImage userId=${userId}`)
+        }
+
+        const response = await fetch(BACK_END_URL + '/image-create-gen', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+            }),
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            return data.workId
+        } else {
+            console.error(`Failed createGenerateImage: ${response.status}`)
+            return -1
+        }
+    } catch (e) {
+        console.error(`createGenerateImage e=${e}`)
+
+        return -1
     }
 }
 

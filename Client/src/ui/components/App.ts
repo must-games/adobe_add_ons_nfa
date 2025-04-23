@@ -52,6 +52,7 @@ import {
     userAccess,
     downloadFile,
     getUser,
+    createGenerateImage,
 } from '../lib/router'
 import './loading-screen'
 import './AlertBanner'
@@ -145,6 +146,14 @@ export class App extends LitElement {
 
     @state()
     private _selectedHairColor: string | null = null
+
+    @state() private _workId = -1
+
+    @state() private _generateImageMessage = ''
+    @state() private _generateDisabledTooltip = ''
+    @state() private _loadingTitle = ''
+
+    @state() private _isCheckWorkStatus = false
 
     private _selectedImageSupportsColor = false
 
@@ -407,6 +416,7 @@ export class App extends LitElement {
             // console.log(`_uploadedFile=${this._uploadedFile.name}`)
             this._isLoading = true
             this._loadingProgress = 0
+            this._workId = -1
             // Simulate progress
             const progressInterval = setInterval(() => {
                 if (this._loadingProgress < 90) {
@@ -417,12 +427,16 @@ export class App extends LitElement {
                 }
             }, 800)
 
-            const workId = await generateImage(
+            // let workId = await createGenerateImage(this._userId)
+            // this._workId = workId
+
+            let workId = await generateImage(
                 this._userId,
                 this._selectedImageKey,
                 this._uploadedFile,
                 this._selectedHairColor || ''
             )
+            this._workId = workId
             console.log(`Generated workId: ${workId}`)
 
             if (workId < 0) {
@@ -432,7 +446,6 @@ export class App extends LitElement {
                 this.requestUpdate()
                 return
             }
-
             // 작업 상태 확인 및 이미지 업데이트를 위한 함수
             const checkWorkStatus = async () => {
                 const workList = await getWorkList(this._userId, workId, '')
@@ -856,6 +869,9 @@ export class App extends LitElement {
 
     // 사용자 접근 데이터 업데이트 함수 추가
     private async _updateUserAccessData() {
+        if (isDebugLog) {
+            console.log(`_updateUserAccessData`)
+        }
         const userAccessData = await userAccess(this._userId)
 
         this.userAccessData = userAccessData
@@ -885,6 +901,27 @@ export class App extends LitElement {
         }
     }
 
+    // 생성 취소 핸들러
+    private _handleGenerationCancelled(
+        e: CustomEvent<{ nextCancelWork: boolean }>
+    ) {
+        this._isLoading = false
+        this.requestUpdate()
+    }
+
+    // 생성 실패 핸들러
+    private _handleGenerationFailed(e: CustomEvent) {
+        const errorMessage = e.detail.message
+        this._isLoading = false
+
+        // 에러 메시지가 있으면 alert 배너 표시
+        if (errorMessage) {
+            this._showAlertBanner(errorMessage)
+        }
+
+        this.requestUpdate()
+    }
+
     render() {
         const isButtonDisabled = false
         // (this.userAccessData?.limitInfo
@@ -899,6 +936,12 @@ export class App extends LitElement {
                 ${this._isLoading
                     ? html`<loading-screen
                           progress="${this._loadingProgress}"
+                          workId="${this._workId}"
+                          userId="${this._userId}"
+                          title="${this._loadingTitle}"
+                          @generation-cancelled="${this
+                              ._handleGenerationCancelled}"
+                          @generation-failed="${this._handleGenerationFailed}"
                       ></loading-screen>`
                     : html`
                           <div class="container">
