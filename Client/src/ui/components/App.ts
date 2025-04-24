@@ -483,7 +483,10 @@ export class App extends LitElement {
                     ) //무한
                 }
                 //workList=[{"id":26,"createdAt":"2025-03-24T03:06:40.665Z","updatedAt":"2025-03-24T03:06:36.988Z","result":[{"filename":"image-result/dev_abodeaddon-ai_adobe_00025.jpg","download_url":"https://objectstorage.kr-central-2.kakaocloud.com/v1/cccf2acbb0a74ae88e2d77e696b7be52/abodeaddon-ai-dev/image-result/dev_abodeaddon-ai_adobe_00025.jpg"}],"status":"COMPLETED"},{"id":25,"createdAt":"2025-03-24T03:05:34.938Z","updatedAt":"2025-03-24T03:05:35.912Z","result":[{"filename":"image-result/dev_abodeaddon-ai_adobe_00024.jpg","download_url":"https://objectstorage.kr-central-2.kakaocloud.com/v1/cccf2acbb0a74ae88e2d77e696b7be52/abodeaddon-ai-dev/image-result/dev_abodeaddon-ai_adobe_00024.jpg"}],
-                if (workList[0].status === 'CANCELED') {
+                if (
+                    workList[0].status === 'CANCELED' ||
+                    workList[0].status === 'REQUESTCANCEL'
+                ) {
                     this._isCheckWorkStatus = false
                     this._workId = -1
                     console.log('The image generation has been canceled.')
