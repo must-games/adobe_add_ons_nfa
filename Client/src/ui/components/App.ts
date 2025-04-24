@@ -463,14 +463,38 @@ export class App extends LitElement {
 
             // 작업 상태 확인 및 이미지 업데이트를 위한 함수
             const checkWorkStatus = async () => {
+                if (isDebugLog) {
+                    console.log(`checkWorkStatus start. workId :`, workId)
+                }
+                if (this._isCheckWorkStatus) {
+                    if (isDebugLog) {
+                        console.log(
+                            `checkWorkStatus start. true workId :`,
+                            workId
+                        )
+                    }
+                    return false
+                }
+                this._isCheckWorkStatus = true
                 const workList = await getWorkList(this._userId, workId, '')
-                console.log(`workList=${JSON.stringify(workList)}`)
+                if (isDebugLog) {
+                    console.log(
+                        `checkWorkStatus start=${JSON.stringify(workList)}`
+                    ) //무한
+                }
                 //workList=[{"id":26,"createdAt":"2025-03-24T03:06:40.665Z","updatedAt":"2025-03-24T03:06:36.988Z","result":[{"filename":"image-result/dev_abodeaddon-ai_adobe_00025.jpg","download_url":"https://objectstorage.kr-central-2.kakaocloud.com/v1/cccf2acbb0a74ae88e2d77e696b7be52/abodeaddon-ai-dev/image-result/dev_abodeaddon-ai_adobe_00025.jpg"}],"status":"COMPLETED"},{"id":25,"createdAt":"2025-03-24T03:05:34.938Z","updatedAt":"2025-03-24T03:05:35.912Z","result":[{"filename":"image-result/dev_abodeaddon-ai_adobe_00024.jpg","download_url":"https://objectstorage.kr-central-2.kakaocloud.com/v1/cccf2acbb0a74ae88e2d77e696b7be52/abodeaddon-ai-dev/image-result/dev_abodeaddon-ai_adobe_00024.jpg"}],
-                if (workList[0].status === 'ERROR') {
+                if (workList[0].status === 'CANCELED') {
+                    this._isCheckWorkStatus = false
+                    this._workId = -1
+                    console.log('The image generation has been canceled.')
+                    return true
+                } else if (workList[0].status === 'ERROR') {
                     this._showAlertBanner(
                         'An error occurred while generating the image. Please try again later.'
                     )
-                    return
+                    this._isCheckWorkStatus = false
+                    this._workId = -1
+                    return true
                 }
 
                 // 완료된 작업에서 이미지 URL 추출
@@ -481,53 +505,63 @@ export class App extends LitElement {
                     const work = workList[i]
                     // console.log(`Processing work ${i}:`, work)
                     // console.log(`Work status: ${work.status}`)
-                    console.log(`work.id=${work.id}`) //ok
+                    if (isDebugLog) {
+                        console.log(
+                            `완료된 작업에서 이미지 URL 추출시작. work.id=${work.id}`
+                        ) //ok
+                    }
                     if (work.status === 'COMPLETED') {
-                        // setTimeout(() => {
-                        //     this._isLoading = false
-                        // const url = URL.createObjectURL(
-                        //     work.result[0].download_url
-                        // )
-
-                        // }, 500)
-                        if (work.result && work.result.length > 0) {
-                            // console.log(
-                            //     `Work ${i} has ${work.result.length} results`
-                            // )
-
-                            for (let j = 0; j < work.result.length; j++) {
-                                const res = work.result[j]
-                                // console.log(`Processing result ${j}:`, res)
-                                console.log(
-                                    `Processing result + id ${j}:`,
-                                    work.id
-                                ) //undefined
-                                //{filename: 'image-result/dev_abodeaddon-ai_adobe_00026.jpg', download_url: 'https://objectstorage.kr-central-2.kakaocloud.com/…ev/image-result/dev_abodeaddon-ai_adobe_00026.jpg'}
-
-                                if (res.download_url) {
+                        setTimeout(async () => {
+                            if (work.result && work.result.length > 0) {
+                                if (isDebugLog) {
                                     console.log(
-                                        `Adding URL to completedImages: ${res.download_url}`
-                                    )
-                                    completedImages.push({
-                                        url: res.download_url,
-                                        id: workId,
-                                    })
+                                        `Workid has ${work.result.length} results`
+                                    ) //ok
+                                }
 
-                                    await this._addImageFromURL(
-                                        res.download_url
-                                    )
-                                    isCompleted = true
-                                    console.log(`Work ${i} is COMPLETED`)
-                                    this._isLoading = false
-                                    this._loadingProgress = 100
-                                    this.requestUpdate()
+                                for (let j = 0; j < work.result.length; j++) {
+                                    const res = work.result[j]
+                                    // console.log(`Processing result ${j}:`, res)
+                                    console.log(
+                                        `Processing result + id ${j}:`,
+                                        work.id
+                                    ) //undefined
+                                    //{filename: 'image-result/dev_abodeaddon-ai_adobe_00026.jpg', download_url: 'https://objectstorage.kr-central-2.kakaocloud.com/…ev/image-result/dev_abodeaddon-ai_adobe_00026.jpg'}
+
+                                    if (res.download_url) {
+                                        if (isDebugLog) {
+                                            console.log(
+                                                `Adding URL to completedImages: ${res.download_url}`
+                                            )
+                                        }
+                                        this._generatedImages = [
+                                            {
+                                                url: res.download_url,
+                                                id: workId,
+                                            },
+                                            ...this._generatedImages,
+                                        ]
+
+                                        await this._addImageFromURL(
+                                            res.download_url
+                                        )
+                                        isCompleted = true
+                                        console.log(`Work ${i} is COMPLETED`)
+                                        this._isLoading = false
+                                        this._loadingProgress = 100
+                                        this.requestUpdate()
+                                    }
                                 }
                             }
-                        }
+                            this._workId = -1
+                            this._isCheckWorkStatus = false
+                        }, 0)
+                        return true
                     } else if (work.status === 'ERROR') {
                         this._showAlertBanner(
                             ' An error occurred while generating the image. Please try again in a moment.'
                         )
+                        this._isCheckWorkStatus = false
                     }
                 }
 
@@ -537,37 +571,37 @@ export class App extends LitElement {
                 // )
 
                 // 완료된 이미지가 있을 때만 this._generatedImages에 추가
-                if (completedImages.length > 0) {
-                    // 기존 이미지 목록에 새 이미지 추가 (중복 방지)
-                    let updatedImages = [...this._generatedImages]
+                // if (completedImages.length > 0) {
+                //     // 기존 이미지 목록에 새 이미지 추가 (중복 방지)
+                //     let updatedImages = [...this._generatedImages]
 
-                    for (const newImage of completedImages) {
-                        if (
-                            !updatedImages.some(
-                                (image) => image.url === newImage.url
-                            )
-                        ) {
-                            updatedImages.unshift(newImage) // 배열의 맨 앞에 추가
-                        }
-                    }
+                //     for (const newImage of completedImages) {
+                //         if (
+                //             !updatedImages.some(
+                //                 (image) => image.url === newImage.url
+                //             )
+                //         ) {
+                //             updatedImages.unshift(newImage) // 배열의 맨 앞에 추가
+                //         }
+                //     }
 
-                    // 새 배열 참조로 할당하여 변경 감지 트리거
-                    this._generatedImages = updatedImages
-                    console.log(
-                        `Updated this._generatedImages:`,
-                        this._generatedImages
-                    ) //['https://objectstorage.kr-central-2.kakaocloud.com/…ev/image-result/dev_abodeaddon-ai_adobe_00036.jpg',....
+                //     // 새 배열 참조로 할당하여 변경 감지 트리거
+                //     this._generatedImages = updatedImages
+                //     console.log(
+                //         `Updated this._generatedImages:`,
+                //         this._generatedImages
+                //     ) //['https://objectstorage.kr-central-2.kakaocloud.com/…ev/image-result/dev_abodeaddon-ai_adobe_00036.jpg',....
 
-                    // await this._updateUserAccessData()
-                    this.requestUpdate()
-                    return true // 작업 완료
-                } else if (isCompleted) {
-                    this._showAlertBanner(
-                        'Work is completed but no images found'
-                    )
-                    return true // 작업은 완료되었지만 이미지가 없음
-                }
-
+                //     // await this._updateUserAccessData()
+                //     this.requestUpdate()
+                //     return true // 작업 완료
+                // } else if (isCompleted) {
+                //     this._showAlertBanner(
+                //         'Work is completed but no images found'
+                //     )
+                //     return true // 작업은 완료되었지만 이미지가 없음
+                // }
+                this._isCheckWorkStatus = false
                 return false // 작업 진행 중
             }
 
@@ -578,33 +612,45 @@ export class App extends LitElement {
             if (!isComplete) {
                 // const workStatus = await checkWorkStatus(); // Assuming checkWorkStatus returns work status
 
-                console.log(`Work is not completed yet. Setting up polling...`)
+                if (isDebugLog) {
+                    console.log(
+                        `Work is not completed yet. Setting up polling...`
+                    )
+                }
 
                 // 5초마다 작업 상태 확인 (최대 12회, 총 1분)
                 let attempts = 0
-                const maxAttempts = 12
                 const interval = setInterval(async () => {
                     attempts++
-                    console.log(`Polling attempt ${attempts}/${maxAttempts}`)
+                    if (isDebugLog) {
+                        console.log(`Polling attempt ${attempts}`) //무한
+                    }
 
                     const isComplete = await checkWorkStatus()
 
-                    if (isComplete || attempts >= maxAttempts) {
+                    if (isComplete) {
                         console.log(
                             `Polling complete. isComplete=${isComplete}, attempts=${attempts}`
                         )
                         clearInterval(interval)
 
                         // Hide loading screen after operation completes
-                        this._isLoading = true
-                        this._loadingProgress = 100
-                        setTimeout(async () => {
-                            this._isLoading = false
-                            await this._updateUserAccessData()
-                            this.requestUpdate()
-                        }, 500)
+                        this._isLoading = false
+                        if (isDebugLog) {
+                            console.log(
+                                '⏹ setting _isLoading=false, now re-rendering…'
+                            )
+                        }
+
+                        await this._updateUserAccessData()
+                        this.requestUpdate()
+                        if (isDebugLog) {
+                            console.log(
+                                '🔄 requestUpdate() after loading complete'
+                            )
+                        }
                     }
-                }, 5000)
+                }, 1000)
             }
         } catch (error) {
             console.error('_handleClick error:', error)
