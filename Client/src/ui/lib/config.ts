@@ -22,4 +22,6 @@ if (process.env.PACKAGE_TYPE === 'distribution') {
     BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2121'
 }
 
+//BACK_END_URL = 'http://localhost:2121'
+
 console.log(`BACK_END_URL=${BACK_END_URL}`)

@@ -46,7 +46,7 @@ export const checkNewDayAndResetData = async (userId: any, dbUser: any) => {
         updateData = { lastLoginAt: new Date() }
     }
 
-    await prisma.user.update({
+    return await prisma.user.update({
         where: { id: userId },
         data: updateData,
     })
@@ -96,7 +96,7 @@ export async function getActiveWorkCount(userId: string): Promise<number> {
                 userId: userId,
                 NOT: {
                     status: {
-                        in: ['ERROR', 'COMPLETED', 'CANCELED']
+                        in: ['ERROR', 'COMPLETED', 'CANCELED', 'REQUESTCANCEL' ]
                     }
                 }
             }
@@ -132,8 +132,15 @@ export const getUser = async (userId: any) => {
 
             logger.info(`getUser New user created: ${userId}`)
         } else {
-            await checkNewDayAndResetData(userId, user)
+            user = await checkNewDayAndResetData(userId, user)
         }
+
+        // checkNewDayAndResetData에서 update가 안되나...
+        user = await prisma.user.findUnique({
+            where: {
+                id: userId,
+            },
+        })
 
         const workingCount = await getActiveWorkCount(userId)
         const userData = {

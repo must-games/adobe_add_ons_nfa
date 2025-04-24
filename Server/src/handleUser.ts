@@ -36,7 +36,7 @@ export async function handleUserAccess(req: Request, res: Response) {
         res.send({ success: true, user: user, limitInfo: limitInfo })
         return
     } catch (e) {
-        logger.error(`/image-list e=${e}`)
+        logger.error(`/user-access e=${e}`)
     }
 
     res.status(500).json({ success: false })
@@ -64,6 +64,6 @@ export async function handleGetUser(req: Request, res: Response) {
         res.send({ success: true, user: user })
         return
     } catch (e) {
-        logger.error(`/image-list e=${e}`)
+        logger.error(`/user-get e=${e}`)
     }
 }

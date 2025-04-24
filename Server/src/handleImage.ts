@@ -9,7 +9,11 @@ import {
     GetObjectStorageUrl,
 } from './objectStorageWrapper'
 import { prisma } from './database'
-import { addImageGeneratedCount } from './user' 
+import { addImageGeneratedCount } from './user'
+
+interface MulterRequest extends Request {
+    file?: any
+}
 
 export async function handleDeleteWork(req: Request, res: Response) {
     if (isDebugLog) {
@@ -86,8 +90,137 @@ export async function handleImageList(req: Request, res: Response) {
     res.status(500).json({ success: false })
 }
 
-interface MulterRequest extends Request {
-    file?: any
+export async function handleImageGenCancel(req: MulterRequest, res: Response) {
+    if (isDebugLog) {
+        logger.debug(`/image-gen-cancel`)
+    }
+
+    try {
+        const userId = req.body.userId
+        const workId = req.body.workId || -1
+
+        if (isDebugLog) {
+            logger.debug(`userId=${userId} workId=${workId}`)
+        }
+
+        const work = await prisma.work.findFirst({
+            where: { id: workId, userId: userId },
+        })
+
+        if (work) {
+            //이미 완료가 되어도 취소해버리자.
+            if (work.status === 'COMPLETED') {
+                const dbUser = await prisma.user.findUnique({
+                    where: {
+                        id: userId,
+                    },
+                })
+
+                if (
+                    dbUser &&
+                    dbUser.imagesGeneratedToday > 0 &&
+                    dbUser.imagesGeneratedTotal > 0
+                ) {
+                    if (isDebugLog) {
+                        logger.debug(`work status=${work.status}`)
+                        logger.debug(
+                            `dbUser.imagesGeneratedToday=${dbUser.imagesGeneratedToday}`
+                        )
+                        logger.debug(
+                            `dbUser.imagesGeneratedTotal=${dbUser.imagesGeneratedTotal}`
+                        )
+                    }
+
+                    await prisma.user.update({
+                        where: {
+                            id: userId,
+                        },
+                        data: {
+                            imagesGeneratedToday:
+                                dbUser.imagesGeneratedToday - 1,
+                            imagesGeneratedTotal:
+                                dbUser.imagesGeneratedTotal - 1,
+                        },
+                    })
+                }
+            } else if (
+                work.status == 'REQUESTCANCEL' ||
+                work.status == 'CANCELED'
+            ) {
+                res.status(200).json({ success: true })
+                return
+            }
+        }
+
+        await prisma.work.update({
+            where: { id: workId, userId: userId },
+            data: {
+                status: 'REQUESTCANCEL',
+                updatedAt: new Date(),
+            },
+        })
+
+        // 필요없다.
+        // await prisma.requestCancelWork.create({
+        //     data: {
+        //         userId: userId,
+        //         workId: workId,
+        //         canceled: false,
+        //     },
+        // })
+
+        res.status(200).json({ success: true })
+        return
+    } catch (e) {
+        logger.error(`/image-gen-cancel e=${e}`)
+    }
+
+    res.status(500).json({ success: false })
+}
+
+export async function handleCreateImageGen(req: Request, res: Response) {
+    if (isDebugLog) {
+        logger.debug(`/image-create-gen`)
+    }
+
+    try {
+        const userId = req.body.userId
+        if (isDebugLog) {
+            console.log(JSON.stringify(req.body, null, 2))
+            console.log('파일 정보:', req.file)
+        }
+
+        const newWork = await prisma.work.create({
+            data: {
+                userId,
+                result: '[]',
+                description: '',
+                imagePrefix: 'kstylo_hair',
+                promptId: '',
+                selectedImageKey: '',
+                selectedHairColorKey: '',
+                sourceImageInfo: JSON.stringify(''),
+                status: 'CREATED',
+            },
+        })
+
+        if (!newWork) {
+            logger.error(`/image-create-gen create work failed`)
+            res.status(500).json({ success: false })
+            return
+        }
+
+        res.status(200).json({
+            success: true,
+            workId: newWork.id,
+            resultPath: '',
+        })
+        return
+    } catch (e) {
+        logger.error(`/image-create-gen e=${e}`)
+    }
+
+    res.status(500).json({ success: false })
 }
 
 export async function handleImageGen(req: MulterRequest, res: Response) {
@@ -97,6 +230,7 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
 
     try {
         const userId = req.body.userId
+        const workId = parseInt(req.body.workId || -1)
         if (isDebugLog) {
             console.log(JSON.stringify(req.body, null, 2))
             console.log('파일 정보:', req.file)
@@ -133,38 +267,84 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                 path: resultPath,
             }
 
-            const newWork = await prisma.work.create({
-                data: {
-                    userId,
-                    result: '[]',
-                    description: '',
-                    imagePrefix: 'kstylo_hair',
-                    promptId: '',
-                    selectedImageKey: selectedImageKey,
-                    selectedHairColorKey: selectedHairColorKey,
-                    sourceImageInfo: JSON.stringify(sourceImageInfo),
-                },
+            if (workId <= 0) {
+                const newWork = await prisma.work.create({
+                    data: {
+                        userId,
+                        result: '[]',
+                        description: '',
+                        imagePrefix: 'kstylo_hair',
+                        promptId: '',
+                        selectedImageKey: selectedImageKey,
+                        selectedHairColorKey: selectedHairColorKey,
+                        sourceImageInfo: JSON.stringify(sourceImageInfo),
+                        status: 'PENDING',
+                    },
+                })
+
+                if (!newWork) {
+                    logger.error(`/image-gen create work failed`)
+                    res.status(500).json({ success: false })
+                    return
+                }
+
+                //서버에서 처리
+                //await addImageGeneratedCount(userId, 1)
+
+                res.status(200).json({
+                    success: true,
+                    workId: newWork.id,
+                    resultPath: resultPath,
+                })
+                return
+            }
+
+            const work = await prisma.work.findFirst({
+                where: { id: workId, userId: userId },
             })
 
-            if (!newWork) {
-                logger.error(`/image-gen create work failed`)
+            if (!work) {
+                logger.error(`/image-gen update not exist work ${workId}`)
                 res.status(500).json({ success: false })
                 return
             }
 
-            //서버에서 처리
-            //await addImageGeneratedCount(userId, 1)
+            if (work.status != 'CREATED') {
+                if (isDebugLog) {
+                    logger.debug(
+                        `/image-gen work.status ${work.status} so pass`
+                    )
+                }
+                //worker에서 처리.
+                res.status(200).json({
+                    success: true,
+                    workId: work.id,
+                    resultPath: '',
+                })
+                return
+            }
+
+            await prisma.work.update({
+                where: {
+                    userId: userId,
+                    id: workId,
+                    status: 'CREATED',
+                },
+                data: {
+                    selectedImageKey: selectedImageKey,
+                    selectedHairColorKey: selectedHairColorKey,
+                    sourceImageInfo: JSON.stringify(sourceImageInfo),
+                    status: 'PENDING',
+                },
+            })
 
             res.status(200).json({
                 success: true,
-                workId: newWork.id,
+                workId: work.id,
                 resultPath: resultPath,
             })
             return
         }
-
-        //const imagePath = body.imagePath
-        //const selectedImageKey = body.selectedImageKey
     } catch (e) {
         logger.error(`/image-gen e=${e}`)
     }
@@ -182,26 +362,31 @@ export async function handleImageGetFile(req: MulterRequest, res: Response) {
 
         const response = await fetch(url)
         if (!response.ok) {
-            throw new Error(`Failed to fetch: ${response.status} ${response.statusText}`)
+            throw new Error(
+                `Failed to fetch: ${response.status} ${response.statusText}`
+            )
         }
 
-        const contentType = response.headers.get('Content-Type') || 'application/octet-stream'
+        const contentType =
+            response.headers.get('Content-Type') || 'application/octet-stream'
         const arrayBuffer = await response.arrayBuffer()
         const base64Data = Buffer.from(arrayBuffer).toString('base64')
 
         if (isDebugLog) {
-            console.log(`handleImageGetFile url=${url} contentType=${contentType}`)
+            console.log(
+                `handleImageGetFile url=${url} contentType=${contentType}`
+            )
         }
-        
+
         res.status(200).json({
             success: true,
             contentType: contentType,
-            data: base64Data
+            data: base64Data,
         })
         return
     } catch (error) {
         console.error('Error downloading file:', error)
     }
-    
+
     res.status(500).json({ success: false })
 }

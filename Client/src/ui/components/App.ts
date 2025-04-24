@@ -427,25 +427,40 @@ export class App extends LitElement {
                 }
             }, 800)
 
-            // let workId = await createGenerateImage(this._userId)
-            // this._workId = workId
-
-            let workId = await generateImage(
-                this._userId,
-                this._selectedImageKey,
-                this._uploadedFile,
-                this._selectedHairColor || ''
-            )
+            let workId = await createGenerateImage(this._userId)
             this._workId = workId
-            console.log(`Generated workId: ${workId}`)
+
+            if (isDebugLog) {
+                console.log('◀ createGenerateImage returned:', workId)
+            }
 
             if (workId < 0) {
+                clearInterval(progressInterval)
                 this._showAlertBanner('Failed to generate image')
                 // console.error(`generateImage failed with workId: ${workId}`)
                 this._isLoading = false
                 this.requestUpdate()
                 return
             }
+
+            this._workId = await generateImage(
+                this._userId,
+                this._workId,
+                this._selectedImageKey,
+                this._uploadedFile,
+                this._selectedHairColor || ''
+            )
+            
+            console.log(`Generated workId: ${this._workId}`)
+
+            if (this._workId < 0) {
+                this._showAlertBanner('Failed to generate image')
+                // console.error(`generateImage failed with workId: ${workId}`)
+                this._isLoading = false
+                this.requestUpdate()
+                return
+            }
+            
             // 작업 상태 확인 및 이미지 업데이트를 위한 함수
             const checkWorkStatus = async () => {
                 const workList = await getWorkList(this._userId, workId, '')

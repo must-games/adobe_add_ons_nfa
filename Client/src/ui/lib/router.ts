@@ -123,6 +123,7 @@ export async function createGenerateImage(userId: string) {
 
 export async function generateImage(
     userId: string,
+    workId: number,
     selectedImageKey: string,
     file: File,
     selectedHairColorKey: string
@@ -139,6 +140,7 @@ export async function generateImage(
 
         const formData = new FormData()
         formData.append('userId', userId)
+        formData.append('workId', workId.toString())
         formData.append('sourceImageFile', blob, file.name)
         formData.append('selectedImageKey', selectedImageKey)
         formData.append('selectedHairColorKey', selectedHairColorKey)
