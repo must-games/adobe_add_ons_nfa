@@ -364,18 +364,18 @@ export class App extends LitElement {
                         )
                     }
 
-                    // jpg가 확실하다...
-                    const fixedBlob = new Blob([imageBlob], {
-                        type: 'image/jpeg',
-                    })
+                    // 'image/jpeg로 지정되어 있다. 이게 안되면 drag & drop안됨.
+                    // const fixedBlob = new Blob([imageBlob], {
+                    //     type: 'image/jpeg',
+                    // })
 
-                    if (isDebugLog) {
-                        console.log(
-                            `handleImageDrag completionCallback 3 ${imageUrl}`
-                        )
-                    }
+                    // if (isDebugLog) {
+                    //     console.log(
+                    //         `handleImageDrag completionCallback 3 ${imageUrl}`
+                    //     )
+                    // }
 
-                    return [{ blob: fixedBlob }]
+                    return [{ blob: imageBlob }]
                 },
             })
         } catch (e) {
@@ -450,7 +450,7 @@ export class App extends LitElement {
                 this._uploadedFile,
                 this._selectedHairColor || ''
             )
-            
+
             console.log(`Generated workId: ${this._workId}`)
 
             if (this._workId < 0) {
@@ -460,7 +460,7 @@ export class App extends LitElement {
                 this.requestUpdate()
                 return
             }
-            
+
             // 작업 상태 확인 및 이미지 업데이트를 위한 함수
             const checkWorkStatus = async () => {
                 const workList = await getWorkList(this._userId, workId, '')
