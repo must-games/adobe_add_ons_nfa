@@ -18,8 +18,10 @@ const app = express()
 const PORT = process.env.SERVER_PORT || 2111
 
 const options = {
-    key: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/privkey.pem'),
-    cert: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/fullchain.pem'),
+    //key: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/privkey.pem'),
+    //cert: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/fullchain.pem'),
+    key: fs.readFileSync('./privkey.pem'),
+    cert: fs.readFileSync('./fullchain.pem')
 }
 
 app.use(cors())
