@@ -12,7 +12,7 @@ module.exports = {
                 DATABASE_URL:
                     'mysql://root:evgXHfGBMUxRdKvp@210.109.14.76:3306/abodeaddon-hair',
                 STORAGE_BUCKET: 'abodeaddon-hair',
-                SERVER_PORT: 2122,
+                SERVER_PORT: 443,
                 DAILY_IMAGE_GENERATION_LIMIT: 1,
             },
         },
