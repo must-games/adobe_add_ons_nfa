@@ -4,7 +4,7 @@ export const SERVER_TAG = 'abodeaddon-ai-base'
 export const VENDOR = 'mustg'
 
 //export const BACK_END_URL = 'http://localhost:2111'
-export let BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2111'
+export let BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
 
 export let isDebugLog = false
 if (process.env.DEBUG === 'true') {
@@ -16,12 +16,18 @@ if (isDebugLog) {
     console.log(`process.env.DEBUG=${process.env.DEBUG}`)    
 }
 
+// if (process.env.PACKAGE_TYPE === 'distribution') {
+//     BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2122'
+// } else {
+//     BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2121'
+// }
+
 if (process.env.PACKAGE_TYPE === 'distribution') {
-    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2122'
+    BACK_END_URL = 'https://adobe-hair-back.mustg.kr:443'
 } else {
-    BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2121'
+    BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
 }
 
-//BACK_END_URL = 'http://localhost:2121'
+//BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
 
 console.log(`BACK_END_URL=${BACK_END_URL}`)
