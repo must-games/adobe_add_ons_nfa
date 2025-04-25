@@ -11,7 +11,18 @@ const secret = 'adobewebserver' // GitHub Webhook에 설정한 Secret
 
 app.use(express.json())
 
-app.post('/gitcommit', (req, res) => {
+function hasServerCommit(commits) {
+    if (!commits || !Array.isArray(commits)) {
+        return false
+    }
+
+    return commits.some((commit) => {
+        const trimmedMessage = commit.message.trim()
+        return trimmedMessage.startsWith('[Server]')
+    })
+}
+
+app.post('/gitcommit', async (req, res) => {
     console.log('data inc' + res)
 
     try {
@@ -48,13 +59,19 @@ app.post('/gitcommit', (req, res) => {
             console.log(`Combined Commit Message: ${finalMessage}`)
         }
 
-        // 비동기 함수로 Git pull 및 빌드 처리
-        if (branch == 'dev') {
-            handleGitPullAndBuildWorkerDev(finalMessage)
-        } else if (branch == 'main') {
-            handleGitPullAndBuildWorkerLive(finalMessage)
+        if (hasServerCommit(req.body.commits)) {
+            // 비동기 함수로 Git pull 및 빌드 처리
+            if (branch == 'dev') {
+                handleGitPullAndBuildWorkerDev(finalMessage)
+            } else if (branch == 'main') {
+                handleGitPullAndBuildWorkerLive(finalMessage)
+            } else {
+                console.error(`unknown branch ${branch}`)
+            }
         } else {
-            console.error(`unknown branch ${branch}`)
+            await sendSlackNotification(
+                `:adobe_flash: :white_check_mark: (${branch}) adobe_add_ons_hair just Commited
+           ${finalMessage}`)
         }
     } catch (e) {
         console.log(e)
