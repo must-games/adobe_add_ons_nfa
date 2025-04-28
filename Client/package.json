@@ -6,8 +6,8 @@
         "clean": "ccweb-add-on-scripts clean",
         "build": "ccweb-add-on-scripts build --use webpack",
         "start": "cross-env PACKAGE_TYPE=private DEBUG=true ccweb-add-on-scripts start --use webpack",
-        "package": "cross-env PACKAGE_TYPE=private DEBUG=true ccweb-add-on-scripts package --use webpack",
-        "package-distribution": "cross-env PACKAGE_TYPE=distribution DEBUG=false ccweb-add-on-scripts package --use webpack"
+        "package-dev": "cross-env PACKAGE_TYPE=private DEBUG=true ccweb-add-on-scripts package --use webpack",
+        "package-live": "cross-env PACKAGE_TYPE=distribution DEBUG=false ccweb-add-on-scripts package --use webpack"
     },
     "keywords": [
         "Adobe",

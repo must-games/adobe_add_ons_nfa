@@ -1,7 +1,7 @@
 {
     "testId": "713d96ea-9d1f-4cdf-a541-3a8d197ee84e",
     "name": "KKUSA AI Profile Generator",
-    "version": "1.0.0",
+    "version": "0.9.0",
     "manifestVersion": 2,
     "requirements": {
         "apps": [
