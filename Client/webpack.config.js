@@ -32,8 +32,11 @@ module.exports = {
     },
     plugins: [
         new webpack.DefinePlugin({
-            'process.env.PACKAGE_TYPE': JSON.stringify(
-                process.env.PACKAGE_TYPE || 'private'
+            'process.env.SERVER_TYPE': JSON.stringify(
+                process.env.SERVER_TYPE || 'private'
+            ),
+            'process.env.DAILY_IMAGE_GENERATION_LIMIT': JSON.stringify(
+                process.env.DAILY_IMAGE_GENERATION_LIMIT || '-1'
             ),
             'process.env.DEBUG': JSON.stringify(process.env.DEBUG || 'false'),
         }),

@@ -1,4 +1,8 @@
-import { BACK_END_URL, isDebugLog } from './config'
+import {
+    BACK_END_URL,
+    isDebugLog,
+    DAILY_IMAGE_GENERATION_LIMIT,
+} from './config'
 
 export async function userAccess(userId: string) {
     try {
@@ -13,6 +17,7 @@ export async function userAccess(userId: string) {
             },
             body: JSON.stringify({
                 userId,
+                dailyImageGenerationLimit: DAILY_IMAGE_GENERATION_LIMIT,
             }),
         })
 

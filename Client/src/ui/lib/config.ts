@@ -12,21 +12,25 @@ if (process.env.DEBUG === 'true') {
 }
 
 if (isDebugLog) {
-    console.log(`process.env.PACKAGE_TYPE=${process.env.PACKAGE_TYPE}`)
+    console.log(`process.env.SERVER_TYPE=${process.env.SERVER_TYPE}`)
     console.log(`process.env.DEBUG=${process.env.DEBUG}`)    
 }
 
-// if (process.env.PACKAGE_TYPE === 'distribution') {
+// if (process.env.SERVER_TYPE === 'distribution') {
 //     BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2122'
 // } else {
 //     BACK_END_URL = 'https://kakaogpu-test.mustg.kr:2121'
 // }
 
-if (process.env.PACKAGE_TYPE === 'distribution') {
+if (process.env.SERVER_TYPE === 'distribution') {
     BACK_END_URL = 'https://adobe-hair-back.mustg.kr:443'
 } else {
     BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
 }
+
+export const DAILY_IMAGE_GENERATION_LIMIT = parseInt(
+    process.env.DAILY_IMAGE_GENERATION_LIMIT || '-1'
+)
 
 //BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
 

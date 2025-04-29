@@ -5,9 +5,11 @@
     "scripts": {
         "clean": "ccweb-add-on-scripts clean",
         "build": "ccweb-add-on-scripts build --use webpack",
-        "start": "cross-env PACKAGE_TYPE=private DEBUG=true ccweb-add-on-scripts start --use webpack",
-        "package-dev": "cross-env PACKAGE_TYPE=private DEBUG=true ccweb-add-on-scripts package --use webpack",
-        "package-live": "cross-env PACKAGE_TYPE=distribution DEBUG=false ccweb-add-on-scripts package --use webpack"
+        "start": "cross-env SERVER_TYPE=private DEBUG=true ccweb-add-on-scripts start --use webpack",
+        "start-private": "cross-env SERVER_TYPE=distribution DAILY_IMAGE_GENERATION_LIMIT=100 DEBUG=true ccweb-add-on-scripts start --use webpack",
+        "package-dev": "cross-env SERVER_TYPE=private DEBUG=true ccweb-add-on-scripts package --use webpack",
+        "package-private": "cross-env SERVER_TYPE=distribution DAILY_IMAGE_GENERATION_LIMIT=100 DEBUG=true ccweb-add-on-scripts package --use webpack",
+        "package-live": "cross-env SERVER_TYPE=distribution DEBUG=false ccweb-add-on-scripts package --use webpack"
     },
     "keywords": [
         "Adobe",

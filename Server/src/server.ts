@@ -10,6 +10,7 @@ import {
     VENDOR,
     STORAGE_BUCKET,
     isDebugLog,
+    DAILY_IMAGE_GENERATION_RESET,
 } from './config'
 import logger from './log'
 import { setupRoutes } from './setupRoutes'
@@ -21,7 +22,7 @@ const options = {
     //key: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/privkey.pem'),
     //cert: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/fullchain.pem'),
     key: fs.readFileSync('./privkey.pem'),
-    cert: fs.readFileSync('./fullchain.pem')
+    cert: fs.readFileSync('./fullchain.pem'),
 }
 
 app.use(cors())
@@ -40,6 +41,7 @@ const serverInfo = () => {
     logger.info(`SERVER_TAG=${SERVER_TAG}`)
     logger.info(`VENDOR=${VENDOR}`)
     logger.info(`isDebugLog=${isDebugLog}`)
+    logger.info(`DAILY_IMAGE_GENERATION_RESET=${DAILY_IMAGE_GENERATION_RESET}`)
     logger.info(`DATABASE_URL=${process.env.DATABASE_URL}`)
     logger.info(`CLOUD_TYPE=${process.env.CLOUD_TYPE}`)
     logger.info(`STORAGE_BUCKET=${STORAGE_BUCKET}`)

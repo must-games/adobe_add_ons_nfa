@@ -16,9 +16,15 @@ export async function handleUserAccess(req: Request, res: Response) {
 
     try {
         const userId = req.body.userId
+        let dailyImageGenerationLimit =
+            req.body?.dailyImageGenerationLimit ?? -1
+
+        if (dailyImageGenerationLimit < 0) {
+            dailyImageGenerationLimit = DAILY_IMAGE_GENERATION_LIMIT
+        }
 
         if (isDebugLog) {
-            logger.debug(`handleUserAccess userId=${userId}`)
+            logger.debug(`handleUserAccess userId=${userId} dailyImageGenerationLimit=${dailyImageGenerationLimit}`)
         }
 
         let user = await getUser(userId)
@@ -29,7 +35,7 @@ export async function handleUserAccess(req: Request, res: Response) {
         }
 
         const limitInfo = {
-            DAILY_IMAGE_GENERATION_LIMIT: DAILY_IMAGE_GENERATION_LIMIT,
+            DAILY_IMAGE_GENERATION_LIMIT: dailyImageGenerationLimit,
             STORED_IMAGE_EXPIRATION_DAYS: STORED_IMAGE_EXPIRATION_DAYS,
         }
 
