@@ -1879,9 +1879,8 @@ export class App extends LitElement {
                                                                                    .DAILY_IMAGE_GENERATION_LIMIT
                                                                            }
                                                                            free
-                                                                           credit </br>
-                                                                           every
-                                                                           day
+                                                                           credit. </br>
+                                                                           No daily reset.
                                                                 </sp-tooltip>
                                                             </sp-button>
 
