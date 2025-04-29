@@ -661,7 +661,7 @@ export class App extends LitElement {
     }
 
     // 경고창을 표시하는 메서드
-    private _showAlertBanner(message: string) {
+    private _showAlertBanner(message: string, timeout = 5000) {
         this.alertVisible = true // 경고창 표시
         this.alertMessage = message // 메시지 저장
 
@@ -676,7 +676,7 @@ export class App extends LitElement {
             } else {
                 this.alertVisible = false // 경고창 숨김
             }
-        }, 5000) // 5초 후에 fade-out 시작
+        }, timeout) // 5초 후에 fade-out 시작
     }
 
     private async _addImageFromURL(url: string) {
@@ -936,16 +936,35 @@ export class App extends LitElement {
         if (isDebugLog) {
             console.log(`_updateUserAccessData`)
         }
+
+        this._generateDisabledTooltip = `Loading...`
         const userAccessData = await userAccess(this._userId)
+
+        if (userAccessData == null || userAccessData.user == null) {
+            console.log(`userAccessData : ${JSON.stringify(userAccessData)}`)
+            console.log(`userAccessData.user  : ${userAccessData.user}`)
+            this._showAlertBanner(
+                `Unable to retrieve user information.
+                Please refresh the page or send feedback.`,
+                1000 * 60 * 60 * 24
+            )
+
+            this._generateImageMessage = `Retrive user information failed`
+            this._generateDisabledTooltip = `Something went wrong. Please refresh the page or send feedback.`
+            return
+        }
 
         this.userAccessData = userAccessData
         this.userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT =
             this.userAccessData.limitInfo.DAILY_IMAGE_GENERATION_LIMIT -
             this.userAccessData.user.imagesGeneratedToday
 
-        this.userAccessData.user = await getUser(this._userId)
-        this.userAccessData.user.imagesGeneratedToday =
-            this.userAccessData.user.imagesGeneratedToday
+        // this.userAccessData.user = await getUser(this._userId)
+        // this.userAccessData.user.imagesGeneratedToday =
+        //     this.userAccessData.user.imagesGeneratedToday
+
+        this._generateImageMessage = `Generating image (${this.userAccessData?.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT} left)`
+        this._generateDisabledTooltip = `You get ${this.userAccessData?.limitInfo.DAILY_IMAGE_GENERATION_LIMIT} free credit every day`
 
         if (isDebugLog) {
             // console.log(`------------------`)
@@ -1858,14 +1877,10 @@ export class App extends LitElement {
                                                                 ?disabled=${isButtonDisabled}
                                                                 style="width:100%; text-align:center;"
                                                             >
-                                                                Generate image
-                                                                (${
+                                                                ${
                                                                     this
-                                                                        .userAccessData
-                                                                        ?.limitInfo
-                                                                        .REMAINING_DAILY_IMAGE_GENERATION_LIMIT
+                                                                        ._generateImageMessage
                                                                 }
-                                                                left)
                                                                 <sp-tooltip
                                                                     self-managed
                                                                     placement="top"
