@@ -1808,8 +1808,8 @@ export class App extends LitElement {
                                                                   style="
                                                                          margin-top: 5px;
                                                                     height:48px;
-                                                                    border:1px solid #efefef;
-                                                                    color: #666;
+                                                                      border:1px solid #e2e2e2;
+                                                                    color: black;
                                                                     padding: 8px 0;
                                                                     display: flex;
                                                                     align-items: center;
