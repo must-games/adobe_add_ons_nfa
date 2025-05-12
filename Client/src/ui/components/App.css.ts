@@ -122,7 +122,7 @@ export const style = css`
     .upload-text {
         font-size: 13px;
         margin-bottom: 6px;
-        color: #bdbdbd;
+        color: black;
         line-height: 15px;
     }
 

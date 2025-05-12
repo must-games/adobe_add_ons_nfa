@@ -955,6 +955,13 @@ export class App extends LitElement {
         }
 
         this.userAccessData = userAccessData
+        //REMAINING_DAILY_IMAGE_GENERATION_LIMIT 가 0보다 작으면 0으로 설정
+        if (
+            this.userAccessData.limitInfo
+                .REMAINING_DAILY_IMAGE_GENERATION_LIMIT < 0
+        ) {
+            this.userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT = 0
+        }
         this.userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT =
             this.userAccessData.limitInfo.DAILY_IMAGE_GENERATION_LIMIT -
             this.userAccessData.user.imagesGeneratedToday
@@ -1383,7 +1390,7 @@ export class App extends LitElement {
                                                                   >
                                                                       <div
                                                                           class="dropzone-content"
-                                                                          style="background-color: #f5f5f5;padding:4px;"
+                                                                          style="background-color:white;padding:4px;"
                                                                       >
                                                                           <div
                                                                               class="upload-icon"
@@ -1734,8 +1741,8 @@ export class App extends LitElement {
                                                                   style="
                                                                     margin-top: 5px;
                                                                     height:48px;
-                                                                    border:1px solid #efefef;
-                                                                    color: #666;
+                                                                    border:1px solid #e2e2e2;
+                                                                    color: black;
                                                                     padding: 8px 0;
                                                                     display: flex;
                                                                     align-items: center;
