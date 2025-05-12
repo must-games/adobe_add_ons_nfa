@@ -32,6 +32,6 @@ export const DAILY_IMAGE_GENERATION_LIMIT = parseInt(
     process.env.DAILY_IMAGE_GENERATION_LIMIT || '-1'
 )
 
-//BACK_END_URL = 'https://adobe-hair-back.mustg.kr:2121'
+//BACK_END_URL = 'http://localhost:2121'
 
 console.log(`BACK_END_URL=${BACK_END_URL}`)

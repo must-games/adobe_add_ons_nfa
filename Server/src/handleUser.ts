@@ -8,6 +8,8 @@ import {
 import logger from './log'
 import { prisma } from './database'
 import { getUser } from './user'
+import { logToDB } from './dbLog'
+import { LogLevel } from '@prisma/client'
 
 export async function handleUserAccess(req: Request, res: Response) {
     if (isDebugLog) {
@@ -16,6 +18,9 @@ export async function handleUserAccess(req: Request, res: Response) {
 
     try {
         const userId = req.body.userId
+
+        await logToDB(userId, LogLevel.DEBUG, 'USER', 'ACCESS', '')
+
         let dailyImageGenerationLimit =
             req.body?.dailyImageGenerationLimit ?? -1
 

@@ -97,6 +97,8 @@ export async function getUser(userId: string) {
 }
 
 export async function createGenerateImage(userId: string) {
+    const startTime = performance.now()
+
     try {
         if (isDebugLog) {
             console.log(`createGenerateImage userId=${userId}`)
@@ -111,6 +113,23 @@ export async function createGenerateImage(userId: string) {
                 userId,
             }),
         })
+
+        const executionTime = (performance.now() - startTime) / 1000
+
+        if (isDebugLog) {
+            console.log(
+                `⏲️  createGenerateImage execution time : ${executionTime.toFixed(
+                    3
+                )}s`
+            )
+        }
+
+        await logToServer(
+            userId,
+            'IMAGE',
+            'CREATE',
+            `time=${executionTime.toFixed(3)}s`
+        )
 
         if (response.ok) {
             const data = await response.json()
@@ -133,6 +152,8 @@ export async function generateImage(
     file: File,
     selectedHairColorKey: string
 ) {
+    const startTime = performance.now()
+
     try {
         if (isDebugLog) {
             console.log(`generateImage filename=${file.name}`)
@@ -157,15 +178,67 @@ export async function generateImage(
 
         if (response.ok) {
             const data = await response.json()
+
+            const executionTime = (performance.now() - startTime) / 1000
+
+            if (isDebugLog) {
+                console.log(
+                    `⏲️ generateImage response.ok execution time: ${executionTime.toFixed(
+                        3
+                    )}s`
+                )
+            }
+
+            await logToServer(
+                userId,
+                'IMAGE',
+                'GEN',
+                `time=${executionTime.toFixed(3)}s`
+            )
+
             return data.workId
         } else {
             console.error(
                 `Failed to get generateImage with status: ${response.status}`
             )
+
+            const executionTime = (performance.now() - startTime) / 1000
+            if (isDebugLog) {
+                console.log(
+                    `⏲️  generateImage response: ${
+                        response.status
+                    } execution time: ${executionTime.toFixed(3)}s`
+                )
+            }
+
+            await logToServer(
+                userId,
+                'IMAGE',
+                'GEN_FAIL',
+                `time=${executionTime.toFixed(3)}s status=${response.status}`
+            )
+
             return -1
         }
     } catch (e) {
         console.error(`generateImage e=${e}`)
+
+        const executionTime = (performance.now() - startTime) / 1000
+
+        if (isDebugLog) {
+            console.log(
+                `⏲️  generateImage e execution time: ${executionTime.toFixed(
+                    3
+                )}s`
+            )
+        }
+
+        await logToServer(
+            userId,
+            'IMAGE',
+            'GEN_FAIL',
+            `time=${executionTime.toFixed(3)}s e=${e}`
+        )
 
         return -1
     }
@@ -254,6 +327,8 @@ export async function downloadFile(url: string): Promise<Blob> {
         console.log(`downloadFile url=${url}`)
     }
 
+    const startTime = performance.now()
+
     //일단 바로 받고
     try {
         //const proxyUrl = 'https://cors-anywhere.herokuapp.com/'
@@ -294,14 +369,88 @@ export async function downloadFile(url: string): Promise<Blob> {
             if (!response.ok) {
                 console.log('downloadFile success false')
             }
+
+            const executionTime = (performance.now() - startTime) / 1000
+            if (isDebugLog) {
+                console.log(
+                    `⏲️ generateImage response.ok execution time: ${executionTime.toFixed(
+                        3
+                    )}s`
+                )
+            }
+
+            await logToServer(
+                '',
+                'IMAGE',
+                'DOWNLOAD_FAILED',
+                `time=${executionTime.toFixed(3)}s`
+            )
             return null
         }
+
+        const executionTime = (performance.now() - startTime) / 1000
+        if (isDebugLog) {
+            console.log(
+                `⏲️ generateImage response.ok execution time: ${executionTime.toFixed(
+                    3
+                )}s`
+            )
+        }
+
+        await logToServer(
+            '',
+            'IMAGE',
+            'DOWNLOAD_SUCCESS',
+            `time=${executionTime.toFixed(3)}s`
+        )
 
         const blob = base64ToBlob(data.data, data.contentType)
         return blob
     } catch (error) {
         console.error('downloadFile 2 error=', error)
+
+        const executionTime = (performance.now() - startTime) / 1000
+        if (isDebugLog) {
+            console.log(
+                `⏲️ generateImage response.ok execution time: ${executionTime.toFixed(
+                    3
+                )}s`
+            )
+        }
+
+        await logToServer(
+            '',
+            'IMAGE',
+            'DOWNLOAD_FAILED',
+            `time=${executionTime.toFixed(3)}s e=${error}`
+        )
     }
 
     return null
+}
+
+export async function logToServer(
+    userId: string,
+    event: string,
+    tag: string,
+    message: string
+) {
+    try {
+        // 서버에 요청 보내기
+        const response = await fetch(BACK_END_URL + '/log', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ userId, event, tag, message }),
+        })
+
+        if (!response.ok) {
+            console.error(
+                `logToServer e= ${response.status}: ${response.statusText}`
+            )
+        }
+    } catch (error) {
+        console.error('logToServer error=', error)
+    }
 }

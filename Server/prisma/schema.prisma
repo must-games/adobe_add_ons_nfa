@@ -19,6 +19,7 @@ model User {
 
   @@index([userAccessStatus])
   @@index([id, userAccessStatus])
+  @@index([createdAt])
 }
 
 model Work {
@@ -43,6 +44,31 @@ model Work {
   @@index([userId, status])
   @@index([status, createdAt])
   @@index([status, updatedAt])
+  @@index([createdAt])
+  @@index([updatedAt])
+}
+
+model Log {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  createdAt DateTime @default(now())
+  level     LogLevel
+  event     String
+  tag       String
+  message   String
+  params    Json     @default("{}")
+
+  @@index([createdAt, event])
+  @@index([event, tag])
+  @@index([createdAt])
+}
+
+enum LogLevel {
+  DEBUG
+  INFO
+  WARN
+  ERROR
+  FATAL
 }
 
 enum UserRole {

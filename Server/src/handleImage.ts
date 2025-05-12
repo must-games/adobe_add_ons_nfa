@@ -9,7 +9,8 @@ import {
     GetObjectStorageUrl,
 } from './objectStorageWrapper'
 import { prisma } from './database'
-import { addImageGeneratedCount } from './user'
+import { logToDB } from './dbLog'
+import { LogLevel } from '@prisma/client'
 
 interface MulterRequest extends Request {
     file?: any
@@ -23,6 +24,8 @@ export async function handleDeleteWork(req: Request, res: Response) {
     try {
         const userId = req.body.userId
         const workId = req.body.workId
+
+        await logToDB(userId, LogLevel.INFO, 'IMAGE', 'DELETE_WORK', `workId=${workId}`)
 
         if (isDebugLog) {
             logger.debug(`userId=${userId} workId=${workId}`)
@@ -98,6 +101,8 @@ export async function handleImageGenCancel(req: MulterRequest, res: Response) {
     try {
         const userId = req.body.userId
         const workId = req.body.workId || -1
+
+        await logToDB(userId, LogLevel.INFO, 'IMAGE', 'GEN_CANCEL', `workId=${workId}`)
 
         if (isDebugLog) {
             logger.debug(`userId=${userId} workId=${workId}`)
@@ -190,6 +195,8 @@ export async function handleCreateImageGen(req: Request, res: Response) {
             console.log('파일 정보:', req.file)
         }
 
+        await logToDB(userId, LogLevel.INFO, 'IMAGE', 'CREATE', '')
+
         const newWork = await prisma.work.create({
             data: {
                 userId,
@@ -205,10 +212,14 @@ export async function handleCreateImageGen(req: Request, res: Response) {
         })
 
         if (!newWork) {
+            await logToDB(userId, LogLevel.ERROR, 'IMAGE', 'CREATE_FAIL', '')
+
             logger.error(`/image-create-gen create work failed`)
             res.status(500).json({ success: false })
             return
         }
+
+        await logToDB(userId, LogLevel.INFO, 'IMAGE', 'CREATE_SUCCESS', `workId=${newWork.id}`)
 
         res.status(200).json({
             success: true,
@@ -236,7 +247,11 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
             console.log('파일 정보:', req.file)
         }
 
+        await logToDB(userId, LogLevel.INFO, 'IMAGE', 'GEN', `workId=${workId}`)
+
         if (req.file == undefined || req.file == null) {
+            await logToDB(userId, LogLevel.INFO, 'IMAGE', 'GEN_ERROR', `workId=${workId} file undefined`)
+
             logger.error(`/image-gen req.file is undefined or null`)
             res.status(500).json({ success: false })
             return
@@ -254,6 +269,9 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                 )) == false
             ) {
                 logger.error(`/image-gen req.objectStorageUploadFile failed`)
+                
+                await logToDB(userId, LogLevel.ERROR, 'IMAGE', 'GEN_FAILED', `workId=${workId} objectStorageUploadFile failed`)
+
                 res.status(500).json({ success: false })
                 return
             }
@@ -283,6 +301,8 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                 })
 
                 if (!newWork) {
+                    await logToDB(userId, LogLevel.ERROR, 'IMAGE', 'GEN_FAILED', `workId=${workId} create work failed`)
+
                     logger.error(`/image-gen create work failed`)
                     res.status(500).json({ success: false })
                     return
@@ -290,6 +310,8 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
 
                 //서버에서 처리
                 //await addImageGeneratedCount(userId, 1)
+
+                await logToDB(userId, LogLevel.INFO, 'IMAGE', 'GEN_SUCCESS', `workId=${workId} case 1`)
 
                 res.status(200).json({
                     success: true,
@@ -304,6 +326,8 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
             })
 
             if (!work) {
+                await logToDB(userId, LogLevel.ERROR, 'IMAGE', 'GEN_FAILED', `workId=${workId} not exist work`)
+
                 logger.error(`/image-gen update not exist work ${workId}`)
                 res.status(500).json({ success: false })
                 return
@@ -337,6 +361,8 @@ export async function handleImageGen(req: MulterRequest, res: Response) {
                     status: 'PENDING',
                 },
             })
+
+            await logToDB(userId, LogLevel.INFO, 'IMAGE', 'GEN_SUCCESS', `workId=${workId} case 2`)
 
             res.status(200).json({
                 success: true,
