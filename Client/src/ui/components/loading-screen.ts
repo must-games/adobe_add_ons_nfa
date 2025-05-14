@@ -124,16 +124,16 @@ export class LoadingScreen extends LitElement {
     render() {
         return html`
             <div class="loading-container">
-                <div class="title">Generating your image</div>
+                <div class="title" style="text-align: center;">
+                    Crafting your perfect hair moment…
+                </div>
                 <div class="progress-bar">
                     <div
                         class="progress-fill"
                         style="width: ${this.progress}%"
                     ></div>
                 </div>
-                <div class="message">
-                    Just a moment, your image is being crafted!
-                </div>
+                <div class="message">Your image is being crafted!</div>
                 ${this.workId >= 0
                     ? html`
                           <div style="margin-top: 24px;">

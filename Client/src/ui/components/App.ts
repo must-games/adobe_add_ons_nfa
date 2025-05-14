@@ -1639,7 +1639,7 @@ export class App extends LitElement {
                                                                                                                         <!-- Using external SVG file instead of inline code -->
                                                                                                                         <img 
                                                                                                                         style="width: 24px; height: 24px; position:absolute; bottom: -8px; left: -5px;"
-                                                                                                                            src="./images/palette.png" 
+                                                                                                                            src="./images/pal3.png" 
                                                                                                                             alt="Hair coloring available"
                                                                                                                         />
 
