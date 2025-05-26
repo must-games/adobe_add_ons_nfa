@@ -29,7 +29,7 @@ export const STORED_IMAGE_EXPIRATION_DAYS = parseInt(
 )
 
 export const DAILY_IMAGE_GENERATION_LIMIT = parseInt(
-    process.env.DAILY_IMAGE_GENERATION_LIMIT || '5'
+    process.env.DAILY_IMAGE_GENERATION_LIMIT || '3'
 )
 
 export const DAILY_IMAGE_GENERATION_RESET =
