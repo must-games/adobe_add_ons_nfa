@@ -79,11 +79,13 @@ export class LoadingScreen extends LitElement {
         //이미지 업로드중이어서 아직 workId없을때
         if (!this.userId || this.workId === -1) {
             this.nextCancelWork = true
-            console.warn(
-                'userId or workId is missing',
-                this.userId,
-                this.workId
-            )
+            if (isDebugLog) {
+                console.log(
+                    'userId or workId is missing',
+                    this.userId,
+                    this.workId
+                )
+            }
             return
         }
 
@@ -99,7 +101,9 @@ export class LoadingScreen extends LitElement {
                 console.log('result', JSON.stringify(result))
             }
             if (result.success === true) {
-                console.log(`generateImageCanceled:${this.workId}`)
+                if (isDebugLog) {
+                    console.log(`generateImageCanceled:${this.workId}`)
+                }
                 this.dispatchEvent(
                     new CustomEvent('generation-cancelled', {
                         bubbles: true,

@@ -242,12 +242,16 @@ export class App extends LitElement {
         // 서버에서 가져온 이미지가 있으면 사용, 없으면 기본 이미지 사용
         if (completedImages.length > 0) {
             this._generatedImages = completedImages
-            console.log(
-                `this._generatedImages=${JSON.stringify(this._generatedImages)}`
-            )
-            console.log(
-                `this.completedImages=${JSON.stringify(completedImages)}`
-            )
+            if (isDebugLog) {
+                console.log(
+                    `this._generatedImages=${JSON.stringify(
+                        this._generatedImages
+                    )}`
+                )
+                console.log(
+                    `this.completedImages=${JSON.stringify(completedImages)}`
+                )
+            }
         } else {
             // 기본 이미지 목록 사용
             this._generatedImages = []
@@ -265,7 +269,12 @@ export class App extends LitElement {
         addOnUISdk.app.on(
             AppEvent.dragstart,
             (eventData: AppDragStartEventData) => {
-                console.log('The drag event has started for', eventData.element)
+                if (isDebugLog) {
+                    console.log(
+                        'The drag event has started for',
+                        eventData.element
+                    )
+                }
             }
         )
 
@@ -451,7 +460,9 @@ export class App extends LitElement {
                 this._selectedHairColor || ''
             )
 
-            console.log(`Generated workId: ${this._workId}`)
+            if (isDebugLog) {
+                console.log(`Generated workId: ${this._workId}`)
+            }
 
             if (this._workId < 0) {
                 this._showAlertBanner('Failed to generate image')
@@ -489,7 +500,9 @@ export class App extends LitElement {
                 ) {
                     this._isCheckWorkStatus = false
                     this._workId = -1
-                    console.log('The image generation has been canceled.')
+                    if (isDebugLog) {
+                        console.log('The image generation has been canceled.')
+                    }
                     return true
                 } else if (workList[0].status === 'ERROR') {
                     this._showAlertBanner(
@@ -525,10 +538,12 @@ export class App extends LitElement {
                                 for (let j = 0; j < work.result.length; j++) {
                                     const res = work.result[j]
                                     // console.log(`Processing result ${j}:`, res)
-                                    console.log(
-                                        `Processing result + id ${j}:`,
-                                        work.id
-                                    ) //undefined
+                                    if (isDebugLog) {
+                                        console.log(
+                                            `Processing result + id ${j}:`,
+                                            work.id
+                                        ) //undefined
+                                    }
                                     //{filename: 'image-result/dev_abodeaddon-ai_adobe_00026.jpg', download_url: 'https://objectstorage.kr-central-2.kakaocloud.com/…ev/image-result/dev_abodeaddon-ai_adobe_00026.jpg'}
 
                                     if (res.download_url) {
@@ -549,7 +564,11 @@ export class App extends LitElement {
                                             res.download_url
                                         )
                                         isCompleted = true
-                                        console.log(`Work ${i} is COMPLETED`)
+                                        if (isDebugLog) {
+                                            console.log(
+                                                `Work ${i} is COMPLETED`
+                                            )
+                                        }
                                         this._isLoading = false
                                         this._loadingProgress = 100
                                         this.requestUpdate()
@@ -559,6 +578,7 @@ export class App extends LitElement {
                             this._workId = -1
                             this._isCheckWorkStatus = false
                         }, 0)
+
                         return true
                     } else if (work.status === 'ERROR') {
                         this._showAlertBanner(
@@ -632,9 +652,11 @@ export class App extends LitElement {
                     const isComplete = await checkWorkStatus()
 
                     if (isComplete) {
-                        console.log(
-                            `Polling complete. isComplete=${isComplete}, attempts=${attempts}`
-                        )
+                        if (isDebugLog) {
+                            console.log(
+                                `Polling complete. isComplete=${isComplete}, attempts=${attempts}`
+                            )
+                        }
                         clearInterval(interval)
 
                         // Hide loading screen after operation completes
@@ -825,15 +847,21 @@ export class App extends LitElement {
         this._openMenuForImage = null
         switch (action) {
             case 'download':
-                console.log('Download image:', img)
+                if (isDebugLog) {
+                    console.log('Download image:', img)
+                }
                 this._downloadImage(img)
                 break
             case 'preview':
-                console.log('Open preview for:', img)
+                if (isDebugLog) {
+                    console.log('Open preview for:', img)
+                }
                 this._openPreviewModal(img)
                 break
             case 'delete':
-                console.log('Delete image:', img)
+                if (isDebugLog) {
+                    console.log('Delete image:', img)
+                }
                 // 클릭한 이미지의 id를 찾습니다
                 const imageToDelete = this._generatedImages.find(
                     (image) => image.url === img
@@ -888,7 +916,9 @@ export class App extends LitElement {
 
             // FileSaver를 사용하여 파일 저장
             saveAs(newBlob, fileName)
-            console.log('파일 저장 완료')
+            if (isDebugLog) {
+                console.log('파일 저장 완료')
+            }
         } catch (error) {
             console.error('이미지 다운로드 중 오류 발생:', error)
             this._showAlertBanner(
@@ -924,7 +954,9 @@ export class App extends LitElement {
                 // 모든 이미지가 성공적으로 삭제되면 배열을 비움
                 this._generatedImages = []
             } else {
-                console.error('일부 이미지 삭제 실패')
+                if (isDebugLog) {
+                    console.error('일부 이미지 삭제 실패')
+                }
             }
         } catch (error) {
             console.error('이미지 삭제 중 오류 발생:', error)
@@ -941,8 +973,12 @@ export class App extends LitElement {
         const userAccessData = await userAccess(this._userId)
 
         if (userAccessData == null || userAccessData.user == null) {
-            console.log(`userAccessData : ${JSON.stringify(userAccessData)}`)
-            console.log(`userAccessData.user  : ${userAccessData.user}`)
+            if (isDebugLog) {
+                console.log(
+                    `userAccessData : ${JSON.stringify(userAccessData)}`
+                )
+                console.log(`userAccessData.user  : ${userAccessData.user}`)
+            }
             this._showAlertBanner(
                 `Unable to retrieve user information.
                 Please refresh the page or send feedback.`,
