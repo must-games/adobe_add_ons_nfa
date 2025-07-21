@@ -187,6 +187,14 @@ export class App extends LitElement {
             console.log(`firststUpdated`)
         }
 
+        // body 스타일 직접 적용
+        document.body.style.margin = '0'
+        document.body.style.padding = '0'
+        document.body.style.overflow = 'hidden'
+        document.documentElement.style.margin = '0'
+        document.documentElement.style.padding = '0'
+        document.documentElement.style.overflow = 'hidden'
+
         // 전역 클릭 이벤트 리스너 추가
         document.addEventListener('click', this._handleGlobalClick.bind(this))
 
@@ -548,192 +556,136 @@ export class App extends LitElement {
     render() {
         return html`
             <sp-theme theme="express" color="light" scale="medium">
-                ${
-                    this.alertVisible
-                        ? html` <alert-banner .visible="${this.alertVisible}"
-                          .message="${this.alertMessage}"/ >`
-                        : null
-                }
-                              <div class="container">
-                                  <!-- 기존 화면 -->
-                                  <div
-                                      class="fixed-container"
-                                      style="position:fixed; top:0; left:0; right:0;"
-                                  >
-                                      <div class="full-content">
-                                          <!-- Select Category Section -->
-                                          <div
-                                              class="section"
-                                              style="padding-bottom:0px; padding-top:0px;"
-                                          >
-                                              <div
-                                                  class="section-header"
-                                                  style="margin-bottom: 0px;"
-                                              >
-                                                  <h2 class="section-title">
-                                                      Category
-                                                  </h2>
-                                              </div>
+                ${this.alertVisible
+                    ? html` <alert-banner .visible="${this.alertVisible}"
+                      .message="${this.alertMessage}"/ >`
+                    : null}
+                <div class="container">
+                    <!-- Category 고정 영역 -->
+                    <div class="fixed-container">
+                        <!-- Select Category Section -->
+                        <div class="section">
+                            <div
+                                class="section-header"
+                                style="margin-bottom: 0px;"
+                            >
+                                <h2 class="section-title">Category</h2>
+                            </div>
 
-                                              <!-- Category Dropdown -->
-                                              <div
-                                                  style="
-                                                        margin-top: 4px;
-                                                    "
-                                              >
-                                                  <sp-picker
-                                                      label="Select Category"
-                                                      value="${
-                                                          this._selectedTheme
-                                                      }"
-                                                      @change="${(
-                                                          e: CustomEvent
-                                                      ) => {
-                                                          this._selectedTheme =
+                            <!-- Category Dropdown -->
+                            <div
+                                style="
+                                                    margin-top: 4px;
+                                                "
+                            >
+                                <sp-picker
+                                    label="Select Category"
+                                    value="${this._selectedTheme}"
+                                    @change="${(e: CustomEvent) => {
+                                        this._selectedTheme = (
+                                            e.target as any
+                                        ).value
+                                        this.requestUpdate()
+                                    }}"
+                                    style="width: 100%;"
+                                >
+                                    <sp-menu-item value="All">All</sp-menu-item>
+                                    <sp-menu-item value="Common"
+                                        >Common Animals</sp-menu-item
+                                    >
+                                    <sp-menu-item value="Endangered"
+                                        >Endangered Animals</sp-menu-item
+                                    >
+                                </sp-picker>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 스크롤 가능한 이미지 목록 -->
+                    <div class="scrollable-content">
+                        <div class="image-categories">
+                            ${
+                                // _imageCategories 객체를 순회하여,
+                                // 현재 _selectedTheme에 따라 카테고리 필터링
+                                Object.entries(this._imageCategories)
+                                    .filter(
+                                        ([category]) =>
+                                            // 'All' 일 경우 전체 표시, 그렇지 않으면 _selectedTheme와 동일한 것만 표시
+                                            this._selectedTheme === 'All' ||
+                                            this._selectedTheme === category
+                                    )
+                                    .map(
+                                        ([category, images]) => html`
+                                            <div class="category">
+                                                <div class="image-grid">
+                                                    ${Array.isArray(images)
+                                                        ? images.map(
                                                               (
-                                                                  e.target as any
-                                                              ).value
-                                                          this.requestUpdate()
-                                                      }}"
-                                                      style="width: 100%;"
-                                                  >
-                                                      <sp-menu-item value="All"
-                                                          >All</sp-menu-item
-                                                      >
-                                                      <sp-menu-item
-                                                          value="Common"
-                                                          >Common
-                                                          Animals</sp-menu-item
-                                                      >
-                                                      <sp-menu-item
-                                                          value="Endangered"
-                                                          >Endangered
-                                                          Animals</sp-menu-item
-                                                      >
-                                                  </sp-picker>
-                                              </div>
+                                                                  imageObj
+                                                              ) => html`
+                                                                  <div
+                                                                      class="image-item ${this
+                                                                          ._selectedImage ===
+                                                                      imageObj.path
+                                                                          ? 'selected'
+                                                                          : ''}"
+                                                                      @click=${() =>
+                                                                          this._handleImageSelect(
+                                                                              imageObj.path,
+                                                                              imageObj.key,
+                                                                              imageObj.color
+                                                                          )}
+                                                                      style="cursor: pointer;"
+                                                                  >
+                                                                      <img
+                                                                          src="${`./images/${imageObj.path}`}"
+                                                                          alt="Image"
+                                                                          @load=${this
+                                                                              ._handleImageDrag}
+                                                                          @click=${(
+                                                                              e: MouseEvent
+                                                                          ) =>
+                                                                              this._handleDoubleClick(
+                                                                                  e
+                                                                              )}
+                                                                      />
 
-                                              <!-- 스크롤 가능한 이미지 목록 -->
-                                              <div class="scrollable-content">
-                                                  <div class="image-categories">
-                                                      ${
-                                                          // _imageCategories 객체를 순회하여,
-                                                          // 현재 _selectedTheme에 따라 카테고리 필터링
-                                                          Object.entries(
-                                                              this
-                                                                  ._imageCategories
+                                                                      ${this
+                                                                          ._selectedImage ===
+                                                                      imageObj.path
+                                                                          ? html`
+                                                                                <div class="selected-overlay">
+                                                                                    <svg
+                                                                                        width="16"
+                                                                                        height="16"
+                                                                                        viewBox="0 0 24 24"
+                                                                                        fill="none"
+                                                                                        xmlns="http://www.w3.org/2000/svg"
+                                                                                    >
+                                                                                        <path
+                                                                                            d="M20 6L9 17L4 12"
+                                                                                            stroke="white"
+                                                                                            stroke-width="2"
+                                                                                            stroke-linecap="round"
+                                                                                            stroke-linejoin="round"
+                                                                                        />
+                                                                                    </svg>
+                                                                                </div>
+                                                                            `
+                                                                          : ''}
+                                                                  </div>
+                                                              `
                                                           )
-                                                              .filter(
-                                                                  ([
-                                                                      category,
-                                                                  ]) =>
-                                                                      // 'All' 일 경우 전체 표시, 그렇지 않으면 _selectedTheme와 동일한 것만 표시
-                                                                      this
-                                                                          ._selectedTheme ===
-                                                                          'All' ||
-                                                                      this
-                                                                          ._selectedTheme ===
-                                                                          category
-                                                              )
-                                                              .map(
-                                                                  ([
-                                                                      category,
-                                                                      images,
-                                                                  ]) => html`
-                                                                      <div
-                                                                          class="category"
-                                                                      >
-                                                                          <div
-                                                                              class="image-grid"
-                                                                          >
-                                                                              ${Array.isArray(
-                                                                                  images
-                                                                              )
-                                                                                  ? images.map(
-                                                                                        (
-                                                                                            imageObj
-                                                                                        ) => html`
-                                                                                            <div
-                                                                                                class="image-item ${this
-                                                                                                    ._selectedImage ===
-                                                                                                imageObj.path
-                                                                                                    ? 'selected'
-                                                                                                    : ''}"
-                                                                                                @click=${() =>
-                                                                                                    this._handleImageSelect(
-                                                                                                        imageObj.path,
-                                                                                                        imageObj.key,
-                                                                                                        imageObj.color
-                                                                                                    )}
-                                                                                                style="cursor: pointer;"
-                                                                                            >
-                                                                                                <img
-                                                                                                    src="${`./images/${imageObj.path}`}"
-                                                                                                    alt="Image"
-                                                                                                    style="width: 100%; height: auto; object-fit: cover;"
-                                                                                                    @load=${this
-                                                                                                        ._handleImageDrag}
-                                                                                                    @click=${(
-                                                                                                        e: MouseEvent
-                                                                                                    ) =>
-                                                                                                        this._handleDoubleClick(
-                                                                                                            e
-                                                                                                        )}
-                                                                                                />
-
-                                                                                                ${this
-                                                                                                    ._selectedImage ===
-                                                                                                imageObj.path
-                                                                                                    ? html`
-                                                                                                          <div
-                                                                                                              class="selected-overlay"
-                                                                                                              style="
-                                                                                                                    position: absolute;
-                                                                                                                    top: 8px;
-                                                                                                                    right: 8px;
-                                                                                                                    width: 24px;
-                                                                                                                    height: 24px;
-                                                                                                                    background-color: #2680eb;
-                                                                                                                    border-radius: 50%;
-                                                                                                                    display: flex;
-                                                                                                                    align-items: center;
-                                                                                                                    justify-content: center;
-                                                                                                                    "
-                                                                                                          >
-                                                                                                              <svg
-                                                                                                                  width="16"
-                                                                                                                  height="16"
-                                                                                                                  viewBox="0 0 24 24"
-                                                                                                                  fill="none"
-                                                                                                                  xmlns="http://www.w3.org/2000/svg"
-                                                                                                              >
-                                                                                                                  <path
-                                                                                                                      d="M20 6L9 17L4 12"
-                                                                                                                      stroke="white"
-                                                                                                                      stroke-width="2"
-                                                                                                                      stroke-linecap="round"
-                                                                                                                      stroke-linejoin="round"
-                                                                                                                  />
-                                                                                                              </svg>
-                                                                                                          </div>
-                                                                                                      `
-                                                                                                    : ''}
-                                                                                            </div>
-                                                                                        `
-                                                                                    )
-                                                                                  : ''}
-                                                                          </div>
-                                                                      </div>
-                                                                  `
-                                                              )
-                                                      }
-                                                  </div>
-                                              </div>
-                                          </div>
-                                      </div>
-                                  </div>
-                              </div>
-                          </div>
-            </sp-theme> `
+                                                        : ''}
+                                                </div>
+                                            </div>
+                                        `
+                                    )
+                            }
+                        </div>
+                    </div>
+                </div>
+            </sp-theme>
+        `
     }
 }
