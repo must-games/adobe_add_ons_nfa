@@ -69,7 +69,7 @@ export const style = css`
     .image-grid {
         display: grid;
         grid-template-columns: repeat(3, 1fr);
-        gap: 16px;
+        gap: 14px;
     }
 
     .image-item {
@@ -134,8 +134,117 @@ export const style = css`
     .scrollable-content {
         padding: 12px;
         flex: 1;
-        overflow-y: auto;
+        overflow-y: overlay;
         background: transparent;
+    }
+
+    .scrollable-content::-webkit-scrollbar {
+        width: 11px;
+    }
+
+    .scrollable-content::-webkit-scrollbar-track {
+        background: transparent;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb {
+        background: rgba(0, 0, 0, 0.2);
+        border-radius: 6px;
+        border: 1px solid transparent;
+        background-clip: content-box;
+    }
+
+    .scrollable-content::-webkit-scrollbar-thumb:hover {
+        background: rgba(0, 0, 0, 0.3);
+        background-clip: content-box;
+    }
+
+    /* 카테고리 dropdown 스타일링 */
+    sp-picker {
+        --spectrum-picker-border-radius: 12px !important;
+        --spectrum-picker-border-color: transparent !important;
+        --spectrum-picker-text-color: white !important;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
+    }
+
+    sp-picker::part(button) {
+        background: linear-gradient(
+            135deg,
+            #667eea 0%,
+            #764ba2 100%
+        ) !important;
+        border: none !important;
+        border-radius: 16px !important;
+        color: white !important;
+        font-weight: 600 !important;
+        padding: 12px 20px !important;
+        min-height: 48px !important;
+    }
+
+    sp-picker[open]::part(button) {
+        background: linear-gradient(
+            135deg,
+            #5a67d8 0%,
+            #6b46c1 100%
+        ) !important;
+        transform: scale(0.98) !important;
+    }
+
+    /* 메뉴 아이템 스타일링 */
+    sp-menu-item {
+        --spectrum-menu-item-background-color: transparent !important;
+        --spectrum-menu-item-background-color-hover: rgba(
+            102,
+            126,
+            234,
+            0.1
+        ) !important;
+        --spectrum-menu-item-background-color-selected: rgba(
+            102,
+            126,
+            234,
+            0.2
+        ) !important;
+        --spectrum-menu-item-text-color: #374151 !important;
+        border-radius: 8px !important;
+        margin: 4px 8px !important;
+        font-weight: 500 !important;
+        transition: all 0.2s ease !important;
+    }
+
+    sp-menu-item:hover {
+        background: linear-gradient(
+            90deg,
+            rgba(102, 126, 234, 0.1) 0%,
+            rgba(118, 75, 162, 0.1) 100%
+        ) !important;
+    }
+
+    sp-menu-item[selected] {
+        background: linear-gradient(
+            90deg,
+            rgba(102, 126, 234, 0.2) 0%,
+            rgba(118, 75, 162, 0.2) 100%
+        ) !important;
+        color: #5a67d8 !important;
+        font-weight: 600 !important;
+    }
+
+    /* 드롭다운 메뉴 컨테이너 */
+    sp-popover {
+        --spectrum-popover-border-radius: 16px !important;
+        --spectrum-popover-border-color: transparent !important;
+        box-shadow: 0 20px 40px -8px rgba(0, 0, 0, 0.15),
+            0 8px 16px -8px rgba(0, 0, 0, 0.1) !important;
+        backdrop-filter: blur(8px) !important;
+        margin-top: 8px !important;
+    }
+
+    /* Button border color override */
+    #button {
+        border-color: var(
+            --spectrum-textfield-border-color,
+            var(--spectrum-alias-border-color)
+        ) !important;
     }
 
     @keyframes fadeIn {
