@@ -674,7 +674,7 @@ export class App extends LitElement {
                                                                                                     style="width: 100%; height: auto; object-fit: cover;"
                                                                                                     @load=${this
                                                                                                         ._handleImageDrag}
-                                                                                                    @dblclick=${(
+                                                                                                    @click=${(
                                                                                                         e: MouseEvent
                                                                                                     ) =>
                                                                                                         this._handleDoubleClick(
