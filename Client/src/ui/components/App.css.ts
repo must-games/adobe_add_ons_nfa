@@ -63,7 +63,20 @@ export const style = css`
     .category {
         display: flex;
         flex-direction: column;
-        gap: 16px;
+        gap: 24px;
+    }
+
+    .group {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .group-title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #374151;
+        margin: 0;
     }
 
     .image-grid {
@@ -91,14 +104,6 @@ export const style = css`
         object-fit: contain;
         display: block;
         border-radius: 14px;
-    }
-
-    .image-item.selected {
-        border: 2px solid #2563eb;
-        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
-            0 10px 10px -5px rgba(0, 0, 0, 0.04),
-            0 0 0 4px rgba(37, 99, 235, 0.1);
-        transform: translateY(-2px);
     }
 
     .selected-overlay {

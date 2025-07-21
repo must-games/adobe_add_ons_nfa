@@ -615,69 +615,60 @@ export class App extends LitElement {
                                             this._selectedTheme === category
                                     )
                                     .map(
-                                        ([category, images]) => html`
+                                        ([category, groups]) => html`
                                             <div class="category">
-                                                <div class="image-grid">
-                                                    ${Array.isArray(images)
-                                                        ? images.map(
-                                                              (
-                                                                  imageObj
-                                                              ) => html`
-                                                                  <div
-                                                                      class="image-item ${this
-                                                                          ._selectedImage ===
-                                                                      imageObj.path
-                                                                          ? 'selected'
-                                                                          : ''}"
-                                                                      @click=${() =>
-                                                                          this._handleImageSelect(
-                                                                              imageObj.path,
-                                                                              imageObj.key,
-                                                                              imageObj.color
-                                                                          )}
-                                                                      style="cursor: pointer;"
+                                                ${Array.isArray(groups)
+                                                    ? groups.map(
+                                                          (group) => html`
+                                                              <div
+                                                                  class="group"
+                                                              >
+                                                                  <h3
+                                                                      class="group-title"
                                                                   >
-                                                                      <img
-                                                                          src="${`./images/${imageObj.path}`}"
-                                                                          alt="Image"
-                                                                          @load=${this
-                                                                              ._handleImageDrag}
-                                                                          @click=${(
-                                                                              e: MouseEvent
-                                                                          ) =>
-                                                                              this._handleDoubleClick(
-                                                                                  e
-                                                                              )}
-                                                                      />
-
-                                                                      ${this
-                                                                          ._selectedImage ===
-                                                                      imageObj.path
-                                                                          ? html`
-                                                                                <div class="selected-overlay">
-                                                                                    <svg
-                                                                                        width="16"
-                                                                                        height="16"
-                                                                                        viewBox="0 0 24 24"
-                                                                                        fill="none"
-                                                                                        xmlns="http://www.w3.org/2000/svg"
-                                                                                    >
-                                                                                        <path
-                                                                                            d="M20 6L9 17L4 12"
-                                                                                            stroke="white"
-                                                                                            stroke-width="2"
-                                                                                            stroke-linecap="round"
-                                                                                            stroke-linejoin="round"
-                                                                                        />
-                                                                                    </svg>
-                                                                                </div>
-                                                                            `
-                                                                          : ''}
+                                                                      ${group.group}
+                                                                  </h3>
+                                                                  <div
+                                                                      class="image-grid"
+                                                                  >
+                                                                      ${group.items.map(
+                                                                          (
+                                                                              imageObj
+                                                                          ) => html`
+                                                                              <div
+                                                                                  class="image-item ${this
+                                                                                      ._selectedImage ===
+                                                                                  imageObj.path
+                                                                                      ? 'selected'
+                                                                                      : ''}"
+                                                                                  @click=${() =>
+                                                                                      this._handleImageSelect(
+                                                                                          imageObj.path,
+                                                                                          imageObj.key,
+                                                                                          false
+                                                                                      )}
+                                                                                  style="cursor: pointer;"
+                                                                              >
+                                                                                  <img
+                                                                                      src="${`./images/${imageObj.path}`}"
+                                                                                      alt="Image"
+                                                                                      @load=${this
+                                                                                          ._handleImageDrag}
+                                                                                      @click=${(
+                                                                                          e: MouseEvent
+                                                                                      ) =>
+                                                                                          this._handleDoubleClick(
+                                                                                              e
+                                                                                          )}
+                                                                                  />
+                                                                              </div>
+                                                                          `
+                                                                      )}
                                                                   </div>
-                                                              `
-                                                          )
-                                                        : ''}
-                                                </div>
+                                                              </div>
+                                                          `
+                                                      )
+                                                    : ''}
                                             </div>
                                         `
                                     )
