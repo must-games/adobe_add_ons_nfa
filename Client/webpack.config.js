@@ -58,48 +58,13 @@ module.exports = {
                     noErrorOnMissing: true,
                 },
                 {
-                    from: 'src/assets/images/female/Color X/*.{png,jpg}',
-                    to: 'images/female/Color X/[name][ext]',
+                    from: 'src/assets/images/Common/*.{png,jpg}',
+                    to: 'images/Common/[name][ext]',
                     noErrorOnMissing: true,
                 },
                 {
-                    from: 'src/assets/images/male/Color X/*.{png,jpg}',
-                    to: 'images/male/Color X/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/Casual-female/*.{png,jpg}',
-                    to: 'images/Casual-female/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/Casual-male/*.{png,jpg}',
-                    to: 'images/Casual-male/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/hanbok-female/*.{png,jpg}',
-                    to: 'images/hanbok-female/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/hanbok-male/*.{png,jpg}',
-                    to: 'images/hanbok-male/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/K-Pop-female/*.{png,jpg}',
-                    to: 'images/K-Pop-female/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/K-Pop-male/*.{png,jpg}',
-                    to: 'images/K-Pop-male/[name][ext]',
-                    noErrorOnMissing: true,
-                },
-                {
-                    from: 'src/assets/images/HairColor/*.{png,jpg}',
-                    to: 'images/HairColor/[name][ext]',
+                    from: 'src/assets/images/Endangered/*.{png,jpg}',
+                    to: 'images/Endangered/[name][ext]',
                     noErrorOnMissing: true,
                 },
                 {
