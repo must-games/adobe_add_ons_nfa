@@ -56,6 +56,7 @@ import {
 } from '../lib/router'
 import './loading-screen'
 import './AlertBanner'
+import './TermsAgreement'
 // import uploadIcon from '../../assets/images/upload_icon.svg' // SVG 파일 import
 
 @customElement('add-on-app')
@@ -95,6 +96,9 @@ export class App extends LitElement {
 
     @state()
     private userAccessData: any = null
+
+    @state()
+    private _termsAgreed = false
 
     // 카테고리 데이터를 초기화하는 메서드
     private initializeImageCategories(data: any) {
@@ -195,8 +199,17 @@ export class App extends LitElement {
         document.documentElement.style.padding = '0'
         document.documentElement.style.overflow = 'hidden'
 
+        // :host 배경색 직접 적용
+        ;(this as any).style.backgroundColor = '#3232328a'
+
         // 전역 클릭 이벤트 리스너 추가
         document.addEventListener('click', this._handleGlobalClick.bind(this))
+
+        // 약관 동의 이벤트 리스너 추가
+        document.addEventListener(
+            'terms-agreed',
+            this._handleTermsAgreed.bind(this)
+        )
 
         this._userId = await addOnUISdk.app.currentUser.userId()
         await this._updateUserAccessData()
@@ -296,6 +309,10 @@ export class App extends LitElement {
         document.removeEventListener(
             'click',
             this._handleGlobalClick.bind(this)
+        )
+        document.removeEventListener(
+            'terms-agreed',
+            this._handleTermsAgreed.bind(this)
         )
     }
 
@@ -553,7 +570,18 @@ export class App extends LitElement {
         this.requestUpdate()
     }
 
+    // 약관 동의 핸들러
+    private _handleTermsAgreed() {
+        this._termsAgreed = true
+        this.requestUpdate()
+    }
+
     render() {
+        // 약관에 동의하지 않았으면 약관 동의 화면 표시
+        if (!this._termsAgreed) {
+            return html`<terms-agreement></terms-agreement>`
+        }
+
         return html`
             <sp-theme theme="express" color="light" scale="medium">
                 ${this.alertVisible

@@ -252,6 +252,11 @@ export const style = css`
         ) !important;
     }
 
+    /* Host background color override */
+    :host {
+        background-color: #3232328a !important;
+    }
+
     @keyframes fadeIn {
         from {
             opacity: 0;
