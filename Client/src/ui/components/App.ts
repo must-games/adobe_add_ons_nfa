@@ -579,7 +579,6 @@ export class App extends LitElement {
                                               <div
                                                   style="
                                                         margin-top: 4px;
-                                                        margin-bottom: 8px;
                                                     "
                                               >
                                                   <sp-picker
