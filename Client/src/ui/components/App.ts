@@ -50,6 +50,8 @@ import {
     getWorkList,
     deleteGeneratedImage,
     userAccess,
+    agreeTOS,
+    clickImage,
     downloadFile,
     getUser,
     createGenerateImage,
@@ -460,6 +462,7 @@ export class App extends LitElement {
     private _handleImageSelect(
         image: string,
         imageKey: string,
+        imageGroup: string,
         color: boolean
     ) {
         if (this._selectedImage === image) {
@@ -481,6 +484,12 @@ export class App extends LitElement {
                 `_handleImageSelect.Selected Image: ${this._selectedImage}, Selected Image Key: ${this._selectedImageKey}`
             )
         }
+
+        //이미지 사용 기록.
+        const fileNameWithExt = image.split('/').pop() ?? '';
+        const imageId = fileNameWithExt.replace(/\.[^/.]+$/, '');
+
+        clickImage(this._userId, imageId, imageGroup)
 
         this.requestUpdate()
     }
@@ -513,39 +522,16 @@ export class App extends LitElement {
         }
 
         this.userAccessData = userAccessData
-        //REMAINING_DAILY_IMAGE_GENERATION_LIMIT 가 0보다 작으면 0으로 설정
-        if (
-            this.userAccessData.limitInfo
-                .REMAINING_DAILY_IMAGE_GENERATION_LIMIT < 0
-        ) {
-            this.userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT = 0
-        }
-        this.userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT =
-            this.userAccessData.limitInfo.DAILY_IMAGE_GENERATION_LIMIT -
-            this.userAccessData.user.imagesGeneratedToday
-
-        // this.userAccessData.user = await getUser(this._userId)
-        // this.userAccessData.user.imagesGeneratedToday =
-        //     this.userAccessData.user.imagesGeneratedToday
-
-        this._generateImageMessage = `Generating image (${this.userAccessData?.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT} left)`
-        this._generateDisabledTooltip = `You get ${this.userAccessData?.limitInfo.DAILY_IMAGE_GENERATION_LIMIT} free credit every day`
 
         if (isDebugLog) {
-            // console.log(`------------------`)
-            // console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
-            console.log(
-                `user imagesGeneratedToday = ${userAccessData.user.imagesGeneratedToday}`
-            )
-            console.log(
-                `DAILY_IMAGE_GENERATION_LIMIT = ${userAccessData.limitInfo.DAILY_IMAGE_GENERATION_LIMIT}`
-            )
-            // console.log(
-            //     `STORED_IMAGE_EXPIRATION_DAYS = ${userAccessData.limitInfo.REMAINING_DAILY_IMAGE_GENERATION_LIMIT}`
-            // )
             console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
-            // console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
-            // console.log(`------------------`)
+        }
+
+        if (this.userAccessData.isTOSAgreed) {
+            //약관동의 패스
+        } else {
+            //약관동의 표시 agreeTOS
+            //agreeTOS(this._userId, true)
         }
     }
 
@@ -673,6 +659,7 @@ export class App extends LitElement {
                                                                                       this._handleImageSelect(
                                                                                           imageObj.path,
                                                                                           imageObj.key,
+                                                                                          group.group,
                                                                                           false
                                                                                       )}
                                                                                   style="cursor: pointer;"

@@ -39,8 +39,6 @@ const serverInfo = () => {
     logger.info(`SERVER_TAG=${SERVER_TAG}`)
     logger.info(`VENDOR=${VENDOR}`)
     logger.info(`isDebugLog=${isDebugLog}`)
-    logger.info(`DATABASE_URL=${process.env.DATABASE_URL}`)
-    logger.info(`CLOUD_TYPE=${process.env.CLOUD_TYPE}`)
     logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 

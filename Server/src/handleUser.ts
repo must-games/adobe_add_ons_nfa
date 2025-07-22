@@ -110,16 +110,20 @@ export async function handleClickImage(req: Request, res: Response) {
             return
         }
 
-        const imageGroud = req.body.imageGroud
+        const imageGroup = req.body.imageGroup
         const imageId = req.body.imageId
 
-        await logToDB(userId, LogLevel.DEBUG, 'USER', 'CLICK_IMAGE', imageId)
-        await logToDB(userId, LogLevel.DEBUG, 'USER', 'CLICK_IMAGE_GROUP', imageGroud)
+        if (isDebugLog) {
+            console.log(`imageId=${imageId}`)
+            console.log(`imageGroup=${imageGroup}`)
+        }
+
+        await logToDB(userId, LogLevel.DEBUG, 'USER', 'CLICK_IMAGE', imageId, { group: imageGroup })
 
         await prisma.imageLog.create({
             data: {
                 userId: userId,
-                imageGroup: imageGroud,
+                imageGroup: imageGroup,
                 imageId: imageId,
             },
         })
