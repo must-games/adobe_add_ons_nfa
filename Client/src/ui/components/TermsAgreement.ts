@@ -116,13 +116,23 @@ export class TermsAgreement extends LitElement {
                 const result = await agreeTOS(this.userId, true)
                 console.log('Successfully agreed to terms:', result)
                 
-                // 성공하면 페이지 새로고침하여 메인 앱으로 이동
-                window.location.reload()
+                // 성공하면 부모 앱에 약관 동의 완료를 알림
+                this.dispatchEvent(
+                    new CustomEvent('terms-agreed', {
+                        bubbles: true,
+                        composed: true,
+                    })
+                )
                 
             } catch (error) {
                 console.error('Failed to agree to terms:', error)
-                // 에러가 발생해도 일단 새로고침 (서버 상태와 동기화)
-                window.location.reload()
+                // 에러 발생시에도 일단 진행하도록 함 (서버에 저장되었을 가능성)
+                this.dispatchEvent(
+                    new CustomEvent('terms-agreed', {
+                        bubbles: true,
+                        composed: true,
+                    })
+                )
             }
         }
     }

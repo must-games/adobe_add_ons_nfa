@@ -103,6 +103,12 @@ export class App extends LitElement {
         this._userId = await addOnUISdk.app.currentUser.userId()
         await this._updateUserAccessData()
 
+        // 약관 동의 이벤트 리스너 추가
+        document.addEventListener(
+            'terms-agreed',
+            this._handleTermsAgreed.bind(this)
+        )
+
         if (isDebugLog) {
             console.log(`=== _updateUserAccessData START ===`)
             console.log(`userId: ${this._userId}`)
@@ -153,6 +159,10 @@ export class App extends LitElement {
     // 컴포넌트가 제거될 때 이벤트 리스너 정리
     disconnectedCallback() {
         super.disconnectedCallback()
+        document.removeEventListener(
+            'terms-agreed',
+            this._handleTermsAgreed.bind(this)
+        )
     }
 
     async updated(): Promise<void> {
@@ -354,6 +364,12 @@ export class App extends LitElement {
         }
 
         this.requestUpdate()
+    }
+
+    // 약관 동의 핸들러
+    private async _handleTermsAgreed() {
+        // 약관 동의 완료 후 사용자 데이터를 다시 가져와서 UI 업데이트
+        await this._updateUserAccessData()
     }
 
     render() {
