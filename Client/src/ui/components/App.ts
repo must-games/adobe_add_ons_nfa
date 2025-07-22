@@ -68,9 +68,6 @@ export class App extends LitElement {
     @state()
     private userAccessData: any = null
 
-    @state()
-    private _termsAgreed = false
-
     // 카테고리 데이터를 초기화하는 메서드
     private initializeImageCategories(data: any) {
         const categories = {}
@@ -105,12 +102,6 @@ export class App extends LitElement {
 
         this._userId = await addOnUISdk.app.currentUser.userId()
         await this._updateUserAccessData()
-
-        // 약관 동의 이벤트 리스너 추가
-        document.addEventListener(
-            'terms-agreed',
-            this._handleTermsAgreed.bind(this)
-        )
 
         if (isDebugLog) {
             console.log(`=== _updateUserAccessData START ===`)
@@ -162,10 +153,6 @@ export class App extends LitElement {
     // 컴포넌트가 제거될 때 이벤트 리스너 정리
     disconnectedCallback() {
         super.disconnectedCallback()
-        document.removeEventListener(
-            'terms-agreed',
-            this._handleTermsAgreed.bind(this)
-        )
     }
 
     async updated(): Promise<void> {
@@ -348,15 +335,10 @@ export class App extends LitElement {
             console.log(`isTOSAgreed: ${this.userAccessData.user.isTOSAgreed}`)
         }
 
-        // if (this.userAccessData.isTOSAgreed) {
         if (this.userAccessData.user.isTOSAgreed) {
-            //약관동의 패스
             console.log('User already agreed to terms, skipping terms screen')
-            this._termsAgreed = true
         } else {
-            //await agreeTOS(this._userId, true)
             console.log('User needs to agree to terms')
-            this._termsAgreed = false
         }
 
         if (userAccessData == null || userAccessData.user == null) {
@@ -374,17 +356,11 @@ export class App extends LitElement {
         this.requestUpdate()
     }
 
-    // 약관 동의 핸들러
-    private _handleTermsAgreed() {
-        this._termsAgreed = true
-        this.requestUpdate()
-    }
-
     render() {
         // userId가 설정되지 않았으면 로딩 표시
         if (!this._userId || !this.userAccessData) {
             return html`<div
-                style="display: flex; justify-content: center; align-items: center; height: 100vh;"
+                style="display: flex; justify-content: center; align-items: center; height: 100vh;background-color:white;"
             >
                 Loading...
             </div>`

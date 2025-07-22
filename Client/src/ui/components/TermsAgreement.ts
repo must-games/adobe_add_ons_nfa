@@ -4,8 +4,8 @@ import { agreeTOS } from '../lib/router'
 
 @customElement('terms-agreement')
 export class TermsAgreement extends LitElement {
-    // @property({ type: String })
-    // userId: string = ''
+    @property({ type: String })
+    userId: string = ''
 
     @state()
     private _termsReviewed = false
@@ -104,34 +104,25 @@ export class TermsAgreement extends LitElement {
 
     private async _handleAgreeAndContinue() {
         if (this._termsReviewed) {
-            // console.log(`Agreeing to terms for userId: ${this.userId}`)
-
-            // if (!this.userId) {
-            //     console.error('userId is empty, cannot agree to terms')
-            //     return
-            // }
-
             try {
+                console.log(`Agreeing to terms for userId: ${this.userId}`)
+                
+                if (!this.userId) {
+                    console.error('userId is empty, cannot agree to terms')
+                    return
+                }
+                
                 // 서버에 약관 동의 상태 저장
-                // const data = await agreeTOS(this.userId, true)
-                // console.log('Successfully agreed to terms')
-                // console.log('await agreeTOS(this.userId, true)', data) //true
-                // 성공하면 이벤트 발생
-                this.dispatchEvent(
-                    new CustomEvent('terms-agreed', {
-                        bubbles: true,
-                        composed: true,
-                    })
-                )
+                const result = await agreeTOS(this.userId, true)
+                console.log('Successfully agreed to terms:', result)
+                
+                // 성공하면 페이지 새로고침하여 메인 앱으로 이동
+                window.location.reload()
+                
             } catch (error) {
                 console.error('Failed to agree to terms:', error)
-                // 에러 발생시에도 일단 진행하도록 함
-                this.dispatchEvent(
-                    new CustomEvent('terms-agreed', {
-                        bubbles: true,
-                        composed: true,
-                    })
-                )
+                // 에러가 발생해도 일단 새로고침 (서버 상태와 동기화)
+                window.location.reload()
             }
         }
     }
