@@ -8,9 +8,7 @@ import {
     SERVER_TYPE,
     SERVER_TAG,
     VENDOR,
-    STORAGE_BUCKET,
     isDebugLog,
-    DAILY_IMAGE_GENERATION_RESET,
 } from './config'
 import logger from './log'
 import { setupRoutes } from './setupRoutes'
@@ -19,8 +17,8 @@ const app = express()
 const PORT = process.env.SERVER_PORT || 2111
 
 const options = {
-    //key: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/privkey.pem'),
-    //cert: fs.readFileSync('/etc/letsencrypt/live/adobe-hair-back.mustg.kr/fullchain.pem'),
+    //key: fs.readFileSync('/etc/letsencrypt/live/tos.nfa.mustg.kr/privkey.pem'),
+    //cert: fs.readFileSync('/etc/letsencrypt/live/tos.nfa.mustg.kr/fullchain.pem'),
     key: fs.readFileSync('./privkey.pem'),
     cert: fs.readFileSync('./fullchain.pem'),
 }
@@ -41,10 +39,8 @@ const serverInfo = () => {
     logger.info(`SERVER_TAG=${SERVER_TAG}`)
     logger.info(`VENDOR=${VENDOR}`)
     logger.info(`isDebugLog=${isDebugLog}`)
-    logger.info(`DAILY_IMAGE_GENERATION_RESET=${DAILY_IMAGE_GENERATION_RESET}`)
     logger.info(`DATABASE_URL=${process.env.DATABASE_URL}`)
     logger.info(`CLOUD_TYPE=${process.env.CLOUD_TYPE}`)
-    logger.info(`STORAGE_BUCKET=${STORAGE_BUCKET}`)
     logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 

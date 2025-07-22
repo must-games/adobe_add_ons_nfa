@@ -5,7 +5,6 @@ import * as crypto from 'crypto'
 import axios from 'axios'
 
 import {
-    COMFYUI_PATH,
     SERVER_TYPE,
     SERVER_TAG,
     VENDOR,
@@ -60,19 +59,6 @@ function getBaseOriginalImagePath() {
     return `./original_images`
 }
 
-export function getTempInputImageFilePath(work: any) {
-    const filepath = `./inputImages/${SERVER_TYPE}_${work.id}_${work.sourceImageInfo.filename}`
-
-    return path.resolve(filepath)
-}
-
-export async function downLoadTempInputFile(work: any) {
-    const inputSaveImagePath = getTempInputImageFilePath(work)
-    const downloadUrl = work.sourceImageInfo.path
-
-    return await downloadFile(downloadUrl, inputSaveImagePath)
-}
-
 export function getCategoryData() {
     const filepath = getBaseOriginalImagePath() + '/category.json'
 
@@ -124,58 +110,6 @@ export function initCategoryData() {
     })
 }
 
-export function getImagePathByKey(key: string) {
-    if (gCategoryData[key]) {
-        const absolutePath = path.resolve(getBaseOriginalImagePath())
-        return absolutePath + '/' + gCategoryData[key]
-    }
-
-    logger.error(`getImagePathByKey key=${key} not found`)
-    return ''
-}
-
-export function getLoraModelPath(workKey: string) {
-    if (process.env.LOCAL_TEST_MODE === 'test') {
-        return `/Users/ggh228/Downloads`
-    }
-
-    return `${COMFYUI_PATH}/models/loras`
-}
-
-function getLoraModelFilePath(workKey: string) {
-    return `${getLoraModelPath(workKey)}/${getLoraModelFileName(workKey)}`
-}
-
-export function getLoraModelPrefix() {
-    return `_${VENDOR}_${SERVER_TYPE}_${SERVER_TAG}lora_`
-}
-
-function getLoraModelName(workKey: string) {
-    return `${getLoraModelPrefix()}${workKey}`
-}
-
-export function getWorkKeyByFileName(fileName: string) {
-    const baseName = path.basename(fileName, path.extname(fileName))
-
-    const prefix = getLoraModelPrefix()
-    if (baseName.startsWith(prefix)) {
-        return baseName.substring(prefix.length) // 앞 부분을 제거하고 반환
-    }
-    return baseName
-}
-
-export function getLoraModelFileName(workKey: string) {
-    return `${getLoraModelName(workKey)}.safetensors`
-}
-
-function getLoraModelCheckSumFileName(workKey: string) {
-    return `${getLoraModelName(workKey)}.md5`
-}
-
-function getLoraModelCheckSumFilePath(workKey: string) {
-    return `${getLoraModelPath(workKey)}/${getLoraModelCheckSumFileName(workKey)}`
-}
-
 export async function calculateMD5(filePath: string): Promise<string> {
     return new Promise((resolve, reject) => {
         const hash = crypto.createHash('md5')
@@ -198,82 +132,6 @@ async function readChecksumFile(checksumFilePath: string): Promise<string> {
     } catch (error) {}
 
     return ''
-}
-
-async function checkExistDownloadedLoraFile(workKey: string) {
-    try {
-        const sT = performance.now()
-
-        const savePath = getLoraModelFilePath(workKey)
-        if (!fs.existsSync(savePath)) {
-            return false
-        }
-
-        const requireMd5 = await readChecksumFile(
-            getLoraModelCheckSumFilePath(workKey)
-        )
-        if (requireMd5 == '') {
-            return false
-        }
-        const md5 = await calculateMD5(savePath)
-
-        const checkTimeSec = (performance.now() - sT) / 1000.0
-        if (isDebugLog) {
-            logger.debug(
-                `${workKey} checkTimeSec: ${checkTimeSec.toFixed(3)} sec`
-            )
-        }
-        return md5 == requireMd5
-    } catch (e) {
-        logger.error(`checkExistDownloadedLoraFile=${e}`)
-    }
-
-    return false
-}
-
-export async function downloadAndSaveLoraModel(
-    loraModels: any
-): Promise<boolean> {
-    try {
-        for (const lora of loraModels) {
-            if (lora.result.length >= 1) {
-                if (await checkExistDownloadedLoraFile(lora.workKey)) {
-                    continue
-                }
-
-                const sT = performance.now()
-                const downloadUrl = lora.result[0].download_url
-                const savePath = getLoraModelFilePath(lora.workKey)
-
-                if (isDebugLog) {
-                    logger.debug(
-                        `downloadAndSaveLoraModel savePath=${savePath}`
-                    )
-                }
-
-                if ((await downloadFile(downloadUrl, savePath)) == false) {
-                    return false
-                }
-
-                const md5 = await calculateMD5(savePath)
-                fs.writeFileSync(
-                    getLoraModelCheckSumFilePath(lora.workKey),
-                    md5
-                )
-
-                const downloadSec = (performance.now() - sT) / 1000.0
-                logger.info(
-                    `${savePath} downloadTime: ${downloadSec.toFixed(3)} sec`
-                )
-            }
-        }
-
-        return true
-    } catch (e) {
-        logger.error(`e=${e}`)
-    }
-
-    return false
 }
 
 /**
@@ -308,32 +166,4 @@ export async function commonRetry<T>(
         }
     }
     return false
-}
-
-export async function getLoraModelInfo(work: any) {
-    let loras: any = []
-    // if (work.loraModel) {
-    //     const loraModel = work.loraModel as any
-    //     for (let i = 0; i < loraModel.length; ++i) {
-    //         const workLora = await prisma.workLora.findFirst({
-    //             where: { id: loraModel[i].id },
-    //             select: {
-    //                 id: true,
-    //                 workKey: true,
-    //                 result: true,
-    //             },
-    //         })
-
-    //         if (workLora) {
-    //             const lora = {
-    //                 id: loraModel[i].id,
-    //                 strength: loraModel[i].strength,
-    //                 workKey: workLora.workKey,
-    //                 result: workLora.result,
-    //             }
-    //             loras.push(lora)
-    //         }
-    //     }
-    // }
-    return loras
 }

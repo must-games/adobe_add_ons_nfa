@@ -16,8 +16,7 @@ export async function userAccess(userId: string) {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify({
-                userId,
-                dailyImageGenerationLimit: DAILY_IMAGE_GENERATION_LIMIT,
+                userId
             }),
         })
 

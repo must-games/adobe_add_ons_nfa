@@ -3,7 +3,7 @@ import { Request, Response } from 'express'
 import logger from './log'
 import { logToDB } from './dbLog'
 import { LogLevel } from '@prisma/client'
-import { STORAGE_BUCKET, isDebugLog } from './config'
+import { isDebugLog } from './config'
 
 export async function handleLog(req: Request, res: Response) {
     if (isDebugLog) {

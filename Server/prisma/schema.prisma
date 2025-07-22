@@ -8,44 +8,32 @@ datasource db {
 }
 
 model User {
-  id                   String           @id @unique
-  userRole             UserRole         @default(USER)
-  createdAt            DateTime         @default(now()) @map("created_at")
-  lastLoginAt          DateTime         @default(now()) @map("last_login_at")
-  userAccessStatus     UserAccessStatus @default(NORMAL)
-  imagesGeneratedToday Int              @default(0)
-  imagesGeneratedTotal Int              @default(0)
-  lastResetDate        DateTime         @default(now())
+  id                  String           @id @unique
+  userRole            UserRole         @default(USER)
+  createdAt           DateTime         @default(now()) @map("created_at")
+  lastLoginAt         DateTime         @default(now()) @map("last_login_at")
+  userAccessStatus    UserAccessStatus @default(NORMAL)
+  imageUsedCountTotal Int              @default(0)
+  imageUsedCountToday Int              @default(0)
+  lastResetDate       DateTime         @default(now())
+  isAgreed            Boolean          @default(false)
 
   @@index([userAccessStatus])
   @@index([id, userAccessStatus])
   @@index([createdAt])
 }
 
-model Work {
-  id                   Int        @id @default(autoincrement())
-  userId               String
-  createdAt            DateTime   @default(now())
-  updatedAt            DateTime   @default(now())
-  status               WorkStatus @default(PENDING)
-  promptId             String     @db.Text
-  description          String     @db.Text
-  imagePrefix          String     @default("adobe")
-  workStart            DateTime   @default(now())
-  workEnd              DateTime   @default(now())
-  generationTime       Float      @default(0)
-  result               Json       @default("[]")
-  selectedImageKey     String     @default("")
-  selectedHairColorKey String     @default("")
-  sourceImageInfo      String     @db.Text
-  batchSize            Int        @default(1)
+model ImageLog {
+  id         Int      @id @default(autoincrement())
+  imageId    String
+  imageGroup String
+  userId     String
+  createdAt  DateTime @default(now())
 
-  @@index([status])
-  @@index([userId, status])
-  @@index([status, createdAt])
-  @@index([status, updatedAt])
+  @@index([imageId, imageGroup])
+  @@index([imageId])
+  @@index([imageGroup])
   @@index([createdAt])
-  @@index([updatedAt])
 }
 
 model Log {
@@ -81,23 +69,4 @@ enum UserRole {
 enum UserAccessStatus {
   NORMAL
   SUSPENDED
-}
-
-enum WorkStatus {
-  CREATED
-  PREPARING
-  PENDING
-  RUNNING
-  DOWNLOADING
-  COMPLETED
-  ERROR
-  CANCELED
-  REQUESTCANCEL
-}
-
-enum UploadStatus {
-  PENDING
-  PROCESSING
-  FAILED
-  SUCCESS
 }

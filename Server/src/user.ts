@@ -1,11 +1,11 @@
 import logger from './log'
 import { prisma } from './database'
-import { isDebugLog, DAILY_IMAGE_GENERATION_RESET } from './config'
+import { isDebugLog } from './config'
 
 export type userData = {
     id: string | null
-    imagesGeneratedToday: number | 0
-    imagesGeneratedTotal: number | 0
+    imageUsedCountTotal: number | 0
+    imageUsedCountToday: number | 0
 }
 
 const isNewDay = (lastResetDate: Date | null): boolean => {
@@ -40,7 +40,7 @@ export const checkNewDayAndResetData = async (userId: any, dbUser: any) => {
 
         updateData = {
             lastResetDate: new Date(),
-            imagesGeneratedToday: 0,
+            imageUsedCountToday: 0,
         }
     } else {
         updateData = { lastLoginAt: new Date() }
@@ -81,37 +81,12 @@ export const addImageGeneratedCount = async (userId: any, count: number) => {
                 id: userId,
             },
             data: {
-                imagesGeneratedToday: dbUser.imagesGeneratedToday + count,
-                imagesGeneratedTotal: dbUser.imagesGeneratedTotal + count,
+                imageUsedCountToday: dbUser.imageUsedCountToday + count,
+                imageUsedCountTotal: dbUser.imageUsedCountTotal + count,
             },
         })
     } catch (e) {
         logger.error(`addImageGeneratedCount error ${e}`)
-    }
-}
-
-export async function getActiveWorkCount(userId: string): Promise<number> {
-    try {
-        // ERROR나 COMPLETED가 아닌 작업 수 조회
-        const count = await prisma.work.count({
-            where: {
-                userId: userId,
-                NOT: {
-                    status: {
-                        in: ['ERROR', 'COMPLETED', 'CANCELED', 'REQUESTCANCEL'],
-                    },
-                },
-            },
-        })
-
-        if (isDebugLog) {
-            logger.debug(`User ${userId} has ${count} active works`)
-        }
-
-        return count
-    } catch (err) {
-        logger.error(`getActiveWorkCount error for user ${userId}: ${err}`)
-        return 0 // 오류 발생 시 0 반환
     }
 }
 
@@ -133,7 +108,7 @@ export const getUser = async (userId: any) => {
             })
 
             logger.info(`getUser New user created: ${userId}`)
-        } else if (DAILY_IMAGE_GENERATION_RESET) {
+        } else {
             user = await checkNewDayAndResetData(userId, user)
         }
 
@@ -144,12 +119,10 @@ export const getUser = async (userId: any) => {
             },
         })
 
-        const workingCount = await getActiveWorkCount(userId)
         const userData = {
             id: user?.id || null,
-            imagesGeneratedToday:
-                user?.imagesGeneratedToday || 0 + workingCount,
-            imagesGeneratedTotal: user?.imagesGeneratedTotal || 0,
+            imageUsedCountToday: user?.imageUsedCountToday || 0,
+            imageUsedCountTotal: user?.imageUsedCountTotal || 0,
         }
 
         return userData
