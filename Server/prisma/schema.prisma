@@ -16,7 +16,7 @@ model User {
   imageUsedCountTotal Int              @default(0)
   imageUsedCountToday Int              @default(0)
   lastResetDate       DateTime         @default(now())
-  isAgreed            Boolean          @default(false)
+  isTOSAgreed         Boolean          @default(false)
 
   @@index([userAccessStatus])
   @@index([id, userAccessStatus])

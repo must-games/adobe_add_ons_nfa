@@ -59,6 +59,34 @@ export async function handleGetUser(req: Request, res: Response) {
     }
 }
 
+export async function handleTOSAgree(req: Request, res: Response) {
+    if (isDebugLog) {
+        logger.debug(`/user-agree-tos`)
+    }
+
+    try {
+        const userId = req.body.userId
+        if (isDebugLog) {
+            logger.debug(`handleTOSAgree userId=${userId}`)
+        }
+        const isTOSAgreed = req.body.isTOSAgreed
+
+        await prisma.user.update({
+            where: {
+                id: userId,
+            },
+            data: {
+                isTOSAgreed: isTOSAgreed,
+            },
+        })
+
+        res.send({ success: true })
+        return
+    } catch (e) {
+        logger.error(`/user-agree-tos e=${e}`)
+    }
+}
+
 export async function handleClickImage(req: Request, res: Response) {
     if (isDebugLog) {
         logger.debug(`/user-click-image`)

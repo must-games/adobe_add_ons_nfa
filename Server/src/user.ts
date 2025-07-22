@@ -6,6 +6,7 @@ export type userData = {
     id: string | null
     imageUsedCountTotal: number | 0
     imageUsedCountToday: number | 0
+    isTOSAgreed: boolean | false
 }
 
 const isNewDay = (lastResetDate: Date | null): boolean => {
@@ -52,44 +53,6 @@ export const checkNewDayAndResetData = async (userId: any, dbUser: any) => {
     })
 }
 
-export const addImageGeneratedCount = async (userId: any, count: number) => {
-    if (!userId) {
-        logger.error(`addImageGeneratedCount userId is ${userId}`)
-        return
-    }
-
-    try {
-        const dbUser = await prisma.user.findUnique({
-            where: {
-                id: userId,
-            },
-        })
-
-        if (!dbUser) {
-            logger.error(`addImageGeneratedCount not exists user ${userId}`)
-            return
-        }
-
-        if (isDebugLog) {
-            logger.debug(
-                `addImageGeneratedCount userId: ${userId}, count: ${count}`
-            )
-        }
-
-        await prisma.user.update({
-            where: {
-                id: userId,
-            },
-            data: {
-                imageUsedCountToday: dbUser.imageUsedCountToday + count,
-                imageUsedCountTotal: dbUser.imageUsedCountTotal + count,
-            },
-        })
-    } catch (e) {
-        logger.error(`addImageGeneratedCount error ${e}`)
-    }
-}
-
 export const getUser = async (userId: any) => {
     try {
         let user = await prisma.user.findUnique({
@@ -123,6 +86,7 @@ export const getUser = async (userId: any) => {
             id: user?.id || null,
             imageUsedCountToday: user?.imageUsedCountToday || 0,
             imageUsedCountTotal: user?.imageUsedCountTotal || 0,
+            isTOSAgreed: user?.isTOSAgreed || false,
         }
 
         return userData
