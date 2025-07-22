@@ -94,11 +94,7 @@ export class TermsAgreement extends LitElement {
 
     private _handleReviewTerms() {
         const termsUrl = 'https://kkusa.mustg.kr/en/tos_kstylo/'
-        window.open(
-            termsUrl,
-            '_blank',
-            'width=800,height=600,scrollbars=yes,resizable=yes'
-        )
+        window.open(termsUrl, '_blank')
         this._termsReviewed = true
     }
 
