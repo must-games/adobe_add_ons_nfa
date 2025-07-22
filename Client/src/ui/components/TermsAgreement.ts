@@ -1,8 +1,12 @@
 import { LitElement, html, css } from 'lit'
-import { customElement, state } from 'lit/decorators.js'
+import { customElement, state, property } from 'lit/decorators.js'
+import { agreeTOS } from '../lib/router'
 
 @customElement('terms-agreement')
 export class TermsAgreement extends LitElement {
+    @property({ type: String })
+    userId: string = ''
+
     @state()
     private _termsReviewed = false
 
@@ -100,12 +104,35 @@ export class TermsAgreement extends LitElement {
 
     private async _handleAgreeAndContinue() {
         if (this._termsReviewed) {
-            this.dispatchEvent(
-                new CustomEvent('terms-agreed', {
-                    bubbles: true,
-                    composed: true,
-                })
-            )
+            console.log(`Agreeing to terms for userId: ${this.userId}`)
+            
+            if (!this.userId) {
+                console.error('userId is empty, cannot agree to terms')
+                return
+            }
+            
+            try {
+                // 서버에 약관 동의 상태 저장
+                await agreeTOS(this.userId, true)
+                console.log('Successfully agreed to terms')
+                
+                // 성공하면 이벤트 발생
+                this.dispatchEvent(
+                    new CustomEvent('terms-agreed', {
+                        bubbles: true,
+                        composed: true,
+                    })
+                )
+            } catch (error) {
+                console.error('Failed to agree to terms:', error)
+                // 에러 발생시에도 일단 진행하도록 함
+                this.dispatchEvent(
+                    new CustomEvent('terms-agreed', {
+                        bubbles: true,
+                        composed: true,
+                    })
+                )
+            }
         }
     }
 

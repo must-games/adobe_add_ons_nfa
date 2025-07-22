@@ -363,9 +363,14 @@ export class App extends LitElement {
     }
 
     render() {
+        // userId가 설정되지 않았으면 로딩 표시
+        if (!this._userId) {
+            return html`<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">Loading...</div>`
+        }
+
         // 약관에 동의하지 않았으면 약관 동의 화면 표시
         if (!this._termsAgreed) {
-            return html`<terms-agreement></terms-agreement>`
+            return html`<terms-agreement .userId="${this._userId}"></terms-agreement>`
         }
 
         return html`
