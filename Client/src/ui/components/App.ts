@@ -382,7 +382,7 @@ export class App extends LitElement {
 
     render() {
         // userId가 설정되지 않았으면 로딩 표시
-        if (!this._userId) {
+        if (!this._userId || !this.userAccessData) {
             return html`<div
                 style="display: flex; justify-content: center; align-items: center; height: 100vh;"
             >
@@ -390,8 +390,10 @@ export class App extends LitElement {
             </div>`
         }
 
-        // 약관에 동의하지 않았으면 약관 동의 화면 표시
-        if (!this._termsAgreed) {
+        // 서버에서 약관 동의 상태를 확인하여 결정
+        const shouldShowTerms = !this.userAccessData.user.isTOSAgreed
+
+        if (shouldShowTerms) {
             return html`<terms-agreement
                 .userId="${this._userId}"
             ></terms-agreement>`
