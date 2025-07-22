@@ -113,7 +113,8 @@ export class App extends LitElement {
         await this._updateUserAccessData()
 
         if (isDebugLog) {
-            console.log(`userId=${this._userId}`)
+            console.log(`=== _updateUserAccessData START ===`)
+            console.log(`userId: ${this._userId}`)
         }
 
         // Get the UI runtime.
@@ -346,13 +347,11 @@ export class App extends LitElement {
         }
 
         const userAccessData = await userAccess(this._userId)
+        console.log(`userAccess API response:`, userAccessData)
 
         if (userAccessData == null || userAccessData.user == null) {
             if (isDebugLog) {
-                console.log(
-                    `userAccessData : ${JSON.stringify(userAccessData)}`
-                )
-                console.log(`userAccessData.user  : ${userAccessData.user}`)
+                console.error('Failed to get user access data:', userAccessData)
             }
             this._showAlertBanner(
                 `Unable to retrieve user information.
@@ -366,6 +365,9 @@ export class App extends LitElement {
 
         if (isDebugLog) {
             console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
+            console.log(`userAccessData set:`, this.userAccessData)
+            console.log(`isTOSAgreed: ${this.userAccessData.isTOSAgreed}`)
+            console.log(`=== _updateUserAccessData END ===`)
         }
 
         if (this.userAccessData.isTOSAgreed) {
