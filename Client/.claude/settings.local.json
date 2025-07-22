@@ -4,7 +4,9 @@
       "Bash(grep:*)",
       "Bash(npm run build:*)",
       "Bash(npm run lint)",
-      "Bash(npm run:*)"
+      "Bash(npm run:*)",
+      "Bash(mkdir:*)",
+      "Bash(cp:*)"
     ],
     "deny": []
   }
