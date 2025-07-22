@@ -93,7 +93,7 @@ export class TermsAgreement extends LitElement {
     }
 
     private _handleReviewTerms() {
-        const termsUrl = 'https://kkusa.mustg.kr/en/tos_kstylo/'
+        const termsUrl = 'https://tos.nfa.mustg.kr/index.html'
         window.open(termsUrl, '_blank')
         this._termsReviewed = true
     }
