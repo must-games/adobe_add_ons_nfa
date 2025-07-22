@@ -3,13 +3,9 @@ import https from 'https'
 import fs from 'fs'
 const cors = require('cors')
 import { Request, Response } from 'express'
+import path from 'path'
 
-import {
-    SERVER_TYPE,
-    SERVER_TAG,
-    VENDOR,
-    isDebugLog,
-} from './config'
+import { SERVER_TYPE, SERVER_TAG, VENDOR, isDebugLog } from './config'
 import logger from './log'
 import { setupRoutes } from './setupRoutes'
 
@@ -64,9 +60,10 @@ if (process.env.NODE_ENV === 'development') {
     })
 }
 
-app.use(express.static('html'));
-app.listen(8080, () => {
-  console.log(`Server running at http://localhost:${8080}/`);
-});
+//if (SERVER_TYPE == 'live') {
+    app.use(express.static('html'))
+//} else if (process.env.NODE_ENV === 'development') {    
+//    app.use(express.static('html'))
+//}
 
 export default app
