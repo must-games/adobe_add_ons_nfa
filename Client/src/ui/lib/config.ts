@@ -23,7 +23,7 @@ if (process.env.SERVER_TYPE === 'distribution') {
 }
 
 //BACK_END_URL = 'http://localhost:2121'
-BACK_END_URL = 'https://tos.nfa.mustg.kr:443'
+//BACK_END_URL = 'https://tos.nfa.mustg.kr:443'
 
 export const DAILY_IMAGE_GENERATION_LIMIT = parseInt(
     process.env.DAILY_IMAGE_GENERATION_LIMIT || '-1'
