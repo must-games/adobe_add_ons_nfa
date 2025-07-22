@@ -459,7 +459,7 @@ export class App extends LitElement {
         }, timeout) // 5초 후에 fade-out 시작
     }
 
-    private _handleImageSelect(
+    private async _handleImageSelect(
         image: string,
         imageKey: string,
         imageGroup: string,
@@ -489,7 +489,7 @@ export class App extends LitElement {
         const fileNameWithExt = image.split('/').pop() ?? '';
         const imageId = fileNameWithExt.replace(/\.[^/.]+$/, '');
 
-        clickImage(this._userId, imageId, imageGroup)
+        await clickImage(this._userId, imageId, imageGroup)
 
         this.requestUpdate()
     }
@@ -531,7 +531,7 @@ export class App extends LitElement {
             //약관동의 패스
         } else {
             //약관동의 표시 agreeTOS
-            //agreeTOS(this._userId, true)
+            //await agreeTOS(this._userId, true)
         }
     }
 

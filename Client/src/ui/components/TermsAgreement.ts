@@ -98,7 +98,7 @@ export class TermsAgreement extends LitElement {
         this._termsReviewed = true
     }
 
-    private _handleAgreeAndContinue() {
+    private async _handleAgreeAndContinue() {
         if (this._termsReviewed) {
             this.dispatchEvent(
                 new CustomEvent('terms-agreed', {
