@@ -173,45 +173,65 @@ export class App extends LitElement {
         }
     }
 
-    private _handleImageDrag(event) {
+    private _handleImageLoad(event) {
         //https://developer.adobe.com/express/add-ons/docs/guides/develop/how_to/drag_and_drop/
-        if (isDebugLog) {
-            console.log(`handleImageDrag ${event.currentTarget.id}`)
-        }
-
         const target = event.currentTarget as HTMLImageElement
-        const imageUrl = target.src
+        const imagePath = target.dataset.imagePath || ''
+        const imageUrl = `./images/${imagePath}`
+
+        // 절대 URL 생성
+        const absoluteImageUrl = new URL(imageUrl, window.location.href).href
 
         if (isDebugLog) {
-            console.log(`handleImageDrag imageUrl=${imageUrl}`)
+            console.log(
+                `handleImageLoad for ${imagePath}, imageUrl=${imageUrl}, absoluteUrl=${absoluteImageUrl}`
+            )
         }
 
         try {
             addOnUISdk.app.enableDragToDocument(event.currentTarget, {
                 previewCallback: (element: HTMLElement) => {
+                    // 드래그된 요소에서 직접 경로 정보 가져오기
+                    const elementImagePath =
+                        (element as HTMLImageElement).dataset.imagePath || ''
+                    const elementImageUrl = `./images/${elementImagePath}`
+                    const elementAbsoluteUrl = new URL(
+                        elementImageUrl,
+                        window.location.href
+                    ).href
+
                     if (isDebugLog) {
                         console.log(
-                            `handleImageDrag previewCallback ${imageUrl}`
+                            `handleImageDrag previewCallback for path: ${elementImagePath}, url: ${elementAbsoluteUrl}`
                         )
                     }
 
-                    //const imageBlob = await downloadFile(imageUrl)
-                    return new URL(imageUrl)
-                    //return new URL(URL.createObjectURL(imageBlob))
+                    return new URL(elementAbsoluteUrl)
                 },
                 completionCallback: async (element: HTMLElement) => {
+                    // 드래그된 요소에서 직접 경로 정보 가져오기
+                    const elementImagePath =
+                        (element as HTMLImageElement).dataset.imagePath || ''
+                    const elementImageUrl = `./images/${elementImagePath}`
+                    const elementAbsoluteUrl = new URL(
+                        elementImageUrl,
+                        window.location.href
+                    ).href
+                    const draggedImageSrc = (element as HTMLImageElement).src
+
+                    // console.log(`=== DRAG COMPLETION DEBUG ===`)
+                    // console.log(`Data imagePath: ${elementImagePath}`)
+                    // console.log(`Calculated absoluteImageUrl: ${elementAbsoluteUrl}`)
+                    // console.log(`Actual dragged element src: ${draggedImageSrc}`)
+                    // console.log(`Element tag: ${element.tagName}`)
+                    // console.log(`==============================`)
+
+                    // data 속성에서 가져온 올바른 URL 사용
+                    const imageBlob = await downloadFile(elementAbsoluteUrl)
+
                     if (isDebugLog) {
                         console.log(
-                            `handleImageDrag completionCallback 1 ${imageUrl}`
-                        )
-                    }
-
-                    // return the blob for the image
-                    const imageBlob = await downloadFile(imageUrl)
-
-                    if (isDebugLog) {
-                        console.log(
-                            `handleImageDrag completionCallback 2 imageBlob=${imageBlob} ${imageUrl}`
+                            `Downloaded blob for: ${elementAbsoluteUrl}`
                         )
                     }
 
@@ -219,7 +239,7 @@ export class App extends LitElement {
                 },
             })
         } catch (e) {
-            console.error(`_handleImageDrag e=${e}`)
+            console.error(`_handleImageLoad e=${e}`)
         }
     }
     private async _handleDoubleClick(event) {
@@ -365,12 +385,18 @@ export class App extends LitElement {
     render() {
         // userId가 설정되지 않았으면 로딩 표시
         if (!this._userId) {
-            return html`<div style="display: flex; justify-content: center; align-items: center; height: 100vh;">Loading...</div>`
+            return html`<div
+                style="display: flex; justify-content: center; align-items: center; height: 100vh;"
+            >
+                Loading...
+            </div>`
         }
 
         // 약관에 동의하지 않았으면 약관 동의 화면 표시
         if (!this._termsAgreed) {
-            return html`<terms-agreement .userId="${this._userId}"></terms-agreement>`
+            return html`<terms-agreement
+                .userId="${this._userId}"
+            ></terms-agreement>`
         }
 
         return html`
@@ -471,8 +497,9 @@ export class App extends LitElement {
                                                                                   <img
                                                                                       src="${`./images/${imageObj.path}`}"
                                                                                       alt="Image"
+                                                                                      data-image-path="${imageObj.path}"
                                                                                       @load=${this
-                                                                                          ._handleImageDrag}
+                                                                                          ._handleImageLoad}
                                                                                       @click=${(
                                                                                           e: MouseEvent
                                                                                       ) =>
