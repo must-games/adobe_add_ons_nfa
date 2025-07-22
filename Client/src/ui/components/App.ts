@@ -103,14 +103,14 @@ export class App extends LitElement {
         // :host 배경색 직접 적용
         ;(this as any).style.backgroundColor = '#3232328a'
 
+        this._userId = await addOnUISdk.app.currentUser.userId()
+        await this._updateUserAccessData()
+
         // 약관 동의 이벤트 리스너 추가
         document.addEventListener(
             'terms-agreed',
             this._handleTermsAgreed.bind(this)
         )
-
-        this._userId = await addOnUISdk.app.currentUser.userId()
-        await this._updateUserAccessData()
 
         if (isDebugLog) {
             console.log(`=== _updateUserAccessData START ===`)
@@ -184,9 +184,9 @@ export class App extends LitElement {
         const absoluteImageUrl = new URL(imageUrl, window.location.href).href
 
         if (isDebugLog) {
-            console.log(
-                `handleImageLoad for ${imagePath}, imageUrl=${imageUrl}, absoluteUrl=${absoluteImageUrl}`
-            )
+            // console.log(
+            //     `handleImageLoad for ${imagePath}, imageUrl=${imageUrl}, absoluteUrl=${absoluteImageUrl}`
+            // )
         }
 
         try {
@@ -219,13 +219,6 @@ export class App extends LitElement {
                         window.location.href
                     ).href
                     const draggedImageSrc = (element as HTMLImageElement).src
-
-                    // console.log(`=== DRAG COMPLETION DEBUG ===`)
-                    // console.log(`Data imagePath: ${elementImagePath}`)
-                    // console.log(`Calculated absoluteImageUrl: ${elementAbsoluteUrl}`)
-                    // console.log(`Actual dragged element src: ${draggedImageSrc}`)
-                    // console.log(`Element tag: ${element.tagName}`)
-                    // console.log(`==============================`)
 
                     // data 속성에서 가져온 올바른 URL 사용
                     const imageBlob = await downloadFile(elementAbsoluteUrl)
@@ -347,7 +340,24 @@ export class App extends LitElement {
         }
 
         const userAccessData = await userAccess(this._userId)
-        console.log(`userAccess API response:`, userAccessData)
+        this.userAccessData = userAccessData
+
+        if (isDebugLog) {
+            console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
+            console.log(`userAccessData set:`, this.userAccessData)
+            console.log(`isTOSAgreed: ${this.userAccessData.user.isTOSAgreed}`)
+        }
+
+        // if (this.userAccessData.isTOSAgreed) {
+        if (this.userAccessData.user.isTOSAgreed) {
+            //약관동의 패스
+            console.log('User already agreed to terms, skipping terms screen')
+            this._termsAgreed = true
+        } else {
+            //await agreeTOS(this._userId, true)
+            console.log('User needs to agree to terms')
+            this._termsAgreed = false
+        }
 
         if (userAccessData == null || userAccessData.user == null) {
             if (isDebugLog) {
@@ -361,21 +371,7 @@ export class App extends LitElement {
             return
         }
 
-        this.userAccessData = userAccessData
-
-        if (isDebugLog) {
-            console.log(`userAccessData=${JSON.stringify(userAccessData)}`)
-            console.log(`userAccessData set:`, this.userAccessData)
-            console.log(`isTOSAgreed: ${this.userAccessData.isTOSAgreed}`)
-            console.log(`=== _updateUserAccessData END ===`)
-        }
-
-        if (this.userAccessData.isTOSAgreed) {
-            //약관동의 패스
-        } else {
-            //약관동의 표시 agreeTOS
-            //await agreeTOS(this._userId, true)
-        }
+        this.requestUpdate()
     }
 
     // 약관 동의 핸들러

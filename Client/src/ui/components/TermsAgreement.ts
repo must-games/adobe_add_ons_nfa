@@ -4,8 +4,8 @@ import { agreeTOS } from '../lib/router'
 
 @customElement('terms-agreement')
 export class TermsAgreement extends LitElement {
-    @property({ type: String })
-    userId: string = ''
+    // @property({ type: String })
+    // userId: string = ''
 
     @state()
     private _termsReviewed = false
@@ -104,18 +104,18 @@ export class TermsAgreement extends LitElement {
 
     private async _handleAgreeAndContinue() {
         if (this._termsReviewed) {
-            console.log(`Agreeing to terms for userId: ${this.userId}`)
-            
-            if (!this.userId) {
-                console.error('userId is empty, cannot agree to terms')
-                return
-            }
-            
+            // console.log(`Agreeing to terms for userId: ${this.userId}`)
+
+            // if (!this.userId) {
+            //     console.error('userId is empty, cannot agree to terms')
+            //     return
+            // }
+
             try {
                 // 서버에 약관 동의 상태 저장
-                await agreeTOS(this.userId, true)
-                console.log('Successfully agreed to terms')
-                
+                // const data = await agreeTOS(this.userId, true)
+                // console.log('Successfully agreed to terms')
+                // console.log('await agreeTOS(this.userId, true)', data) //true
                 // 성공하면 이벤트 발생
                 this.dispatchEvent(
                     new CustomEvent('terms-agreed', {
