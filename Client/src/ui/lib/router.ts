@@ -1,7 +1,6 @@
 import {
     BACK_END_URL,
     isDebugLog,
-    DAILY_IMAGE_GENERATION_LIMIT,
 } from './config'
 
 export async function userAccess(userId: string) {
@@ -32,6 +31,69 @@ export async function userAccess(userId: string) {
 
         return null
     }
+}
+
+export async function agreeTOS(userId: string, isAgreed: boolean = true) {
+    try {
+        if (isDebugLog) {
+            console.log(`agreeTOS userId=${userId} isAgreed=${isAgreed}`)
+        }
+
+        const response = await fetch(BACK_END_URL + '/user-agree-tos', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+                isTOSAgreed: isAgreed,
+            }),
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        } else {
+            console.error(`Failed agreeTOS: ${response.status}`)
+            return null
+        }
+    } catch (e) {
+        console.error(`agreeTOS e=${e}`)
+
+        return null
+    }
+}
+
+export async function clickImage(userId: string, imageId: string, imageGroup: string) {
+    try {
+        if (isDebugLog) {
+            console.log(`clickImage userId=${userId} imageId=${imageId} imageGroup=${imageGroup}`)
+        }
+
+        const response = await fetch(BACK_END_URL + '/user-click-image', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                userId,
+                imageId,
+                imageGroup,
+            }),
+        })
+
+        if (response.ok) {
+            const data = await response.json()
+            return data
+        } else {
+            console.error(`Failed clickImage: ${response.status}`)
+            return null
+        }
+    } catch (e) {
+        console.error(`clickImage e=${e}`)
+
+        return null
+    }   
 }
 
 export async function cancelGenerateImage(userId: string, workId: number) {
