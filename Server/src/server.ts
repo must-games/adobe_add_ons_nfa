@@ -64,4 +64,9 @@ if (process.env.NODE_ENV === 'development') {
     })
 }
 
+app.use(express.static('html'));
+app.listen(8080, () => {
+  console.log(`Server running at http://localhost:${8080}/`);
+});
+
 export default app
