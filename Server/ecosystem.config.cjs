@@ -11,7 +11,7 @@ module.exports = {
                 LOG_LEVEL: 'Debug',
                 DATABASE_URL:
                     'mysql://root:evgXHfGBMUxRdKvp@210.109.14.76:3306/abodeaddon-nfa',
-                SERVER_PORT: 80,
+                SERVER_PORT: 443,
             },
         },
     ],
