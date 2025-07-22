@@ -11,25 +11,15 @@ import '@spectrum-web-components/button/sp-button.js'
 import '@spectrum-web-components/theme/sp-theme.js'
 
 import '@spectrum-web-components/dropzone/sp-dropzone.js'
-import '@spectrum-web-components/dropzone/sp-dropzone.js'
 
 import { LitElement, html } from 'lit'
 import { customElement, property, state } from 'lit/decorators.js'
 import type { DocumentSandboxApi } from '../../models/DocumentSandboxApi'
 import { style } from './App.css'
 
-import '@spectrum-web-components/button/sp-button.js'
-import '@spectrum-web-components/button/sp-clear-button.js'
-import '@spectrum-web-components/button/sp-close-button.js'
-
 // Add this import for the picker component
 import '@spectrum-web-components/picker/sp-picker.js'
 import '@spectrum-web-components/menu/sp-menu-item.js'
-import '@spectrum-web-components/menu/sp-menu-divider.js'
-import '@spectrum-web-components/alert-banner/sp-alert-banner.js'
-import '@spectrum-web-components/asset/sp-asset.js'
-import '@spectrum-web-components/tooltip/sp-tooltip.js'
-import '@spectrum-web-components/link/sp-link.js'
 
 import {
     type AddOnSDKAPI,
@@ -44,22 +34,10 @@ import addOnUISdk from 'https://new.express.adobe.com/static/add-on-sdk/sdk.js'
 import categoryData from '../../assets/category.json' // JSON 파일 가져오기
 
 import { isDebugLog } from '../lib/config'
-import { saveAs } from 'file-saver'
-import {
-    generateImage,
-    getWorkList,
-    deleteGeneratedImage,
-    userAccess,
-    agreeTOS,
-    clickImage,
-    downloadFile,
-    getUser,
-    createGenerateImage,
-} from '../lib/router'
+import { userAccess, agreeTOS, clickImage, downloadFile } from '../lib/router'
 import './loading-screen'
 import './AlertBanner'
 import './TermsAgreement'
-// import uploadIcon from '../../assets/images/upload_icon.svg' // SVG 파일 import
 
 @customElement('add-on-app')
 export class App extends LitElement {
@@ -68,15 +46,6 @@ export class App extends LitElement {
 
     @state()
     private _sandboxProxy!: DocumentSandboxApi
-
-    @state()
-    private _generatedImages: { url: string; id: number }[] = []
-
-    @state()
-    private _showAllImages = false
-
-    @state()
-    private _uploadedFile: File | null = null
 
     @state()
     private _selectedImage: string | null = null
@@ -112,81 +81,11 @@ export class App extends LitElement {
     }
 
     @state()
-    private _openMenuForImage: string | null = null
-
-    @state()
-    private _previewModalOpen = false
-
-    @state()
-    private _previewImageSrc: string | null = null
-
-    @state()
-    private _previewText =
-        'showcasing a sleek and sophisticated braided crown, enjoying a cultural food festival'
-
-    @state()
     private _userId = ''
-
-    @state()
-    private _isLoading = false
-
-    @state()
-    private _loadingProgress = 10 // Default progress value
-
-    @state()
-    private _selectedHairColor: string | null = null
-
-    @state() private _workId = -1
-
-    @state() private _generateImageMessage = ''
-    @state() private _generateDisabledTooltip = ''
-    @state() private _loadingTitle = ''
-
-    @state() private _isCheckWorkStatus = false
-
-    private _selectedImageSupportsColor = false
-
-    private _handleHairColorSelect(colorKey: string) {
-        // 이미 선택된 색상과 같으면 해제, 아니면 새 colorKey로 설정
-        if (this._selectedHairColor === colorKey) {
-            this._selectedHairColor = null
-        } else {
-            this._selectedHairColor = colorKey
-        }
-
-        // 필요한 추가 작업
-        // console.log(`Selected hair color: ${this._selectedHairColor}`)
-
-        this.requestUpdate()
-    }
 
     static get styles() {
         return style
     }
-
-    // makeDraggableUsingUrl(elementId: string, previewUrl: string) {
-    //     const image = document.getElementById(elementId)
-
-    //     const dragCallbacks = {
-    //         previewCallback: (image: HTMLElement) => {
-    //             // Return a new URL for the remote preview
-    //             return new URL(previewUrl)
-    //         },
-    //         completionCallback: async (image: HTMLElement) => {
-    //             // Fetch and return the image blob
-    //             const imageBlob = await fetch(image.src).then((response) =>
-    //                 response.blob()
-    //             )
-    //             return [{ blob: imageBlob }]
-    //         },
-    //     }
-
-    //     try {
-    //         addOnUISdk.app.enableDragToDocument(image, dragCallbacks)
-    //     } catch (error) {
-    //         console.log('Failed to enable DragToDocument:', error)
-    //     }
-    // }
 
     async firstUpdated(): Promise<void> {
         if (isDebugLog) {
@@ -204,9 +103,6 @@ export class App extends LitElement {
         // :host 배경색 직접 적용
         ;(this as any).style.backgroundColor = '#3232328a'
 
-        // 전역 클릭 이벤트 리스너 추가
-        document.addEventListener('click', this._handleGlobalClick.bind(this))
-
         // 약관 동의 이벤트 리스너 추가
         document.addEventListener(
             'terms-agreed',
@@ -218,49 +114,6 @@ export class App extends LitElement {
 
         if (isDebugLog) {
             console.log(`userId=${this._userId}`)
-        }
-
-        // 초기 이미지 목록 가져오기
-        const workList = await getWorkList(this._userId, -1, 'COMPLETED')
-        if (isDebugLog) {
-            console.log(`workList=${JSON.stringify(workList)}`)
-        }
-
-        // 완료된 작업에서 이미지 URL 추출
-        const completedImages = []
-        for (const work of workList) {
-            if (
-                work.status === 'COMPLETED' &&
-                work.result &&
-                work.result.length > 0
-            ) {
-                for (const res of work.result) {
-                    if (res.download_url) {
-                        completedImages.push({
-                            url: res.download_url,
-                            id: work.id,
-                        })
-                    }
-                }
-            }
-        }
-
-        // 서버에서 가져온 이미지가 있으면 사용, 없으면 기본 이미지 사용
-        if (completedImages.length > 0) {
-            this._generatedImages = completedImages
-            if (isDebugLog) {
-                console.log(
-                    `this._generatedImages=${JSON.stringify(
-                        this._generatedImages
-                    )}`
-                )
-                console.log(
-                    `this.completedImages=${JSON.stringify(completedImages)}`
-                )
-            }
-        } else {
-            // 기본 이미지 목록 사용
-            this._generatedImages = []
         }
 
         // Get the UI runtime.
@@ -309,30 +162,9 @@ export class App extends LitElement {
     disconnectedCallback() {
         super.disconnectedCallback()
         document.removeEventListener(
-            'click',
-            this._handleGlobalClick.bind(this)
-        )
-        document.removeEventListener(
             'terms-agreed',
             this._handleTermsAgreed.bind(this)
         )
-    }
-
-    // 전역 클릭 이벤트 핸들러 추가
-    private _handleGlobalClick(e: MouseEvent) {
-        const target = e.target as HTMLElement
-        const menuButton = this.shadowRoot?.querySelector('.image-actions')
-        const menu = this.shadowRoot?.querySelector('.image-menu')
-
-        if (menuButton && menu) {
-            const isClickInsideMenu = menu.contains(target)
-            const isClickOnMenuButton = menuButton.contains(target)
-
-            if (!isClickInsideMenu && !isClickOnMenuButton) {
-                this._openMenuForImage = null
-                this.requestUpdate()
-            }
-        }
     }
 
     async updated(): Promise<void> {
@@ -462,8 +294,7 @@ export class App extends LitElement {
     private async _handleImageSelect(
         image: string,
         imageKey: string,
-        imageGroup: string,
-        color: boolean
+        imageGroup: string
     ) {
         if (this._selectedImage === image) {
             this._selectedImage = null
@@ -473,21 +304,15 @@ export class App extends LitElement {
             this._selectedImageKey = imageKey
         }
 
-        if (color === true) {
-            this._selectedImageSupportsColor = true
-        } else {
-            this._selectedImageSupportsColor = false
-        }
-
         if (isDebugLog) {
             console.log(
                 `_handleImageSelect.Selected Image: ${this._selectedImage}, Selected Image Key: ${this._selectedImageKey}`
             )
         }
 
-        //이미지 사용 기록.
-        const fileNameWithExt = image.split('/').pop() ?? '';
-        const imageId = fileNameWithExt.replace(/\.[^/.]+$/, '');
+        // 이미지 사용 기록
+        const fileNameWithExt = image.split('/').pop() ?? ''
+        const imageId = fileNameWithExt.replace(/\.[^/.]+$/, '')
 
         await clickImage(this._userId, imageId, imageGroup)
 
@@ -500,7 +325,6 @@ export class App extends LitElement {
             console.log(`_updateUserAccessData`)
         }
 
-        this._generateDisabledTooltip = `Loading...`
         const userAccessData = await userAccess(this._userId)
 
         if (userAccessData == null || userAccessData.user == null) {
@@ -515,9 +339,6 @@ export class App extends LitElement {
                 Please refresh the page or send feedback.`,
                 1000 * 60 * 60 * 24
             )
-
-            this._generateImageMessage = `Retrive user information failed`
-            this._generateDisabledTooltip = `Something went wrong. Please refresh the page or send feedback.`
             return
         }
 
@@ -533,27 +354,6 @@ export class App extends LitElement {
             //약관동의 표시 agreeTOS
             //await agreeTOS(this._userId, true)
         }
-    }
-
-    // 생성 취소 핸들러
-    private _handleGenerationCancelled(
-        e: CustomEvent<{ nextCancelWork: boolean }>
-    ) {
-        this._isLoading = false
-        this.requestUpdate()
-    }
-
-    // 생성 실패 핸들러
-    private _handleGenerationFailed(e: CustomEvent) {
-        const errorMessage = e.detail.message
-        this._isLoading = false
-
-        // 에러 메시지가 있으면 alert 배너 표시
-        if (errorMessage) {
-            this._showAlertBanner(errorMessage)
-        }
-
-        this.requestUpdate()
     }
 
     // 약관 동의 핸들러
@@ -659,8 +459,7 @@ export class App extends LitElement {
                                                                                       this._handleImageSelect(
                                                                                           imageObj.path,
                                                                                           imageObj.key,
-                                                                                          group.group,
-                                                                                          false
+                                                                                          group.group
                                                                                       )}
                                                                                   style="cursor: pointer;"
                                                                               >
