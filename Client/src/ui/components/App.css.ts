@@ -27,7 +27,7 @@ export const style = css`
 
     .header {
         color: white;
-        padding: 10px 12px;
+        padding: 8px 12px;
         font-weight: 500;
         width: 100%;
         font-size: 14px;
@@ -45,10 +45,12 @@ export const style = css`
 
     .header .video-link {
         color: white !important;
-        font-size: 14px !important;
+        font-size: 11px !important;
         border-radius: 20px !important;
         cursor: pointer;
         text-decoration: none;
+        font-family: system-ui;
+        font-weight: 100;
     }
 
     .container {
