@@ -79,6 +79,7 @@ export const style = css`
         color: #2d3748;
         line-height: 20px;
         margin-bottom: 7px;
+        margin-top: 7px;
     }
 
     .image-categories {
@@ -168,6 +169,7 @@ export const style = css`
         flex: 1;
         overflow-y: overlay;
         background: transparent;
+        margin-bottom: 40px;
     }
 
     .scrollable-content::-webkit-scrollbar {
