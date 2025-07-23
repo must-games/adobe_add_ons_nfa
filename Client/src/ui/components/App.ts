@@ -394,11 +394,11 @@ export class App extends LitElement {
         // 서버에서 약관 동의 상태를 확인하여 결정
         const shouldShowTerms = !this.userAccessData.user.isTOSAgreed
 
-        // if (shouldShowTerms) {
-        //     return html`<terms-agreement
-        //         .userId="${this._userId}"
-        //     ></terms-agreement>`
-        // }
+        if (shouldShowTerms) {
+            return html`<terms-agreement
+                .userId="${this._userId}"
+            ></terms-agreement>`
+        }
 
         return html`
             <sp-theme theme="express" color="light" scale="medium">
