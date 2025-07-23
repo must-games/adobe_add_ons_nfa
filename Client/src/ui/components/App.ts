@@ -372,6 +372,15 @@ export class App extends LitElement {
         await this._updateUserAccessData()
     }
 
+    // 비디오 링크 클릭 핸들러
+    private _handleVideoLinkClick() {
+        try {
+            window.open('https://youtu.be/Y21ZqC8-gOI', '_blank')
+        } catch (error) {
+            console.error('Failed to open video link:', error)
+        }
+    }
+
     render() {
         // userId가 설정되지 않았으면 로딩 표시
         if (!this._userId || !this.userAccessData) {
@@ -399,13 +408,12 @@ export class App extends LitElement {
                     : null}
                 <!-- Header -->
                 <sp-top-nav class="header" style="display:block;">
-                    <sp-link
-                        href="https://youtu.be/Y21ZqC8-gOI"
-                        static-color="white"
-                        target="_blank"
+                    <div
+                        class="video-link"
+                        @click=${this._handleVideoLinkClick}
                     >
                         Video Link for Non Fungible Animals
-                    </sp-link>
+                    </div>
                 </sp-top-nav>
                 <div class="container">
                     <!-- Category 고정 영역 -->

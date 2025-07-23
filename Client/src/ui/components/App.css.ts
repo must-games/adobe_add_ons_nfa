@@ -43,10 +43,9 @@ export const style = css`
         font-size: 14px;
     }
 
-    .header sp-link {
+    .header .video-link {
         color: white !important;
         font-size: 14px !important;
-        padding: 8px 16px !important;
         border-radius: 20px !important;
         cursor: pointer;
         text-decoration: underline;
