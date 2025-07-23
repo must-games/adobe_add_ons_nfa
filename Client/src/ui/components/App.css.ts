@@ -24,6 +24,34 @@ export const style = css`
         padding: 0 !important;
         overflow: hidden !important;
     }
+
+    .header {
+        color: white;
+        padding: 10px 12px;
+        font-weight: 500;
+        width: 100%;
+        font-size: 14px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        text-align: center !important;
+    }
+
+    .header-text {
+        font-size: 14px;
+    }
+
+    .header sp-link {
+        color: white !important;
+        font-size: 14px !important;
+        padding: 8px 16px !important;
+        border-radius: 20px !important;
+        cursor: pointer;
+        text-decoration: underline;
+    }
+
     .container {
         padding: 0;
         display: flex;

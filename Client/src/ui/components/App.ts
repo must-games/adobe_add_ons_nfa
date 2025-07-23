@@ -385,11 +385,11 @@ export class App extends LitElement {
         // 서버에서 약관 동의 상태를 확인하여 결정
         const shouldShowTerms = !this.userAccessData.user.isTOSAgreed
 
-        if (shouldShowTerms) {
-            return html`<terms-agreement
-                .userId="${this._userId}"
-            ></terms-agreement>`
-        }
+        // if (shouldShowTerms) {
+        //     return html`<terms-agreement
+        //         .userId="${this._userId}"
+        //     ></terms-agreement>`
+        // }
 
         return html`
             <sp-theme theme="express" color="light" scale="medium">
@@ -397,6 +397,16 @@ export class App extends LitElement {
                     ? html` <alert-banner .visible="${this.alertVisible}"
                       .message="${this.alertMessage}"/ >`
                     : null}
+                <!-- Header -->
+                <sp-top-nav class="header" style="display:block;">
+                    <sp-link
+                        href="https://youtu.be/Y21ZqC8-gOI"
+                        static-color="white"
+                        target="_blank"
+                    >
+                        Video Link for Non Fungible Animals
+                    </sp-link>
+                </sp-top-nav>
                 <div class="container">
                     <!-- Category 고정 영역 -->
                     <div class="fixed-container">
