@@ -25,7 +25,7 @@ export class TermsAgreement extends LitElement {
             .terms-container {
                 background: white;
                 border-radius: 16px;
-                padding: 32px;
+                padding: 22px;
                 max-width: 400px;
                 width: 90%;
                 box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
@@ -33,12 +33,18 @@ export class TermsAgreement extends LitElement {
                 margin: 20px;
             }
 
-            .terms-title {
-                font-size: 20px;
-                font-weight: 600;
-                color: #333;
+            .video-container {
+                width: 100%;
                 margin: 0 0 16px 0;
-                line-height: 1.4;
+                border-radius: 8px;
+                overflow: hidden;
+            }
+
+            .video-container video {
+                width: 100%;
+                min-height: 120px;
+                border-radius: 8px;
+                object-fit: contain;
             }
 
             .terms-content {
@@ -106,16 +112,16 @@ export class TermsAgreement extends LitElement {
         if (this._termsReviewed) {
             try {
                 console.log(`Agreeing to terms for userId: ${this.userId}`)
-                
+
                 if (!this.userId) {
                     console.error('userId is empty, cannot agree to terms')
                     return
                 }
-                
+
                 // 서버에 약관 동의 상태 저장
                 const result = await agreeTOS(this.userId, true)
                 console.log('Successfully agreed to terms:', result)
-                
+
                 // 성공하면 부모 앱에 약관 동의 완료를 알림
                 this.dispatchEvent(
                     new CustomEvent('terms-agreed', {
@@ -123,7 +129,6 @@ export class TermsAgreement extends LitElement {
                         composed: true,
                     })
                 )
-                
             } catch (error) {
                 console.error('Failed to agree to terms:', error)
                 // 에러 발생시에도 일단 진행하도록 함 (서버에 저장되었을 가능성)
@@ -140,9 +145,12 @@ export class TermsAgreement extends LitElement {
     render() {
         return html`
             <div class="terms-container">
-                <h1 class="terms-title">
-                    Please review the Terms of Use for MUSTGAMES
-                </h1>
+                <div class="video-container">
+                    <video controls autoplay>
+                        <source src="assets/NFA_animals.mp4" type="video/mp4" />
+                        Your browser does not support the video tag.
+                    </video>
+                </div>
 
                 <div class="terms-content">
                     This add-on allows you to use the materials provided by

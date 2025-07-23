@@ -76,6 +76,11 @@ module.exports = {
                     from: 'src/assets/images/*.svg',
                     to: 'images/[name][ext]',
                     noErrorOnMissing: true,
+                },
+                {
+                    from: 'src/assets/*.mp4',
+                    to: 'assets/[name][ext]',
+                    noErrorOnMissing: true,
                 }, //필수
             ],
         }),
