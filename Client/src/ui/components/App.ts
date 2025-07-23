@@ -412,7 +412,9 @@ export class App extends LitElement {
                         class="video-link"
                         @click=${this._handleVideoLinkClick}
                     >
-                        Video Link for Non Fungible Animals
+                        Non Fungible Animals is a digital art project created to
+                        raise awareness about the value of endangered animals.
+                        <span style="text-decoration: underline;">(Link)</span>
                     </div>
                 </sp-top-nav>
                 <div class="container">

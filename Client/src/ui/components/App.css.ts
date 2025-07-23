@@ -48,7 +48,7 @@ export const style = css`
         font-size: 14px !important;
         border-radius: 20px !important;
         cursor: pointer;
-        text-decoration: underline;
+        text-decoration: none;
     }
 
     .container {
