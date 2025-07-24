@@ -375,7 +375,7 @@ export class App extends LitElement {
     // 비디오 링크 클릭 핸들러
     private _handleVideoLinkClick() {
         try {
-            window.open('https://youtu.be/Y21ZqC8-gOI', '_blank')
+            window.open('https://youtu.be/BPw1sZyQ21s', '_blank')
         } catch (error) {
             console.error('Failed to open video link:', error)
         }
