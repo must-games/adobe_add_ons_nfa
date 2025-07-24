@@ -80,6 +80,9 @@ export class App extends LitElement {
     @state()
     private _userId = ''
 
+    private _lastClickTime = 0
+    private _clickCount = 0
+
     static get styles() {
         return style
     }
@@ -139,36 +142,52 @@ export class App extends LitElement {
             AppEvent.dragend,
             async (eventData: AppDragEndEventData) => {
                 if (!eventData.dropCancelled) {
+                    const draggedImageSrc = (
+                        eventData.element as HTMLImageElement
+                    ).src
+                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i)
+                    if (!match) return null
+
+                    const fullName = match[1] // ex) "Cat_5"
+                    const baseName = fullName.split('_')[0] // ex) "Cat"
+                    clickImage(this._userId, fullName, baseName)
+
                     if (isDebugLog) {
                         console.log(
-                            'The drag event has ended for',
-                            eventData.element.id
+                            `The drag event has ended for ${draggedImageSrc}`
                         )
                     }
-                    
+
                     // 드래그가 성공적으로 완료된 경우 _handleImageSelect 함수 실행
                     const imageElement = eventData.element as HTMLImageElement
                     const imagePath = imageElement.dataset.imagePath || ''
-                    
+
                     // 이미지 카테고리에서 해당 이미지 정보 찾기
                     let imageKey = ''
                     let imageGroup = ''
-                    
-                    Object.entries(this._imageCategories).forEach(([category, groups]) => {
-                        if (Array.isArray(groups)) {
-                            groups.forEach((group) => {
-                                group.items.forEach((imageObj) => {
-                                    if (imageObj.path === imagePath) {
-                                        imageKey = imageObj.key
-                                        imageGroup = group.group
-                                    }
+
+                    Object.entries(this._imageCategories).forEach(
+                        ([category, groups]) => {
+                            if (Array.isArray(groups)) {
+                                groups.forEach((group) => {
+                                    group.items.forEach((imageObj) => {
+                                        if (imageObj.path === imagePath) {
+                                            imageKey = imageObj.key
+                                            imageGroup = group.group
+                                        }
+                                    })
                                 })
-                            })
+                            }
                         }
-                    })
+                    )
 
                     // _handleImageSelect 함수 호출 (드래그 선택으로 표시)
-                    await this._handleImageSelect(imagePath, imageKey, imageGroup, true)
+                    await this._handleImageSelect(
+                        imagePath,
+                        imageKey,
+                        imageGroup,
+                        true
+                    )
                 } else {
                     if (isDebugLog) {
                         console.log(
@@ -257,7 +276,29 @@ export class App extends LitElement {
             console.error(`_handleImageLoad e=${e}`)
         }
     }
-    private async _handleDoubleClick(event) {
+    private async _handleSingleClick(event: MouseEvent) {
+        event.stopPropagation() // 이벤트 버블링 방지
+
+        const currentTime = Date.now()
+        const timeDiff = currentTime - this._lastClickTime
+
+        // 더블클릭 감지 (500ms 이내의 연속 클릭)
+        if (timeDiff < 400) {
+            this._clickCount++
+            if (this._clickCount === 2) {
+                // 더블클릭인 경우 두 번째 클릭을 무시
+                this._clickCount = 0
+                this._lastClickTime = 0
+                return
+            }
+        } else {
+            // 새로운 클릭 시퀀스 시작
+            this._clickCount = 1
+        }
+
+        this._lastClickTime = currentTime
+
+        // 이벤트가 재사용되기 전에 필요한 값들을 미리 저장
         const target = event.currentTarget as HTMLImageElement
         const imageUrl = target.src
 
@@ -523,6 +564,12 @@ export class App extends LitElement {
                                                                                   imageObj.path
                                                                                       ? 'selected'
                                                                                       : ''}"
+                                                                                  @click=${() =>
+                                                                                      this._handleImageSelect(
+                                                                                          imageObj.path,
+                                                                                          imageObj.key,
+                                                                                          group.group
+                                                                                      )}
                                                                                   style="cursor: pointer;"
                                                                               >
                                                                                   <img
@@ -531,18 +578,12 @@ export class App extends LitElement {
                                                                                       data-image-path="${imageObj.path}"
                                                                                       @load=${this
                                                                                           ._handleImageLoad}
-                                                                                      @click=${(
+                                                                                      @click="${(
                                                                                           e: MouseEvent
-                                                                                      ) => {
-                                                                                          this._handleDoubleClick(
+                                                                                      ) =>
+                                                                                          this._handleSingleClick(
                                                                                               e
-                                                                                          )
-                                                                                          this._handleImageSelect(
-                                                                                              imageObj.path,
-                                                                                              imageObj.key,
-                                                                                              group.group
-                                                                                          )
-                                                                                      }}
+                                                                                          )}}"
                                                                                   />
                                                                               </div>
                                                                           `
