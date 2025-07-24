@@ -117,7 +117,7 @@ export class App extends LitElement {
             console.log(`userId: ${this._userId}`)
         }
 
-        // Get the UI runtime.
+       // Get the UI runtime.
         const { runtime } = this.addOnUISdk.instance
 
         // Get the proxy object, which is required
@@ -145,12 +145,17 @@ export class App extends LitElement {
                     const draggedImageSrc = (
                         eventData.element as HTMLImageElement
                     ).src
-                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i)
-                    if (!match) return null
+                    try {
+                        const decodedUrl = decodeURIComponent(draggedImageSrc)
+                        const match = decodedUrl.match(/\/([^\/?#]+)\.png$/i)
+                        if (!match) return null
 
-                    const fullName = match[1] // ex) "Cat_5"
-                    const baseName = fullName.split('_')[0] // ex) "Cat"
-                    clickImage(this._userId, fullName, baseName)
+                        const fullName = match[1] // ex) "Cat_5"
+                        const baseName = fullName.split('_')[0] // ex) "Cat"
+                        clickImage(this._userId, fullName, baseName)
+                    } catch(e) {
+
+                    }
 
                     if (isDebugLog) {
                         console.log(
