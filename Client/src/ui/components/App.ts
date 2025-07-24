@@ -80,6 +80,9 @@ export class App extends LitElement {
     @state()
     private _userId = ''
 
+    private _lastClickTime = 0
+    private _clickCount = 0
+
     static get styles() {
         return style
     }
@@ -139,12 +142,14 @@ export class App extends LitElement {
             AppEvent.dragend,
             (eventData: AppDragEndEventData) => {
                 if (!eventData.dropCancelled) {
-                    const draggedImageSrc = (eventData.element as HTMLImageElement).src
-                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i);
-                    if (!match) return null;
+                    const draggedImageSrc = (
+                        eventData.element as HTMLImageElement
+                    ).src
+                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i)
+                    if (!match) return null
 
-                    const fullName = match[1]; // ex) "Cat_5"
-                    const baseName = fullName.split('_')[0]; // ex) "Cat"
+                    const fullName = match[1] // ex) "Cat_5"
+                    const baseName = fullName.split('_')[0] // ex) "Cat"
                     clickImage(this._userId, fullName, baseName)
 
                     if (isDebugLog) {
@@ -240,7 +245,29 @@ export class App extends LitElement {
             console.error(`_handleImageLoad e=${e}`)
         }
     }
-    private async _handleDoubleClick(event) {
+    private async _handleSingleClick(event: MouseEvent) {
+        event.stopPropagation() // 이벤트 버블링 방지
+
+        const currentTime = Date.now()
+        const timeDiff = currentTime - this._lastClickTime
+
+        // 더블클릭 감지 (500ms 이내의 연속 클릭)
+        if (timeDiff < 400) {
+            this._clickCount++
+            if (this._clickCount === 2) {
+                // 더블클릭인 경우 두 번째 클릭을 무시
+                this._clickCount = 0
+                this._lastClickTime = 0
+                return
+            }
+        } else {
+            // 새로운 클릭 시퀀스 시작
+            this._clickCount = 1
+        }
+
+        this._lastClickTime = currentTime
+
+        // 이벤트가 재사용되기 전에 필요한 값들을 미리 저장
         const target = event.currentTarget as HTMLImageElement
         const imageUrl = target.src
 
@@ -520,7 +547,7 @@ export class App extends LitElement {
                                                                                       @click=${(
                                                                                           e: MouseEvent
                                                                                       ) =>
-                                                                                          this._handleDoubleClick(
+                                                                                          this._handleSingleClick(
                                                                                               e
                                                                                           )}
                                                                                   />
