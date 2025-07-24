@@ -145,12 +145,15 @@ export class App extends LitElement {
                     const draggedImageSrc = (
                         eventData.element as HTMLImageElement
                     ).src
-                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i)
-                    if (!match) return null
+                    try {
+                        const decodedUrl = decodeURIComponent(draggedImageSrc)
+                        const match = decodedUrl.match(/\/([^\/?#]+)\.png$/i)
+                        if (!match) return null
 
-                    const fullName = match[1] // ex) "Cat_5"
-                    const baseName = fullName.split('_')[0] // ex) "Cat"
-                    clickImage(this._userId, fullName, baseName)
+                        const fullName = match[1] // ex) "Cat_5"
+                        const baseName = fullName.split('_')[0] // ex) "Cat"
+                        clickImage(this._userId, fullName, baseName)
+                    } catch (e) {}
 
                     if (isDebugLog) {
                         console.log(
@@ -564,12 +567,6 @@ export class App extends LitElement {
                                                                                   imageObj.path
                                                                                       ? 'selected'
                                                                                       : ''}"
-                                                                                  @click=${() =>
-                                                                                      this._handleImageSelect(
-                                                                                          imageObj.path,
-                                                                                          imageObj.key,
-                                                                                          group.group
-                                                                                      )}
                                                                                   style="cursor: pointer;"
                                                                               >
                                                                                   <img
@@ -578,12 +575,18 @@ export class App extends LitElement {
                                                                                       data-image-path="${imageObj.path}"
                                                                                       @load=${this
                                                                                           ._handleImageLoad}
-                                                                                      @click="${(
+                                                                                      @click=${(
                                                                                           e: MouseEvent
-                                                                                      ) =>
+                                                                                      ) => {
                                                                                           this._handleSingleClick(
                                                                                               e
-                                                                                          )}}"
+                                                                                          )
+                                                                                          this._handleImageSelect(
+                                                                                              imageObj.path,
+                                                                                              imageObj.key,
+                                                                                              group.group
+                                                                                          )
+                                                                                      }}
                                                                                   />
                                                                               </div>
                                                                           `
