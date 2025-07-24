@@ -139,10 +139,17 @@ export class App extends LitElement {
             AppEvent.dragend,
             (eventData: AppDragEndEventData) => {
                 if (!eventData.dropCancelled) {
+                    const draggedImageSrc = (eventData.element as HTMLImageElement).src
+                    const match = draggedImageSrc.match(/\/([^\/?#]+)\.png$/i);
+                    if (!match) return null;
+
+                    const fullName = match[1]; // ex) "Cat_5"
+                    const baseName = fullName.split('_')[0]; // ex) "Cat"
+                    clickImage(this._userId, fullName, baseName)
+
                     if (isDebugLog) {
                         console.log(
-                            'The drag event has ended for',
-                            eventData.element.id
+                            `The drag event has ended for ${draggedImageSrc}`
                         )
                     }
                 } else {
