@@ -137,7 +137,7 @@ export class App extends LitElement {
 
         addOnUISdk.app.on(
             AppEvent.dragend,
-            (eventData: AppDragEndEventData) => {
+            async (eventData: AppDragEndEventData) => {
                 if (!eventData.dropCancelled) {
                     if (isDebugLog) {
                         console.log(
@@ -145,6 +145,30 @@ export class App extends LitElement {
                             eventData.element.id
                         )
                     }
+                    
+                    // 드래그가 성공적으로 완료된 경우 _handleImageSelect 함수 실행
+                    const imageElement = eventData.element as HTMLImageElement
+                    const imagePath = imageElement.dataset.imagePath || ''
+                    
+                    // 이미지 카테고리에서 해당 이미지 정보 찾기
+                    let imageKey = ''
+                    let imageGroup = ''
+                    
+                    Object.entries(this._imageCategories).forEach(([category, groups]) => {
+                        if (Array.isArray(groups)) {
+                            groups.forEach((group) => {
+                                group.items.forEach((imageObj) => {
+                                    if (imageObj.path === imagePath) {
+                                        imageKey = imageObj.key
+                                        imageGroup = group.group
+                                    }
+                                })
+                            })
+                        }
+                    })
+
+                    // _handleImageSelect 함수 호출 (드래그 선택으로 표시)
+                    await this._handleImageSelect(imagePath, imageKey, imageGroup, true)
                 } else {
                     if (isDebugLog) {
                         console.log(
@@ -305,9 +329,10 @@ export class App extends LitElement {
     private async _handleImageSelect(
         image: string,
         imageKey: string,
-        imageGroup: string
+        imageGroup: string,
+        isDragSelect: boolean = false
     ) {
-        if (this._selectedImage === image) {
+        if (!isDragSelect && this._selectedImage === image) {
             this._selectedImage = null
             this._selectedImageKey = null
         } else {
@@ -498,12 +523,6 @@ export class App extends LitElement {
                                                                                   imageObj.path
                                                                                       ? 'selected'
                                                                                       : ''}"
-                                                                                  @click=${() =>
-                                                                                      this._handleImageSelect(
-                                                                                          imageObj.path,
-                                                                                          imageObj.key,
-                                                                                          group.group
-                                                                                      )}
                                                                                   style="cursor: pointer;"
                                                                               >
                                                                                   <img
@@ -514,10 +533,16 @@ export class App extends LitElement {
                                                                                           ._handleImageLoad}
                                                                                       @click=${(
                                                                                           e: MouseEvent
-                                                                                      ) =>
+                                                                                      ) => {
                                                                                           this._handleDoubleClick(
                                                                                               e
-                                                                                          )}
+                                                                                          )
+                                                                                          this._handleImageSelect(
+                                                                                              imageObj.path,
+                                                                                              imageObj.key,
+                                                                                              group.group
+                                                                                          )
+                                                                                      }}
                                                                                   />
                                                                               </div>
                                                                           `
