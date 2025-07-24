@@ -117,7 +117,7 @@ export class App extends LitElement {
             console.log(`userId: ${this._userId}`)
         }
 
-       // Get the UI runtime.
+        // Get the UI runtime.
         const { runtime } = this.addOnUISdk.instance
 
         // Get the proxy object, which is required
@@ -153,9 +153,7 @@ export class App extends LitElement {
                         const fullName = match[1] // ex) "Cat_5"
                         const baseName = fullName.split('_')[0] // ex) "Cat"
                         clickImage(this._userId, fullName, baseName)
-                    } catch(e) {
-
-                    }
+                    } catch (e) {}
 
                     if (isDebugLog) {
                         console.log(
@@ -535,12 +533,6 @@ export class App extends LitElement {
                                                                                   imageObj.path
                                                                                       ? 'selected'
                                                                                       : ''}"
-                                                                                  @click=${() =>
-                                                                                      this._handleImageSelect(
-                                                                                          imageObj.path,
-                                                                                          imageObj.key,
-                                                                                          group.group
-                                                                                      )}
                                                                                   style="cursor: pointer;"
                                                                               >
                                                                                   <img
@@ -551,10 +543,16 @@ export class App extends LitElement {
                                                                                           ._handleImageLoad}
                                                                                       @click=${(
                                                                                           e: MouseEvent
-                                                                                      ) =>
+                                                                                      ) => {
                                                                                           this._handleSingleClick(
                                                                                               e
-                                                                                          )}
+                                                                                          )
+                                                                                          this._handleImageSelect(
+                                                                                              imageObj.path,
+                                                                                              imageObj.key,
+                                                                                              group.group
+                                                                                          )
+                                                                                      }}
                                                                                   />
                                                                               </div>
                                                                           `
