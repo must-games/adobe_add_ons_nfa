@@ -41,7 +41,7 @@ export const checkNewDayAndResetData = async (userId: any, dbUser: any) => {
 
         updateData = {
             lastResetDate: new Date(),
-            imageUsedCountToday: 0,
+            //imageUsedCountToday: 0,
         }
     } else {
         updateData = { lastLoginAt: new Date() }
@@ -72,8 +72,9 @@ export const getUser = async (userId: any) => {
 
             logger.info(`getUser New user created: ${userId}`)
         } else {
-            user = await checkNewDayAndResetData(userId, user)
         }
+
+        user = await checkNewDayAndResetData(userId, user)
 
         // checkNewDayAndResetData에서 update가 안되나...
         user = await prisma.user.findUnique({
