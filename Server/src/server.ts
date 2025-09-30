@@ -61,7 +61,7 @@ if (process.env.NODE_ENV === 'development') {
 }
 
 //if (SERVER_TYPE == 'live') {
-    app.use(express.static('html'))
+//    app.use(express.static('html'))
 //} else if (process.env.NODE_ENV === 'development') {    
 //    app.use(express.static('html'))
 //}
