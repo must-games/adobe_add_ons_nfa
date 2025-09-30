@@ -60,10 +60,10 @@ if (process.env.NODE_ENV === 'development') {
     })
 }
 
-//if (SERVER_TYPE == 'live') {
-//    app.use(express.static('html'))
-//} else if (process.env.NODE_ENV === 'development') {    
-//    app.use(express.static('html'))
-//}
+if (SERVER_TYPE == 'live') {
+   app.use(express.static('html'))
+} else if (process.env.NODE_ENV === 'development') {    
+   //app.use(express.static('html'))
+}
 
 export default app
