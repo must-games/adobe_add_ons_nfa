@@ -38,7 +38,7 @@ const serverInfo = () => {
     logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
-if (process.env.NODE_ENV === 'development') {
+if (SERVER_TYPE !== 'live') {
     app.listen(PORT, () => {
         logger.info('-------------------------------------------')
         logger.info(`🚀 Server running onp http://localhost:${PORT}`)
