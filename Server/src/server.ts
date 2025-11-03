@@ -38,32 +38,32 @@ const serverInfo = () => {
     logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
-if (SERVER_TYPE !== 'live') {
-    app.listen(PORT, () => {
-        logger.info('-------------------------------------------')
-        logger.info(`🚀 Server running onp http://localhost:${PORT}`)
-        logger.info('-------------------------------------------')
+// if (SERVER_TYPE !== 'live') {
+//     app.listen(PORT, () => {
+//         logger.info('-------------------------------------------')
+//         logger.info(`🚀 Server running onp http://localhost:${PORT}`)
+//         logger.info('-------------------------------------------')
 
-        serverInfo()
+//         serverInfo()
 
-        logger.info('-------------------------------------------')
-    })
-} else {
-    https.createServer(options, app).listen(PORT, () => {
-        logger.info('-------------------------------------------')
-        logger.info(`🚀 Server running on https://domain:${PORT}`)
-        logger.info('-------------------------------------------')
+//         logger.info('-------------------------------------------')
+//     })
+// } else {
+https.createServer(options, app).listen(PORT, () => {
+    logger.info('-------------------------------------------')
+    logger.info(`🚀 Server running on https://domain:${PORT}`)
+    logger.info('-------------------------------------------')
 
-        serverInfo()
+    serverInfo()
 
-        logger.info('-------------------------------------------')
-    })
-}
+    logger.info('-------------------------------------------')
+})
+//}
 
 if (SERVER_TYPE == 'live') {
-   app.use(express.static('html'))
-} else if (process.env.NODE_ENV === 'development') {    
-   //app.use(express.static('html'))
+    app.use(express.static('html'))
+} else if (process.env.NODE_ENV === 'development') {
+    //app.use(express.static('html'))
 }
 
 export default app
