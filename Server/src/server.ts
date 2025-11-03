@@ -38,27 +38,27 @@ const serverInfo = () => {
     logger.info(`NODE_ENV=${process.env.NODE_ENV}`)
 }
 
-// if (SERVER_TYPE !== 'live') {
-//     app.listen(PORT, () => {
+//if (SERVER_TYPE !== 'live') {
+    app.listen(PORT, () => {
+        logger.info('-------------------------------------------')
+        logger.info(`🚀 Server running onp http://localhost:${PORT}`)
+        logger.info('-------------------------------------------')
+
+        serverInfo()
+
+        logger.info('-------------------------------------------')
+    })
+// } else {
+//     https.createServer(options, app).listen(PORT, () => {
 //         logger.info('-------------------------------------------')
-//         logger.info(`🚀 Server running onp http://localhost:${PORT}`)
+//         logger.info(`🚀 Server running on https://domain:${PORT}`)
 //         logger.info('-------------------------------------------')
 
 //         serverInfo()
 
 //         logger.info('-------------------------------------------')
 //     })
-// } else {
-https.createServer(options, app).listen(PORT, () => {
-    logger.info('-------------------------------------------')
-    logger.info(`🚀 Server running on https://domain:${PORT}`)
-    logger.info('-------------------------------------------')
-
-    serverInfo()
-
-    logger.info('-------------------------------------------')
-})
-//}
+// }
 
 if (SERVER_TYPE == 'live') {
     app.use(express.static('html'))
